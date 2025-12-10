@@ -4,71 +4,71 @@ lab:
     module: 'Work with Delta Lake tables in Microsoft Fabric'
 ---
 
-# Use Delta Tables in Apache Spark
+# Apache Spark에서 Delta Table 사용
 
-Tables in a Microsoft Fabric Lakehouse are based on the open-source Delta Lake format. Delta Lake adds support for relational semantics for both batch and streaming data. In this exercise you will create Delta tables and explore the data using SQL queries.
+Microsoft Fabric Lakehouse의 Table은 오픈 소스 Delta Lake 형식 기반입니다. Delta Lake는 배치 및 스트리밍 데이터 모두에 대한 관계형 시맨틱 지원을 추가합니다. 이 실습에서는 Delta Table을 생성하고 SQL 쿼리를 사용하여 데이터를 탐색합니다.
 
-This exercise should take approximately **45** minutes to complete
+이 실습은 완료하는 데 약 **45**분 정도 소요됩니다.
 
-> [!Note] 
-> You need access to a [Microsoft Fabric tenant](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> [!NOTE]
+> 이 실습을 완료하려면 [Microsoft Fabric tenant](https://learn.microsoft.com/fabric/get-started/fabric-trial)에 대한 액세스 권한이 필요합니다.
 
-## Create a workspace
+## Workspace 생성
 
-Before working with data in Fabric, create a workspace in a tenant with the Fabric capacity enabled.
+Fabric에서 데이터를 작업하기 전에, Fabric Capacity가 활성화된 tenant에 Workspace를 생성하세요.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric-developer) at `https://app.fabric.microsoft.com/home?experience=fabric-developer` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode in the **Advanced** section that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric-developer) (`https://app.fabric.microsoft.com/home?experience=fabric-developer`)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+2. 왼쪽의 메뉴 바에서 **Workspaces** (아이콘은 &#128455;와 유사합니다)를 선택합니다.
+3. 원하는 이름으로 새 Workspace를 생성하고, **Advanced** 섹션에서 Fabric Capacity를 포함하는 라이선스 모드(*Trial*, *Premium*, 또는 *Fabric*)를 선택합니다.
+4. 새 Workspace가 열리면 비어 있어야 합니다.
 
-    ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
+    ![Fabric의 빈 Workspace 스크린샷.](./Images/new-workspace.png)
 
-## Create a lakehouse and upload files
+## Lakehouse 생성 및 파일 업로드
 
-Now that you have a workspace, it's time to create a data lakehouse for your data.
+이제 Workspace를 만들었으니, 데이터용 Data Lakehouse를 생성할 차례입니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Data Engineering* section, select **Lakehouse**. Give it a unique name of your choice. Make sure the "Lakehouse schemas (Public Preview)" option is disabled.
+1. 왼쪽의 메뉴 바에서 **Create**를 선택합니다. *New* 페이지의 *Data Engineering* 섹션에서 **Lakehouse**를 선택합니다. 원하는 고유한 이름을 지정합니다. "Lakehouse schemas (Public Preview)" 옵션이 비활성화되어 있는지 확인합니다.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**참고**: **Create** 옵션이 사이드바에 고정되어 있지 않은 경우, 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-    After a minute or so, a new lakehouse will be created:
+    1분 정도 후에 새 Lakehouse가 생성됩니다:
 
-    ![Screenshot of a new lakehouse.](./Images/new-lakehouse.png)
+    ![새 Lakehouse 스크린샷.](./Images/new-lakehouse.png)
 
-1. View the new lakehouse, and note that the **Explorer** pane on the left enables you to browse tables and files in the lakehouse:
+2. 새 Lakehouse를 확인하고, 왼쪽에 있는 **Explorer** 창을 통해 Lakehouse의 Table과 파일을 탐색할 수 있음에 유의하세요:
 
-You can now ingest data into the lakehouse. There are several ways to do this, but for now you’ll download a text file to your local computer (or lab VM if applicable) and then upload it to your lakehouse. 
+이제 Lakehouse로 데이터를 ingest(수집)할 수 있습니다. 이를 위한 여러 가지 방법이 있지만, 지금은 텍스트 파일을 로컬 컴퓨터(해당하는 경우 랩 VM)로 다운로드한 다음 Lakehouse에 업로드합니다.
 
-1. Download the [data file](https://github.com/MicrosoftLearning/dp-data/raw/main/products.csv) from `https://github.com/MicrosoftLearning/dp-data/raw/main/products.csv`, saving it as *products.csv*.
-1. Return to the web browser tab containing your lakehouse, and in the Explorer pane, next to the **Files** folder, select the … menu.  Create a **New subfolder** called *products*.
-1. In the … menu for the products folder, **upload** the *products.csv* file from your local computer (or lab VM if applicable).
-1. After the file has been uploaded, select the **products** folder to verify that the file has been uploaded, as shown here:
+1. `https://github.com/MicrosoftLearning/dp-data/raw/main/products.csv`에서 [데이터 파일](https://github.com/MicrosoftLearning/dp-data/raw/main/products.csv)을 다운로드하여 *products.csv*로 저장합니다.
+2. Lakehouse가 열려 있는 웹 브라우저 탭으로 돌아가서 Explorer 창의 **Files** 폴더 옆에 있는 … 메뉴를 선택합니다. *products*라는 **New subfolder**를 생성합니다.
+3. products 폴더의 … 메뉴에서 로컬 컴퓨터(해당하는 경우 랩 VM)에 있는 *products.csv* 파일을 **업로드**합니다.
+4. 파일이 업로드되면 **products** 폴더를 선택하여 파일이 업로드되었는지 확인합니다. 다음 그림과 같습니다:
 
-    ![Screen picture of products.csv uploaded to the lakehouse.](Images/upload-products.png)
-  
-## Explore data in a DataFrame
+    ![Lakehouse에 업로드된 products.csv 스크린샷.](Images/upload-products.png)
 
-You can now create a Fabric notebook to work with your data. Notebooks provide an interactive environment where you can write and run code.
+## DataFrame에서 데이터 탐색
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Data Engineering* section, select **Notebook**.
+이제 데이터 작업을 위해 Fabric Notebook을 생성할 수 있습니다. Notebook은 코드를 작성하고 실행할 수 있는 대화형 환경을 제공합니다.
 
-    A new notebook named **Notebook 1** is created and opened.
+1. 왼쪽의 메뉴 바에서 **Create**를 선택합니다. *New* 페이지의 *Data Engineering* 섹션에서 **Notebook**을 선택합니다.
 
-    ![Screenshot of a new notebook.](./Images/new-notebook.png)
+    **Notebook 1**이라는 새 Notebook이 생성되고 열립니다.
 
-1. Fabric assigns a name to each notebook you create, such as Notebook 1, Notebook 2, etc. Click the name panel above the **Home** tab on the menu to change the name to something more descriptive.
-1. Select the first cell (which is currently a code cell), and then in the top-right tool bar, use the **M↓** button to convert it to a markdown cell. The text contained in the cell will then be displayed as formatted text.
-1. Use the 🖉 (Edit) button to switch the cell to editing mode, then modify the markdown as shown below.
+    ![새 Notebook 스크린샷.](./Images/new-notebook.png)
+
+2. Fabric은 생성하는 각 Notebook에 Notebook 1, Notebook 2 등과 같은 이름을 할당합니다. 메뉴의 **Home** 탭 위에 있는 이름 패널을 클릭하여 더 설명적인 이름으로 변경합니다.
+3. 첫 번째 셀(현재 코드 셀)을 선택한 다음, 오른쪽 상단 도구 모음에서 **M↓** 버튼을 사용하여 Markdown 셀로 변환합니다. 그러면 셀에 포함된 텍스트가 서식 있는 텍스트로 표시됩니다.
+4. 🖉 (편집) 버튼을 사용하여 셀을 편집 모드로 전환한 다음, 아래와 같이 Markdown을 수정합니다.
 
     ```markdown
-    # Delta Lake tables 
-    Use this notebook to explore Delta Lake functionality 
+    # Delta Lake tables
+    Use this notebook to explore Delta Lake functionality
     ```
 
-1. Click anywhere in the notebook outside of the cell to stop editing it.
-1. In the **Explorer** pane, select **Add data items**, and then select **Existing data sources**. Connect to the lakehouse you created previously.
-1. Add a new code cell, and add the following code to read the products data into a DataFrame using a defined schema:
+5. 셀 외부의 Notebook 아무 곳이나 클릭하여 편집을 중지합니다.
+6. **Explorer** 창에서 **Add data items**를 선택한 다음, **Existing data sources**를 선택합니다. 이전에 생성한 Lakehouse에 연결합니다.
+7. 새 코드 셀을 추가하고 다음 코드를 추가하여 정의된 Schema를 사용하여 products 데이터를 DataFrame으로 읽습니다:
 
     ```python
    from pyspark.sql.types import StructType, IntegerType, StringType, DoubleType
@@ -86,93 +86,93 @@ You can now create a Fabric notebook to work with your data. Notebooks provide a
     ```
 
 > [!TIP]
-> Hide or display the explorer panes by using the chevron « icon. This enables you to either focus on the notebook, or your files.
+> 셰브론 « 아이콘을 사용하여 Explorer 창을 숨기거나 표시할 수 있습니다. 이를 통해 Notebook 또는 파일에 집중할 수 있습니다.
 
-1. Use the **Run cell** (▷) button on the left of the cell to run it.
+8. 셀 왼쪽에 있는 **Run cell** (▷) 버튼을 사용하여 셀을 실행합니다.
 
 > [!NOTE]
-> Since this is the first time you’ve run any code in this notebook, a Spark session must be started. This means that the first run can take a minute or so to complete. Subsequent runs will be quicker.
+> 이 Notebook에서 코드를 처음 실행하는 것이므로 Spark session을 시작해야 합니다. 이는 첫 실행에 1분 정도 소요될 수 있음을 의미합니다. 이후 실행은 더 빨라집니다.
 
-1. When the cell code has completed, review the output below the cell, which should look similar to this:
+9. 셀 코드가 완료되면, 다음 그림과 유사하게 표시되어야 하는 셀 아래의 출력을 검토합니다:
 
-    ![Screen picture of products.csv data.](Images/products-schema.png)
- 
-## Create Delta tables
+    ![products.csv 데이터 스크린샷.](Images/products-schema.png)
 
-You can save the DataFrame as a Delta table by using the *saveAsTable* method. Delta Lake supports the creation of both managed and external tables:
+## Delta Table 생성
 
-   * **Managed** Delta tables benefit from higher performance, as Fabric manages both the schema metadata and the data files.
-   * **External** tables allow you to store data externally, with the metadata managed by Fabric.
+*saveAsTable* 메서드를 사용하여 DataFrame을 Delta Table로 저장할 수 있습니다. Delta Lake는 Managed Table과 External Table 생성을 모두 지원합니다:
 
-### Create a managed table
+*   **Managed** Delta Table은 Fabric이 Schema Metadata와 데이터 파일 모두를 관리하므로 더 높은 성능을 제공합니다.
+*   **External** Table은 Metadata가 Fabric에 의해 관리되면서 데이터를 외부에 저장할 수 있도록 합니다.
 
-The data files are created in the **Tables** folder.
+### Managed Table 생성
 
-1. Under the results returned by the first code cell, use the + Code icon to add a new code cell.
+데이터 파일은 **Tables** 폴더에 생성됩니다.
+
+1. 첫 번째 코드 셀에서 반환된 결과 아래에서 + Code 아이콘을 사용하여 새 코드 셀을 추가합니다.
 
 > [!TIP]
-> To see the + Code icon, move the mouse to just below and to the left of the output from the current cell. Alternatively, in the menu bar, on the Edit tab, select **+ Add code cell**.
+> + Code 아이콘을 보려면 마우스를 현재 셀의 출력 바로 아래쪽과 왼쪽으로 이동합니다. 또는 메뉴 바의 Edit 탭에서 **+ Add code cell**을 선택합니다.
 
-1. To create a managed Delta table, add a new cell, enter the following code and then run the cell:
+2. Managed Delta Table을 생성하려면 새 셀을 추가하고 다음 코드를 입력한 다음 셀을 실행합니다:
 
     ```python
    df.write.format("delta").saveAsTable("managed_products")
     ```
 
-1. In the Explorer pane, **Refresh** the Tables folder and expand the Tables node to verify that the **managed_products** table has been created.
+3. Explorer 창에서 Tables 폴더를 **새로 고침**하고 Tables 노드를 확장하여 **managed_products** Table이 생성되었는지 확인합니다.
 
 > [!NOTE]
-> The triangle icon next to the file name indicates a Delta table.
+> 파일 이름 옆의 삼각형 아이콘은 Delta Table을 나타냅니다.
 
-The files for managed tables are stored in the **Tables** folder in the lakehouse. A folder named *managed_products* has been created which stores the Parquet files and delta_log folder for the table.
+Managed Table의 파일은 Lakehouse의 **Tables** 폴더에 저장됩니다. *managed_products*라는 폴더가 생성되어 Table의 Parquet 파일과 delta_log 폴더를 저장합니다.
 
-### Create an external table
+### External Table 생성
 
-You can also create external tables, which may be stored somewhere other than the lakehouse, with the schema metadata stored in the lakehouse.
+External Table을 생성할 수도 있으며, 이 테이블은 Lakehouse가 아닌 다른 곳에 저장될 수 있으며 Schema Metadata는 Lakehouse에 저장됩니다.
 
-1. In the Explorer pane, in the … menu for the **Files** folder, select **Copy ABFS path**. The ABFS path is the fully qualified path to the lakehouse Files folder.
+1. Explorer 창의 **Files** 폴더에 대한 … 메뉴에서 **Copy ABFS path**를 선택합니다. ABFS path는 Lakehouse Files 폴더에 대한 전체 경로입니다.
 
-1. In a new code cell, paste the ABFS path. Add the following code, using cut and paste to insert the abfs_path into the correct place in the code:
+2. 새 코드 셀에 ABFS path를 붙여넣습니다. 다음 코드를 추가하고, 잘라내기 및 붙여넣기를 사용하여 abfs_path를 코드의 올바른 위치에 삽입합니다:
 
     ```python
    df.write.format("delta").saveAsTable("external_products", path="abfs_path/external_products")
     ```
 
-1. The full path should look similar to this:
+3. 전체 경로는 다음과 유사하게 표시되어야 합니다:
 
     ```python
    abfss://workspace@tenant-onelake.dfs.fabric.microsoft.com/lakehousename.Lakehouse/Files/external_products
     ```
 
-1. **Run** the cell to save the DataFrame as an external table in the Files/external_products folder.
+4. 셀을 **실행**하여 DataFrame을 Files/external_products 폴더에 External Table로 저장합니다.
 
-1. In the Explorer pane, **Refresh** the Tables folder and expand the Tables node and verify that the external_products table has been created containing the schema metadata.
+5. Explorer 창에서 Tables 폴더를 **새로 고침**하고 Tables 노드를 확장하여 external_products Table이 Schema Metadata를 포함하여 생성되었는지 확인합니다.
 
-1. In the Explorer pane, in the … menu for the Files folder, select **Refresh**. Then expand the Files node and verify that the external_products folder has been created for the table’s data files.
+6. Explorer 창의 Files 폴더에 대한 … 메뉴에서 **새로 고침**을 선택합니다. 그런 다음 Files 노드를 확장하여 Table의 데이터 파일을 위한 external_products 폴더가 생성되었는지 확인합니다.
 
-### Compare managed and external tables
+### Managed Table과 External Table 비교
 
-Let’s explore the differences between managed and external tables using the %%sql magic command.
+%%sql magic command를 사용하여 Managed Table과 External Table 간의 차이점을 탐색해 보겠습니다.
 
-1. In a new code cell and run the following code:
+1. 새 코드 셀에서 다음 코드를 실행합니다:
 
     ```python
    %%sql
    DESCRIBE FORMATTED managed_products;
     ```
 
-1. In the results, view the Location property for the table. Click on the Location value in the Data type column to see the full path. Notice that the OneLake storage location ends with /Tables/managed_products.
+2. 결과에서 Table의 Location 속성을 확인합니다. Data type 열의 Location 값을 클릭하여 전체 경로를 확인합니다. OneLake 저장 위치가 /Tables/managed_products로 끝나는 것을 확인하세요.
 
-1. Modify the DESCRIBE command to show the details of the external_products table as shown here:
+3. DESCRIBE 명령을 수정하여 다음 그림과 같이 external_products Table의 세부 정보를 표시합니다:
 
     ```python
    %%sql
    DESCRIBE FORMATTED external_products;
     ```
 
-1. Run the cell and in the results, view the Location property for the table. Widen the Data type column to see the full path and notice that the OneLake storage locations ends with /Files/external_products.
+4. 셀을 실행하고 결과에서 Table의 Location 속성을 확인합니다. Data type 열을 넓혀 전체 경로를 확인하고 OneLake 저장 위치가 /Files/external_products로 끝나는 것을 확인하세요.
 
-1. In a new code cell and run the following code:
+5. 새 코드 셀에서 다음 코드를 실행합니다:
 
     ```python
    %%sql
@@ -180,16 +180,16 @@ Let’s explore the differences between managed and external tables using the %%
    DROP TABLE external_products;
     ```
 
-1. In the Explorer pane, **Refresh** the Tables folder to verify that no tables are listed in the Tables node.
-1. In the Explorer pane, **Refresh** the Files folder and verify that the external_products file has *not* been deleted. Select this folder to view the Parquet data files and _delta_log folder. 
+6. Explorer 창에서 Tables 폴더를 **새로 고침**하여 Tables 노드에 Table이 나열되지 않는지 확인합니다.
+7. Explorer 창에서 Files 폴더를 **새로 고침**하고 external_products 파일이 삭제되지 *않았는지* 확인합니다. 이 폴더를 선택하여 Parquet 데이터 파일과 _delta_log 폴더를 확인합니다.
 
-The metadata for the external table was deleted, but not the data file.
+External Table의 Metadata는 삭제되었지만, 데이터 파일은 삭제되지 않았습니다.
 
-## Use SQL to create a Delta table
+## SQL을 사용하여 Delta Table 생성
 
-You will now create a Delta table, using the %%sql magic command. 
+이제 %%sql magic command를 사용하여 Delta Table을 생성합니다.
 
-1. Add another code cell and run the following code:
+1. 다른 코드 셀을 추가하고 다음 코드를 실행합니다:
 
     ```python
    %%sql
@@ -198,19 +198,19 @@ You will now create a Delta table, using the %%sql magic command.
    LOCATION 'Files/external_products';
     ```
 
-1. In the Explorer pane, in the … menu for the **Tables** folder, select **Refresh**. Then expand the Tables node and verify that a new table named *products* is listed. Then expand the table to view the schema.
-1. Add another code cell and run the following code:
+2. Explorer 창의 **Tables** 폴더에 대한 … 메뉴에서 **새로 고침**을 선택합니다. 그런 다음 Tables 노드를 확장하여 *products*라는 새 Table이 나열되는지 확인합니다. 이어서 Table을 확장하여 Schema를 확인합니다.
+3. 다른 코드 셀을 추가하고 다음 코드를 실행합니다:
 
     ```python
    %%sql
    SELECT * FROM products;
     ```
 
-## Explore table versioning
+## Table 버전 관리 탐색
 
-Transaction history for Delta tables is stored in JSON files in the delta_log folder. You can use this transaction log to manage data versioning.
+Delta Table의 트랜잭션 기록은 delta_log 폴더의 JSON 파일에 저장됩니다. 이 트랜잭션 로그를 사용하여 데이터 버전 관리를 관리할 수 있습니다.
 
-1. Add a new code cell to the notebook and run the following code which implements a 10% reduction in the price for mountain bikes:
+1. Notebook에 새 코드 셀을 추가하고 산악 자전거 가격을 10% 인하하는 다음 코드를 실행합니다:
 
     ```python
    %%sql
@@ -219,16 +219,16 @@ Transaction history for Delta tables is stored in JSON files in the delta_log fo
    WHERE Category = 'Mountain Bikes';
     ```
 
-1. Add another code cell and run the following code:
+2. 다른 코드 셀을 추가하고 다음 코드를 실행합니다:
 
     ```python
    %%sql
    DESCRIBE HISTORY products;
     ```
 
-The results show the history of transactions recorded for the table.
+결과는 Table에 기록된 트랜잭션 기록을 보여줍니다.
 
-1. Add another code cell and run the following code:
+3. 다른 코드 셀을 추가하고 다음 코드를 실행합니다:
 
     ```python
    delta_table_path = 'Files/external_products'
@@ -241,13 +241,13 @@ The results show the history of transactions recorded for the table.
    display(original_data)
     ```
 
-Two result sets are returned - one containing the data after the price reduction, and the other showing the original version of the data.
+두 개의 결과 세트가 반환됩니다. 하나는 가격 인하 후의 데이터를 포함하고, 다른 하나는 원본 버전의 데이터를 보여줍니다.
 
-## Analyze Delta table data with SQL queries
+## SQL 쿼리로 Delta Table 데이터 분석
 
-Using the SQL magic command you can use SQL syntax instead of Pyspark. Here you will create a temporary view from the products table using a `SELECT` statement.
+SQL magic command를 사용하면 PySpark 대신 SQL 구문을 사용할 수 있습니다. 여기서는 `SELECT` 문을 사용하여 products Table에서 임시 View를 생성합니다.
 
-1. Add a new code cell, and run the following code to create and display the temporary view:
+1. 새 코드 셀을 추가하고 다음 코드를 실행하여 임시 View를 생성하고 표시합니다:
 
     ```python
    %%sql
@@ -260,10 +260,10 @@ Using the SQL magic command you can use SQL syntax instead of Pyspark. Here you 
 
    SELECT *
    FROM products_view
-   ORDER BY Category;    
+   ORDER BY Category;
     ```
 
-1. Add a new code cell, and run the following code to return the top 10 categories by number of products:
+2. 새 코드 셀을 추가하고 다음 코드를 실행하여 제품 수 기준으로 상위 10개 Category를 반환합니다:
 
     ```python
    %%sql
@@ -273,13 +273,13 @@ Using the SQL magic command you can use SQL syntax instead of Pyspark. Here you 
    LIMIT 10;
     ```
 
-1. When the data is returned, select **+ New chart** to display one of the suggested charts.
+3. 데이터가 반환되면 **+ New chart**를 선택하여 제안된 차트 중 하나를 표시합니다.
 
-    ![Screen picture of SQL select statement and results.](Images/sql-select.png)
+    ![SQL SELECT 문 및 결과 스크린샷.](Images/sql-select.png)
 
-Alternatively, you can run a SQL query using PySpark.
+또는 PySpark를 사용하여 SQL 쿼리를 실행할 수 있습니다.
 
-1. Add a new code cell, and run the following code:
+1. 새 코드 셀을 추가하고 다음 코드를 실행합니다:
 
     ```python
    from pyspark.sql.functions import col, desc
@@ -288,11 +288,11 @@ Alternatively, you can run a SQL query using PySpark.
    display(df_products.limit(6))
     ```
 
-## Use Delta tables for streaming data
+## 스트리밍 데이터에 Delta Table 사용
 
-Delta Lake supports streaming data. Delta tables can be a sink or a source for data streams created using the Spark Structured Streaming API. In this example, you’ll use a Delta table as a sink for some streaming data in a simulated internet of things (IoT) scenario.
+Delta Lake는 스트리밍 데이터를 지원합니다. Delta Table은 Spark Structured Streaming API를 사용하여 생성된 데이터 스트림의 Sink 또는 Source가 될 수 있습니다. 이 예시에서는 시뮬레이션된 IoT(Internet of Things) 시나리오에서 일부 스트리밍 데이터의 Sink로 Delta Table을 사용합니다.
 
-1.	Add a new code cell and add the following code and run it:
+1. 새 코드 셀을 추가하고 다음 코드를 추가하여 실행합니다:
 
     ```python
     from notebookutils import mssparkutils
@@ -326,9 +326,9 @@ Delta Lake supports streaming data. Delta tables can be a sink or a source for d
     print("Source stream created...")
     ```
 
-Ensure the message *Source stream created…* is displayed. The code you just ran has created a streaming data source based on a folder to which some data has been saved, representing readings from hypothetical IoT devices.
+*Source stream created…* 메시지가 표시되는지 확인합니다. 방금 실행한 코드는 가상의 IoT 디바이스에서 읽은 데이터를 나타내는, 일부 데이터가 저장된 폴더를 기반으로 스트리밍 데이터 Source를 생성했습니다.
 
-1. In a new code cell, add and run the following code:
+2. 새 코드 셀에 다음 코드를 추가하고 실행합니다:
 
     ```python
    # Write the stream to a delta table
@@ -338,18 +338,18 @@ Ensure the message *Source stream created…* is displayed. The code you just ra
    print("Streaming to delta sink...")
     ```
 
-This code writes the streaming device data in Delta format to a folder named iotdevicedata. Because the path for the folder location in the Tables folder, a table will automatically be created for it.
+이 코드는 스트리밍 디바이스 데이터를 Delta 형식으로 iotdevicedata라는 폴더에 씁니다. Tables 폴더에 있는 폴더 위치의 경로 때문에 해당 폴더에 Table이 자동으로 생성됩니다.
 
-1. In a new code cell, add and run the following code:
+3. 새 코드 셀에 다음 코드를 추가하고 실행합니다:
 
     ```python
    %%sql
    SELECT * FROM IotDeviceData;
     ```
 
-This code queries the IotDeviceData table, which contains the device data from the streaming source.
+이 코드는 스트리밍 Source에서 가져온 디바이스 데이터를 포함하는 IotDeviceData Table을 쿼리합니다.
 
-1. In a new code cell, add and run the following code:
+4. 새 코드 셀에 다음 코드를 추가하고 실행합니다:
 
     ```python
    # Add more data to the source stream
@@ -364,29 +364,29 @@ This code queries the IotDeviceData table, which contains the device data from t
    mssparkutils.fs.put(inputPath + "more-data.txt", more_data, True)
     ```
 
-This code writes more hypothetical device data to the streaming source.
+이 코드는 더 많은 가상의 디바이스 데이터를 스트리밍 Source에 씁니다.
 
-1. Re-run the cell containing the following code:
+5. 다음 코드가 포함된 셀을 다시 실행합니다:
 
     ```python
    %%sql
    SELECT * FROM IotDeviceData;
     ```
 
-This code queries the IotDeviceData table again, which should now include the additional data that was added to the streaming source.
+이 코드는 IotDeviceData Table을 다시 쿼리합니다. 이 테이블에는 이제 스트리밍 Source에 추가된 추가 데이터가 포함되어야 합니다.
 
-1. In a new code cell, add code to stop the stream and run the cell:
+6. 새 코드 셀에 스트림을 중지하는 코드를 추가하고 셀을 실행합니다:
 
     ```python
    deltastream.stop()
     ```
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you’ve learned how to work with Delta tables in Microsoft Fabric.
+이 실습에서는 Microsoft Fabric에서 Delta Table을 사용하는 방법을 배웠습니다.
 
-If you’ve finished exploring your lakehouse, you can delete the workspace you created for this exercise.
+Lakehouse 탐색을 마쳤다면, 이 실습을 위해 생성한 Workspace를 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-1. In the … menu on the toolbar, select **Workspace settings**.
-1. In the General section, select **Remove this workspace**.
+1. 왼쪽 바에서 Workspace 아이콘을 선택하여 포함된 모든 항목을 확인합니다.
+2. 도구 모음의 … 메뉴에서 **Workspace settings**를 선택합니다.
+3. General 섹션에서 **Remove this workspace**를 선택합니다.

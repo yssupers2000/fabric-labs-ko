@@ -1,74 +1,74 @@
----
+`---
 lab:
     title: 'Load data into a warehouse using T-SQL'
     module: 'Load data into a warehouse in Microsoft Fabric'
 ---
 
-# Load data into a warehouse using T-SQL
+`# T-SQL을 사용하여 Data Warehouse에 데이터 로드
 
-In Microsoft Fabric, a data warehouse provides a relational database for large-scale analytics. Unlike the default read-only SQL endpoint for tables defined in a lakehouse, a data warehouse provides full SQL semantics; including the ability to insert, update, and delete data in the tables.
+Microsoft Fabric에서 Data Warehouse는 대규모 분석을 위한 관계형 데이터베이스를 제공합니다. Lakehouse에 정의된 테이블의 기본 읽기 전용 SQL endpoint와 달리, Data Warehouse는 테이블에 데이터를 삽입, 업데이트, 삭제하는 기능을 포함하여 전체 SQL semantic(SQL 의미론)을 제공합니다.
 
-This lab will take approximately **30** minutes to complete.
+이 랩을 완료하는 데 약 **30**분이 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric trial](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 실습을 완료하려면 [Microsoft Fabric 평가판](https://learn.microsoft.com/fabric/get-started/fabric-trial)이 필요합니다.
 
-## Create a workspace
+## Workspace 생성
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터를 사용하기 전에, Fabric 평가판이 활성화된 Workspace를 생성하세요.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser, and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1.  브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`에 있는 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명(credentials)으로 로그인합니다.
+2.  왼쪽 메뉴 바에서 **Workspaces** (아이콘은 &#128455;와 유사합니다)를 선택합니다.
+3.  원하는 이름으로 새 Workspace를 생성하고, Fabric Capacity(*Trial*, *Premium*, 또는 *Fabric*)를 포함하는 라이선싱 모드(licensing mode)를 선택하세요.
+4.  새 Workspace가 열리면 비어 있어야 합니다.
 
     ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
 
-## Create a lakehouse and upload files
+## Lakehouse 생성 및 파일 업로드
 
-In our scenario, since we don't have any available data, we must ingest data to be used for loading the warehouse. You'll create a data lakehouse for the data files you're going to use to load the warehouse.
+이 시나리오에서는 사용 가능한 데이터가 없으므로, Data Warehouse 로딩에 사용할 데이터를 ingest(수집)해야 합니다. Data Warehouse를 로드하는 데 사용할 데이터 파일용 Lakehouse를 생성합니다.
 
-1. Select **+ New item** and create a new **Lakehouse** with a name of your choice.
+1.  **+ New item**을 선택하고 원하는 이름으로 새 **Lakehouse**를 생성하세요.
 
-    After a minute or so, a new empty lakehouse will be created. You need to ingest some data into the data lakehouse for analysis. There are multiple ways to do this, but in this exercise you'll download a CSV file to your local computer (or lab VM if applicable) and then upload it to your lakehouse.
+    1분 정도 후에 새 빈 Lakehouse가 생성됩니다. 분석을 위해 Data Lakehouse로 일부 데이터를 ingest(수집)해야 합니다. 이를 수행하는 여러 가지 방법이 있지만, 이 실습에서는 CSV 파일을 로컬 컴퓨터(또는 해당되는 경우 랩 VM)로 다운로드한 다음 Lakehouse에 업로드합니다.
 
-1. Download the file for this exercise from `https://github.com/MicrosoftLearning/dp-data/raw/main/sales.csv`.
+2.  `https://github.com/MicrosoftLearning/dp-data/raw/main/sales.csv`에서 이 실습용 파일을 다운로드합니다.
 
-1. Return to the web browser tab containing your lakehouse, and in the **...** menu for the **Files** folder in the **Explorer** pane, select **Upload** and **Upload files**, and then upload the **sales.csv** file from your local computer (or lab VM if applicable) to the lakehouse.
+3.  Lakehouse가 포함된 웹 브라우저 탭으로 돌아가서, **Explorer** 창의 **Files** 폴더에 있는 **...** 메뉴에서 **Upload**와 **Upload files**를 선택한 다음, 로컬 컴퓨터(또는 해당되는 경우 랩 VM)에서 **sales.csv** 파일을 Lakehouse에 업로드합니다.
 
-1. After the files have been uploaded, select **Files**. Verify that the CSV file has been uploaded, as shown here:
+4.  파일이 업로드된 후 **Files**를 선택하세요. 여기에 표시된 대로 CSV 파일이 업로드되었는지 확인합니다.
 
     ![Screenshot of uploaded file in a lakehouse.](./Images/sales-file-upload.png)
 
-## Create a table in the lakehouse
+## Lakehouse에 테이블 생성
 
-1. In the **...** menu for the **sales.csv** file in the **Explorer** pane, select **Load to tables**, and then **New table**.
+1.  **Explorer** 창의 **sales.csv** 파일에 있는 **...** 메뉴에서 **Load to tables**를 선택한 다음 **New table**을 선택합니다.
 
-1. Provide the following information in the **Load file to new table** dialog.
-    - **New table name:** staging_sales
-    - **Use header for columns names:** Selected
-    - **Separator:** ,
+2.  **Load file to new table** 대화 상자에 다음 정보를 제공합니다.
+    -   **New table name:** staging_sales
+    -   **Use header for columns names:** Selected
+    -   **Separator:** ,
 
-1. Select **Load**.
+3.  **Load**를 선택합니다.
 
-## Create a warehouse
+## Warehouse 생성
 
-Now that you have a workspace, a lakehouse, and the sales table with the data you need, it's time to create a data warehouse.
+이제 Workspace, Lakehouse, 그리고 필요한 데이터가 있는 sales 테이블이 있으니, Data Warehouse를 생성할 차례입니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Data Warehouse* section, select **Warehouse**. Give it a unique name of your choice.
+1.  왼쪽 메뉴 바에서 **Create**를 선택합니다. *New* 페이지의 *Data Warehouse* 섹션에서 **Warehouse**를 선택합니다. 원하는 고유한 이름을 지정하세요.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**참고**: **Create** 옵션이 사이드바에 고정되어 있지 않은 경우, 먼저 줄임표 (**...**) 옵션을 선택해야 합니다.
 
-    After a minute or so, a new warehouse will be created:
+    1분 정도 후에 새 Warehouse가 생성됩니다.
 
     ![Screenshot of a new warehouse.](./Images/new-empty-data-warehouse.png)
 
-## Create fact table, dimensions and view
+## Fact table, dimension 및 View 생성
 
-Let's create the fact tables and dimensions for the Sales data. You'll also create a view pointing to a lakehouse, this simplifies the code in the stored procedure we'll use to load.
+Sales 데이터에 대한 Fact table(팩트 테이블)과 dimension(차원)을 생성해 봅시다. Lakehouse를 가리키는 view(뷰)도 생성할 것인데, 이는 로드에 사용할 stored procedure(저장 프로시저)의 코드를 단순화합니다.
 
-1. From your workspace, select the warehouse you created.
+1.  Workspace에서 생성한 Warehouse를 선택합니다.
 
-1. In the warehouse toolbar, select **New SQL query**, then copy and run the following query.
+2.  Warehouse 도구 모음에서 **New SQL query**를 선택한 다음, 다음 쿼리를 복사하여 실행합니다.
 
     ```sql
     CREATE SCHEMA [Sales]
@@ -106,13 +106,13 @@ Let's create the fact tables and dimensions for the Sales data. You'll also crea
     GO
     ```
 
-    > **Important:** In a data warehouse, foreign key constraints are not always necessary at the table level. While foreign key constraints can help ensure data integrity, they can also add overhead to the ETL (Extract, Transform, Load) process and slow down data loading. The decision to use foreign key constraints in a data warehouse should be based on a careful consideration of the trade-offs between data integrity and performance.
+    > **중요**: Data Warehouse에서 foreign key constraint(외래 키 제약 조건)는 테이블 수준에서 항상 필요한 것은 아닙니다. Foreign key constraint(외래 키 제약 조건)가 데이터 무결성(data integrity)을 보장하는 데 도움이 될 수 있지만, ETL (Extract, Transform, Load) 프로세스에 오버헤드(overhead)를 추가하고 데이터 로딩 속도를 늦출 수도 있습니다. Data Warehouse에서 foreign key constraint(외래 키 제약 조건) 사용 결정은 데이터 무결성(data integrity)과 성능(performance) 간의 trade-off(장단점)를 신중하게 고려하여 이루어져야 합니다.
 
-1. In the **Explorer**, navigate to **Schemas >> Sales >> Tables**. Note the *Fact_Sales*, *Dim_Customer*, and *Dim_Item* tables you just created.
+3.  **Explorer**에서 **Schemas >> Sales >> Tables**로 이동합니다. 방금 생성한 *Fact_Sales*, *Dim_Customer*, *Dim_Item* 테이블을 확인합니다.
 
-    > **Note**: If you can't see the new schemas, open the **...** menu for **Tables** in the **Explorer** pane, then select **Refresh**.
+    > **참고**: 새 schema(스키마)가 보이지 않으면, **Explorer** 창의 **Tables**에 있는 **...** 메뉴를 열고 **Refresh**를 선택하세요.
 
-1. Open a new **New SQL query** editor, then copy and run the following query. Update *<your lakehouse name>* with the lakehouse you created.
+4.  새 **New SQL query** 편집기를 열고, 다음 쿼리를 복사하여 실행합니다. *<your lakehouse name>*을 생성한 Lakehouse 이름으로 업데이트하세요.
 
     ```sql
     CREATE VIEW Sales.Staging_Sales
@@ -120,15 +120,15 @@ Let's create the fact tables and dimensions for the Sales data. You'll also crea
 	SELECT * FROM [<your lakehouse name>].[dbo].[staging_sales];
     ```
 
-1. In the **Explorer**, navigate to **Schemas >> Sales >> Views**. Note the *Staging_Sales* view you created.
+5.  **Explorer**에서 **Schemas >> Sales >> Views**로 이동합니다. 생성한 *Staging_Sales* view(뷰)를 확인합니다.
 
-## Load data to the warehouse
+## Warehouse로 데이터 로드
 
-Now that the fact and dimensions tables are created, let's create a stored procedure to load the data from our lakehouse into the warehouse. Because of the automatic SQL endpoint created when we create the lakehouse, you can directly access the data in your lakehouse from the warehouse using T-SQL and cross-database queries.
+이제 fact 테이블과 dimension 테이블이 생성되었으므로, Lakehouse에서 Data Warehouse로 데이터를 로드하는 stored procedure(저장 프로시저)를 생성해 보겠습니다. Lakehouse 생성 시 자동으로 생성되는 SQL endpoint 덕분에 T-SQL과 cross-database query(교차 데이터베이스 쿼리)를 사용하여 Warehouse에서 Lakehouse의 데이터에 직접 액세스할 수 있습니다.
 
-For the sake of simplicity in this case study, you'll use the customer name and item name as the primary keys.
+이 사례 연구의 단순화를 위해 고객 이름과 항목 이름을 primary key(기본 키)로 사용합니다.
 
-1. Create a new **New SQL query** editor, then copy and run the following query.
+1.  새 **New SQL query** 편집기를 생성하고, 다음 쿼리를 복사하여 실행합니다.
 
     ```sql
     CREATE OR ALTER PROCEDURE Sales.LoadDataFromStaging (@OrderYear INT)
@@ -164,19 +164,19 @@ For the sake of simplicity in this case study, you'll use the customer name and 
         WHERE YEAR(OrderDate) = @OrderYear;
     END
     ```
-1. Create a new **New SQL query** editor, then copy and run the following query.
+2.  새 **New SQL query** 편집기를 생성하고, 다음 쿼리를 복사하여 실행합니다.
 
     ```sql
     EXEC Sales.LoadDataFromStaging 2021
     ```
 
-    > **Note:** In this case, we are only loading data from the year 2021. However, you have the option to modify it to load data from previous years.
+    > **참고**: 이 경우 2021년 데이터만 로드하고 있습니다. 하지만 이전 연도의 데이터를 로드하도록 수정할 수 있습니다.
 
-## Run analytical queries
+## 분석 쿼리 실행
 
-Let's run some analytical queries to validate the data in the warehouse.
+Data Warehouse의 데이터를 검증하기 위해 분석 쿼리를 실행해 봅시다.
 
-1. On the top menu, select **New SQL query**, then copy and run the following query.
+1.  상단 메뉴에서 **New SQL query**를 선택한 다음, 다음 쿼리를 복사하여 실행합니다.
 
     ```sql
     SELECT c.CustomerName, SUM(s.UnitPrice * s.Quantity) AS TotalSales
@@ -188,9 +188,9 @@ Let's run some analytical queries to validate the data in the warehouse.
     ORDER BY TotalSales DESC;
     ```
 
-    > **Note:** This query shows the customers by total sales for the year of 2021. The customer with the highest total sales for the specified year is **Jordan Turner**, with total sales of **14686.69**. 
+    > **참고**: 이 쿼리는 2021년 총 판매액(total sales) 기준 고객을 보여줍니다. 지정된 연도에 가장 높은 총 판매액을 기록한 고객은 **Jordan Turner**이며, 총 판매액은 **14686.69**입니다.
 
-1. On the top menu, select **New SQL query** or reuse the same editor, then copy and run the following query.
+2.  상단 메뉴에서 **New SQL query**를 선택하거나 동일한 편집기를 재사용하고, 다음 쿼리를 복사하여 실행합니다.
 
     ```sql
     SELECT i.ItemName, SUM(s.UnitPrice * s.Quantity) AS TotalSales
@@ -203,9 +203,9 @@ Let's run some analytical queries to validate the data in the warehouse.
 
     ```
 
-    > **Note:** This query shows the top-seliing items by total sales for the year of 2021. These results suggest that the *Mountain-200 bike* model, in both black and silver colors, was the most popular item among customers in 2021.
+    > **참고**: 이 쿼리는 2021년 총 판매액(total sales) 기준 베스트셀러 항목을 보여줍니다. 이 결과는 *Mountain-200 bike* 모델(블랙 및 실버 색상 모두)이 2021년 고객들 사이에서 가장 인기 있는 항목이었음을 시사합니다.
 
-1. On the top menu, select **New SQL query** or reuse the same editor, then copy and run the following query.
+3.  상단 메뉴에서 **New SQL query**를 선택하거나 동일한 편집기를 재사용하고, 다음 쿼리를 복사하여 실행합니다.
 
     ```sql
     WITH CategorizedSales AS (
@@ -241,16 +241,16 @@ Let's run some analytical queries to validate the data in the warehouse.
     ORDER BY TotalSales DESC;
     ```
 
-    > **Note:** The results of this query show the top customer for each of the categories: Bike, Helmet, and Gloves, based on their total sales. For example, **Joan Coleman** is the top customer for the **Gloves** category.
+    > **참고**: 이 쿼리의 결과는 총 판매액(total sales)을 기준으로 각 Category(카테고리)인 Bike, Helmet, Gloves의 상위 고객을 보여줍니다. 예를 들어, **Joan Coleman**은 **Gloves** Category(카테고리)의 상위 고객입니다.
     >
-    > The category information was extracted from the `ItemName` column using string manipulation, as there is no separate category column in the dimension table. This approach assumes that the item names follow a consistent naming convention. If the item names do not follow a consistent naming convention, the results may not accurately reflect the true category of each item.
+    > dimension 테이블에 별도의 category column(카테고리 열)이 없으므로, category 정보는 string manipulation(문자열 조작)을 사용하여 `ItemName` 열에서 추출되었습니다. 이 접근 방식은 항목 이름이 일관된 명명 규칙(naming convention)을 따른다고 가정합니다. 항목 이름이 일관된 명명 규칙을 따르지 않는 경우, 결과가 각 항목의 실제 category(카테고리)를 정확하게 반영하지 못할 수 있습니다.
 
-In this exercise, you have created a lakehouse and a data warehouse with multiple tables. You have ingested data and used cross-database queries to load data from the lakehouse to the warehouse. Additionally, you have used the query tool to perform analytical queries.
+이 실습에서는 여러 테이블이 있는 Lakehouse와 Data Warehouse를 생성했습니다. 데이터를 ingest(수집)하고 cross-database query(교차 데이터베이스 쿼리)를 사용하여 Lakehouse에서 Warehouse로 데이터를 로드했습니다. 또한 쿼리 도구를 사용하여 분석 쿼리를 수행했습니다.
 
-## Clean up resources
+## 리소스 정리
 
-If you've finished exploring your data warehouse, you can delete the workspace you created for this exercise.
+Data Warehouse 탐색을 마쳤으면, 이 실습을 위해 생성한 Workspace를 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-1. Select **Workspace settings** and in the **General** section, scroll down and select **Remove this workspace**.
-1. Select **Delete** to delete the workspace.
+1.  왼쪽 바에서 Workspace 아이콘을 선택하여 포함된 모든 항목을 확인합니다.
+2.  **Workspace settings**를 선택하고, **General** 섹션에서 아래로 스크롤하여 **Remove this workspace**를 선택합니다.
+3.  **Delete**를 선택하여 Workspace를 삭제합니다.

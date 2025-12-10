@@ -1,21 +1,21 @@
-# Contributing to Microsoft Learning Repositories
+# Microsoft Learning 리포지토리에 기여하기
 
-MCT contributions are a key part of keeping the lab and demo content current as the Azure platform changes. We want to make it as easy as possible for you to contribute changes to the lab files. Here are a few guidelines to keep in mind as you contribute changes.
+MCT의 기여는 Azure 플랫폼이 변화함에 따라 랩 및 데모 콘텐츠를 최신 상태로 유지하는 데 핵심적인 부분입니다. Microsoft는 랩 파일에 변경 사항을 기여하는 것을 최대한 쉽게 만들고자 합니다. 변경 사항을 기여할 때 유념해야 할 몇 가지 지침이 있습니다.
 
-## GitHub Use & Purpose
+## GitHub 사용 및 목적
 
-Microsoft Learning is using GitHub to publish the lab steps and lab scripts for courses that cover cloud services like Azure. Using GitHub allows the course’s authors and MCTs to keep the lab content current with Azure platform changes. Using GitHub allows the MCTs to provide feedback and suggestions for lab changes, and then the course authors can update lab steps and scripts quickly and relatively easily.
+Microsoft Learning은 Azure와 같은 클라우드 서비스를 다루는 과정(코스)의 랩 단계 및 랩 스크립트를 게시하기 위해 GitHub를 사용하고 있습니다. GitHub를 사용하면 과정(코스)의 저자 및 MCT가 Azure 플랫폼 변경 사항에 맞춰 랩 콘텐츠를 최신 상태로 유지할 수 있습니다. 또한 GitHub를 통해 MCT는 랩 변경에 대한 피드백과 제안을 제공할 수 있으며, 그러면 과정(코스) 저자는 랩 단계 및 스크립트를 빠르고 비교적 쉽게 업데이트할 수 있습니다.
 
-> When you prepare to teach these courses, you should ensure that you are using the latest lab steps and scripts by downloading the appropriate files from GitHub. GitHub should not be used to discuss technical content in the course, or how to prep. It should only be used to address changes in the labs.
+> 이 과정(코스)을 가르칠 준비를 할 때, GitHub에서 해당 파일을 다운로드하여 최신 랩 단계 및 스크립트를 사용하고 있는지 확인해야 합니다. GitHub는 과정(코스)의 기술 콘텐츠나 준비 방법에 대해 논의하는 데 사용되어서는 안 됩니다. 랩의 변경 사항만 다루는 데 사용되어야 합니다.
 
-It is strongly recommended that MCTs and Partners access these materials and in turn, provide them separately to students.  Pointing students directly to GitHub to access Lab steps as part of an ongoing class will require them to access yet another UI as part of the course, contributing to a confusing experience for the student. An explanation to the student regarding why they are receiving separate Lab instructions can highlight the nature of an always-changing cloud-based interface and platform. Microsoft Learning support for accessing files on GitHub and support for navigation of the GitHub site is limited to MCTs teaching this course only.
+MCT 및 파트너가 이러한 자료에 액세스하고, 이어서 학생들에게 별도로 제공하도록 강력히 권장됩니다. 학생들을 GitHub로 직접 안내하여 진행 중인 수업의 일환으로 랩 단계에 액세스하게 하는 것은 학생들이 과정(코스)의 일부로 또 다른 UI에 액세스하도록 요구하여 학생들에게 혼란스러운 경험을 제공할 수 있습니다. 학생들이 별도의 랩 지침을 받는 이유에 대한 설명을 통해 항상 변화하는 클라우드 기반 인터페이스 및 플랫폼의 특성을 강조할 수 있습니다. GitHub의 파일 액세스 및 GitHub 사이트 탐색에 대한 Microsoft Learning 지원은 이 과정(코스)을 가르치는 MCT에게만 제공됩니다.
 
-> As an alternative to pointing students directly to the GitHub repository, you can point students to the GitHub Pages website to view the lab instructions. The URL for the GitHub Pages website can be found at the top of the repository.
+> 학생들을 GitHub 리포지토리로 직접 안내하는 것에 대한 대안으로, 학생들에게 GitHub Pages 웹사이트를 안내하여 랩 지침을 볼 수 있도록 할 수 있습니다. GitHub Pages 웹사이트의 URL은 리포지토리 상단에서 찾을 수 있습니다.
 
-To address general comments about the course and demos, or how to prepare for a course delivery, please use the existing MCT forums.
+과정(코스) 및 데모에 대한 일반적인 의견을 다루거나, 과정(코스) 전달을 준비하는 방법에 대해 논의하려면 기존 MCT 포럼을 사용해 주십시오.
 
-## Additional Resources
+## 추가 리소스
 
-A user guide has been provided for MCTs who are new to GitHub. It provides steps for connecting to GitHub, downloading and printing course materials, updating the scripts that students use in labs, and explaining how you can help ensure that this course’s content remains current.
+GitHub를 처음 사용하는 MCT를 위한 사용자 가이드가 제공되었습니다. 이 가이드는 GitHub에 연결하고, 과정(코스) 자료를 다운로드 및 인쇄하고, 학생들이 랩에서 사용하는 스크립트를 업데이트하고, 이 과정(코스)의 콘텐츠가 최신 상태로 유지되도록 돕는 방법을 설명하는 단계를 제공합니다.
 
 <https://microsoftlearning.github.io/MCT-User-Guide/>

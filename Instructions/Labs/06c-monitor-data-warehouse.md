@@ -1,67 +1,69 @@
+```yaml
 ---
 lab:
     title: 'Monitor a data warehouse in Microsoft Fabric'
     module: 'Monitor a data warehouse in Microsoft Fabric'
 ---
 
-# Monitor a data warehouse in Microsoft Fabric
+# Microsoft Fabric에서 Data Warehouse 모니터링하기
+```
 
-In Microsoft Fabric, a data warehouse provides a relational database for large-scale analytics. Data warehouses in Microsoft Fabric include dynamic management views that you can use to monitor activity and queries.
+Microsoft Fabric에서 Data Warehouse는 대규모 분석을 위한 관계형 데이터베이스를 제공합니다. Microsoft Fabric의 Data Warehouse는 활동 및 쿼리를 모니터링하는 데 사용할 수 있는 동적 관리 뷰(DMV)를 포함합니다.
 
-This lab will take approximately **30** minutes to complete.
+이 랩은 완료하는 데 약 **30**분이 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric trial](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 실습을 완료하려면 [Microsoft Fabric 평가판](https://learn.microsoft.com/fabric/get-started/fabric-trial)이 필요합니다.
 
-## Create a workspace
+## 작업 영역 생성하기
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성화된 작업 영역을 생성하세요.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser, and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`의 [Microsoft Fabric 홈 페이지](https://learn.microsoft.com/fabric/get-started/fabric-trial)로 이동하여 Fabric 자격 증명으로 로그인하세요.
+2. 왼쪽 메뉴 바에서 **Workspaces**를 선택합니다(아이콘은 &#128455;와 유사하게 생겼습니다).
+3. 원하는 이름으로 새 작업 영역을 생성하고, Fabric Capacity를 포함하는 라이선싱 모드(*Trial*, *Premium* 또는 *Fabric*)를 선택합니다.
+4. 새 작업 영역이 열리면 비어 있어야 합니다.
 
     ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
 
-## Create a sample data warehouse
+## 샘플 Data Warehouse 생성하기
 
-Now that you have a workspace, it's time to create a data warehouse.
+이제 작업 영역이 있으므로 Data Warehouse를 생성할 차례입니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Data Warehouse* section, select **Sample warehouse** and create a new data warehouse named **sample-dw**.
+1. 왼쪽 메뉴 바에서 **Create**를 선택합니다. *New* 페이지의 *Data Warehouse* 섹션 아래에서 **Sample warehouse**를 선택하고 **sample-dw**라는 이름으로 새 Data Warehouse를 생성하세요.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    > **참고**: **Create** 옵션이 사이드바에 고정되어 있지 않다면 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-    After a minute or so, a new warehouse will be created and populated with sample data for a taxi ride analysis scenario.
+    1분 정도 지나면 새로운 warehouse가 생성되고 택시 탑승 분석 시나리오를 위한 샘플 데이터로 채워집니다.
 
     ![Screenshot of a new warehouse.](./Images/sample-data-warehouse.png)
 
-## Explore dynamic management views
+## 동적 관리 뷰(DMV) 탐색하기
 
-Microsoft Fabric data warehouses include dynamic management views (DMVs), which you can use to identify current activity in the data warehouse instance.
+Microsoft Fabric Data Warehouse는 Data Warehouse 인스턴스에서 현재 활동을 식별하는 데 사용할 수 있는 동적 관리 뷰(DMV)를 포함합니다.
 
-1. In the **sample-dw** data warehouse page, in the **New SQL query** drop-down list, select **New SQL query**.
-1. In the new blank query pane, enter the following Transact-SQL code to query the **sys.dm_exec_connections** DMV:
+1. **sample-dw** Data Warehouse 페이지의 **New SQL query** 드롭다운 목록에서 **New SQL query**를 선택합니다.
+2. 새 빈 쿼리 창에 다음 Transact-SQL 코드를 입력하여 **sys.dm_exec_connections** DMV를 쿼리하세요.
 
     ```sql
    SELECT * FROM sys.dm_exec_connections;
     ```
 
-1. Use the **&#9655; Run** button to run the SQL script and view the results, which include details of all connections to the data warehouse.
-1. Modify the SQL code to query the **sys.dm_exec_sessions** DMV, like this:
+3. **&#9655; Run** 버튼을 사용하여 SQL 스크립트를 실행하고 Data Warehouse에 대한 모든 연결의 세부 정보를 포함하는 결과를 확인하세요.
+4. 다음과 같이 SQL 코드를 수정하여 **sys.dm_exec_sessions** DMV를 쿼리하세요.
 
     ```sql
    SELECT * FROM sys.dm_exec_sessions;
     ```
 
-1. Run the modified query and view the results, which show details of all authenticated sessions.
-1. Modify the SQL code to query the **sys.dm_exec_requests** DMV, like this:
+5. 수정된 쿼리를 실행하고 모든 인증된 세션의 세부 정보를 보여주는 결과를 확인하세요.
+6. 다음과 같이 SQL 코드를 수정하여 **sys.dm_exec_requests** DMV를 쿼리하세요.
 
     ```sql
    SELECT * FROM sys.dm_exec_requests;
     ```
 
-1. Run the modified query and view the results, which show details of all requests being executed in the data warehouse.
-1. Modify the SQL code to join the DMVs and return information about currently running requests in the same database, like this:
+7. 수정된 쿼리를 실행하고 Data Warehouse에서 실행 중인 모든 요청의 세부 정보를 보여주는 결과를 확인하세요.
+8. 다음과 같이 SQL 코드를 수정하여 DMV를 조인하고 동일한 데이터베이스에서 현재 실행 중인 요청에 대한 정보를 반환하세요.
 
     ```sql
    SELECT connections.connection_id,
@@ -77,58 +79,57 @@ Microsoft Fabric data warehouses include dynamic management views (DMVs), which 
    ORDER BY requests.total_elapsed_time DESC;
     ```
 
-1. Run the modified query and view the results, which show details of all running queries in the database (including this one).
-1. In the **New SQL query** drop-down list, select **New SQL query** to add a second query tab. Then in the new empty query tab, run the following code:
+9. 수정된 쿼리를 실행하고 데이터베이스에서 실행 중인 모든 쿼리의 세부 정보(현재 쿼리 포함)를 보여주는 결과를 확인하세요.
+10. **New SQL query** 드롭다운 목록에서 **New SQL query**를 선택하여 두 번째 쿼리 탭을 추가하세요. 그런 다음 새 빈 쿼리 탭에서 다음 코드를 실행하세요.
 
     ```sql
    WHILE 1 = 1
        SELECT * FROM Trip;
     ```
 
-1. Leave the query running, and return to the tab containing the code to query the DMVs and re-run it. This time, the results should include the second query that is running in the other tab. Note the elapsed time for that query.
-1. Wait a few seconds and re-run the code to query the DMVs again. The elapsed time for the query in the other tab should have increased.
-1. Return to the second query tab where the query is still running and select **Cancel** to cancel it.
-1. Back on the tab with the code to query the DMVs, re-run the query to confirm that the second query is no longer running.
-1. Close all query tabs.
+11. 쿼리를 계속 실행 상태로 두고, DMV를 쿼리하는 코드가 있는 탭으로 돌아가서 다시 실행하세요. 이번에는 결과에 다른 탭에서 실행 중인 두 번째 쿼리가 포함되어야 합니다. 해당 쿼리의 경과 시간을 기록해두세요.
+12. 몇 초 기다린 다음 DMV를 쿼리하는 코드를 다시 실행하세요. 다른 탭의 쿼리에 대한 경과 시간이 증가해야 합니다.
+13. 쿼리가 여전히 실행 중인 두 번째 쿼리 탭으로 돌아가서 **Cancel**을 선택하여 쿼리를 취소하세요.
+14. DMV를 쿼리하는 코드가 있는 탭으로 돌아가서 쿼리를 다시 실행하여 두 번째 쿼리가 더 이상 실행되지 않는지 확인하세요.
+15. 모든 쿼리 탭을 닫으세요.
 
-> **Further Information**: See [Monitor connections, sessions, and requests using DMVs](https://learn.microsoft.com/fabric/data-warehouse/monitor-using-dmv) in the Microsoft Fabric documentation for more information about using DMVs.
+> **추가 정보**: DMV 사용에 대한 자세한 내용은 Microsoft Fabric 설명서의 [DMV를 사용하여 연결, 세션 및 요청 모니터링](https://learn.microsoft.com/fabric/data-warehouse/monitor-using-dmv)을 참조하세요.
 
-## Explore query insights
+## Query insights 탐색하기
 
-Microsoft Fabric data warehouses provide *query insights* - a special set of views that provide details about the queries being run in your data warehouse.
+Microsoft Fabric Data Warehouse는 Data Warehouse에서 실행 중인 쿼리에 대한 세부 정보를 제공하는 특별한 뷰(view) 집합인 *Query insights*를 제공합니다.
 
-1. In the **sample-dw** data warehouse page, in the **New SQL query** drop-down list, select **New SQL query**.
-1. In the new blank query pane, enter the following Transact-SQL code to query the **exec_requests_history** view:
+1. **sample-dw** Data Warehouse 페이지의 **New SQL query** 드롭다운 목록에서 **New SQL query**를 선택합니다.
+2. 새 빈 쿼리 창에 다음 Transact-SQL 코드를 입력하여 **exec_requests_history** 뷰(view)를 쿼리하세요.
 
     ```sql
    SELECT * FROM queryinsights.exec_requests_history;
     ```
 
-1. Use the **&#9655; Run** button to run the SQL script and view the results, which include details of previously executed queries.
-1. Modify the SQL code to query the **frequently_run_queries** view, like this:
+3. **&#9655; Run** 버튼을 사용하여 SQL 스크립트를 실행하고 이전에 실행된 쿼리의 세부 정보를 포함하는 결과를 확인하세요.
+4. 다음과 같이 SQL 코드를 수정하여 **frequently_run_queries** 뷰(view)를 쿼리하세요.
 
     ```sql
    SELECT * FROM queryinsights.frequently_run_queries;
     ```
 
-1. Run the modified query and view the results, which show details of frequently run queries.
-1. Modify the SQL code to query the **long_running_queries** view, like this:
+5. 수정된 쿼리를 실행하고 자주 실행되는 쿼리의 세부 정보를 보여주는 결과를 확인하세요.
+6. 다음과 같이 SQL 코드를 수정하여 **long_running_queries** 뷰(view)를 쿼리하세요.
 
     ```sql
    SELECT * FROM queryinsights.long_running_queries;
     ```
 
-1. Run the modified query and view the results, which show details of all queries and their durations.
+7. 수정된 쿼리를 실행하고 모든 쿼리 및 해당 지속 시간의 세부 정보를 보여주는 결과를 확인하세요.
 
-> **Further Information**: See [Query insights in Fabric data warehousing](https://learn.microsoft.com/fabric/data-warehouse/query-insights) in the Microsoft Fabric documentation for more information about using query insights.
+> **추가 정보**: Query insights 사용에 대한 자세한 내용은 Microsoft Fabric 설명서의 [Fabric Data Warehousing의 Query insights](https://learn.microsoft.com/fabric/data-warehouse/query-insights)를 참조하세요.
 
+## 리소스 정리하기
 
-## Clean up resources
+이 실습에서는 Microsoft Fabric Data Warehouse의 활동을 모니터링하기 위해 동적 관리 뷰(DMV)와 Query insights를 사용했습니다.
 
-In this exercise, you have used dynamic management views and query insights to monitor activity in a Microsoft Fabric data warehouse.
+Data Warehouse 탐색을 마쳤다면 이 실습을 위해 생성한 작업 영역을 삭제할 수 있습니다.
 
-If you've finished exploring your data warehouse, you can delete the workspace you created for this exercise.
-
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-1. Select **Workspace settings** and in the **General** section, scroll down and select **Remove this workspace**.
-1. Select **Delete** to delete the workspace.
+1. 왼쪽 바에서 작업 영역 아이콘을 선택하여 포함된 모든 항목을 확인하세요.
+2. **Workspace settings**를 선택하고 **General** 섹션에서 아래로 스크롤하여 **Remove this workspace**를 선택합니다.
+3. **Delete**를 선택하여 작업 영역을 삭제합니다.

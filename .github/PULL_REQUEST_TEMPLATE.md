@@ -1,9 +1,9 @@
-# Module: 00
-## Lab/Demo: 00
+# 모듈: 00
+## 실습/데모: 00
 
-Fixes # .
+해결합니다 # .
 
-Changes proposed in this pull request:
+이 pull request에서 제안된 변경 사항:
 
 -
 -

@@ -4,40 +4,40 @@ lab:
     module: 'Explore data for data science with notebooks in Microsoft Fabric'
 ---
 
-# Explore data for data science with notebooks in Microsoft Fabric
+# Microsoft Fabric에서 Notebook을 사용하여 데이터 과학을 위한 데이터 탐색
 
-In this lab, we'll use notebooks for data exploration. Notebooks are a powerful tool for interactively exploring and analyzing data. During this exercise, we'll learn how to create and use notebooks to explore a dataset, generate summary statistics, and create visualizations to better understand the data. By the end of this lab, you'll have a solid understanding of how to use notebooks for data exploration and analysis.
+이 랩에서는 데이터 탐색을 위해 Notebook을 사용합니다. Notebook은 데이터를 대화식으로 탐색하고 분석하기 위한 강력한 도구입니다. 이 실습 동안 데이터셋을 탐색하고, 요약 통계(summary statistics)를 생성하며, 데이터를 더 잘 이해하기 위한 시각화를 생성하기 위해 Notebook을 생성하고 사용하는 방법을 배웁니다. 이 랩을 마치면 데이터 탐색 및 분석을 위해 Notebook을 사용하는 방법에 대한 확실한 이해를 갖게 될 것입니다.
 
-This lab takes approximately **30** minutes to complete.
+이 랩을 완료하는 데 약 **30**분이 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric trial](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 실습을 완료하려면 [Microsoft Fabric 평가판](https://learn.microsoft.com/fabric/get-started/fabric-trial)이 필요합니다.
 
-## Create a workspace
+## 워크스페이스 생성
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터를 사용하기 전에 Fabric 평가판이 활성화된 워크스페이스를 생성합니다.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser, and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`에 있는 [Microsoft Fabric 홈페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+1. 왼쪽 메뉴 바에서 **Workspaces** (아이콘은 &#128455;와 비슷합니다)를 선택합니다.
+1. 원하는 이름으로 새 워크스페이스를 생성하고, Fabric Capacity를 포함하는 라이선스 모드(*Trial*, *Premium* 또는 *Fabric*)를 선택합니다.
+1. 새 워크스페이스가 열리면 비어 있어야 합니다.
 
-    ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
+    ![Fabric의 비어 있는 워크스페이스 스크린샷.](./Images/new-workspace.png)
 
-## Create a notebook
+## Notebook 생성
 
-To train a model, you can create a *notebook*. Notebooks provide an interactive environment in which you can write and run code (in multiple languages) as *experiments*.
+모델을 학습시키려면 *Notebook*을 생성할 수 있습니다. Notebook은 *실험(experiments)*으로 코드를 작성하고 실행(여러 언어 지원)할 수 있는 대화형 환경을 제공합니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Data Science* section, select **Notebook**. Give it a unique name of your choice.
+1. 왼쪽 메뉴 바에서 **만들기**를 선택합니다. *새로 만들기* 페이지의 *데이터 과학* 섹션에서 **Notebook**을 선택합니다. 원하는 고유한 이름을 지정합니다.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**참고**: **만들기** 옵션이 사이드바에 고정되어 있지 않으면 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-    After a few seconds, a new notebook containing a single *cell* will open. Notebooks are made up of one or more cells that can contain *code* or *markdown* (formatted text).
+    몇 초 후에 단일 *셀*을 포함하는 새 Notebook이 열립니다. Notebook은 *코드* 또는 *Markdown* (형식화된 텍스트)을 포함할 수 있는 하나 이상의 셀로 구성됩니다.
 
-1. Select the first cell (which is currently a *code* cell), and then in the dynamic tool bar at its top-right, use the **M&#8595;** button to convert the cell to a *markdown* cell.
+1. 첫 번째 셀(현재 *코드* 셀)을 선택한 다음, 오른쪽 상단에 있는 동적 도구 모음에서 **M&#8595;** 버튼을 사용하여 셀을 *Markdown* 셀로 변환합니다.
 
-    When the cell changes to a markdown cell, the text it contains is rendered.
+    셀이 Markdown 셀로 변경되면 포함된 텍스트가 렌더링(rendered)됩니다.
 
-1. If necessary, use the **&#128393;** (Edit) button to switch the cell to editing mode, then delete the content and enter the following text:
+1. 필요한 경우 **&#128393;** (편집) 버튼을 사용하여 셀을 편집 모드로 전환한 다음, 내용을 삭제하고 다음 텍스트를 입력합니다.
 
     ```text
    # Perform data exploration for data science
@@ -45,15 +45,15 @@ To train a model, you can create a *notebook*. Notebooks provide an interactive 
    Use the code in this notebook to perform data exploration for data science.
     ```
 
-## Load data into a dataframe
+## 데이터프레임으로 데이터 로드
 
-Now you're ready to run code to get data. You'll work with the [**diabetes dataset**](https://learn.microsoft.com/azure/open-datasets/dataset-diabetes?tabs=azureml-opendatasets?azure-portal=true) from the Azure Open Datasets. After loading the data, you'll convert the data to a Pandas dataframe, which is a common structure for working with data in rows and columns.
+이제 데이터를 가져오는 코드를 실행할 준비가 되었습니다. Azure Open Datasets에서 [**당뇨병 데이터셋**](https://learn.microsoft.com/azure/open-datasets/dataset-diabetes?tabs=azureml-opendatasets?azure-portal=true)을 사용하여 작업합니다. 데이터를 로드한 후에는 데이터를 Pandas 데이터프레임으로 변환합니다. 이는 행과 열의 데이터로 작업하기 위한 일반적인 구조입니다.
 
-1. In your notebook, use the **+ Code** icon below the latest cell to add a new code cell to the notebook.
+1. Notebook에서 최신 셀 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가합니다.
 
-    > **Tip**: To see the **+ Code** icon, move the mouse to just below and to the left of the output from the current cell. Alternatively, in the menu bar, on the **Edit** tab, select **+ Add code cell**.
+    > **팁**: **+ 코드** 아이콘을 보려면 마우스를 현재 셀 출력의 바로 아래쪽과 왼쪽으로 이동합니다. 또는 메뉴 바의 **편집** 탭에서 **+ 코드 셀 추가**를 선택합니다.
 
-1. Enter the following code to load the dataset into a dataframe.
+1. 데이터셋을 데이터프레임으로 로드하기 위해 다음 코드를 입력합니다.
 
     ```python
    # Azure storage access info for open dataset diabetes
@@ -71,17 +71,17 @@ Now you're ready to run code to get data. You'll work with the [**diabetes datas
    df = spark.read.parquet(wasbs_path)
     ```
 
-1. Use the **&#9655; Run cell** button on the left of the cell to run it. Alternatively, you can press **SHIFT** + **ENTER** on your keyboard to run a cell.
+1. 셀의 왼쪽에 있는 **&#9655; 셀 실행** 버튼을 사용하여 실행합니다. 또는 키보드에서 **SHIFT** + **ENTER**를 눌러 셀을 실행할 수 있습니다.
 
-    > **Note**: Since this is the first time you've run any Spark code in this session, the Spark pool must be started. This means that the first run in the session can take a minute or so to complete. Subsequent runs will be quicker.
+    > **참고**: 이 세션에서 Spark 코드를 처음 실행하는 것이므로 Spark 풀을 시작해야 합니다. 이는 세션에서 첫 번째 실행이 완료하는 데 약 1분 정도 걸릴 수 있음을 의미합니다. 이후 실행은 더 빠릅니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code in it:
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    display(df)
     ```
 
-1. When the cell command has completed, review the output below the cell, which should look similar to this:
+1. 셀 명령이 완료되면 셀 아래의 출력을 검토합니다. 출력은 다음과 같아야 합니다.
 
     |AGE|SEX|BMI|BP|S1|S2|S3|S4|S5|S6|Y|
     |---|---|---|--|--|--|--|--|--|--|--|
@@ -92,20 +92,20 @@ Now you're ready to run code to get data. You'll work with the [**diabetes datas
     |50|1|23.0|101.0|192|125.4|52.0|4.0|4.2905|80|135|
     | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-    The output shows the rows and columns of the diabetes dataset. The data consists of ten baseline variables, age, sex, body mass index, average blood pressure, and six blood serum measurements for diabetes patients, as well as the response of interest (a quantitative measure of disease progression one year after baseline), which is labelled **Y**.
+    출력은 당뇨병 데이터셋의 행과 열을 보여줍니다. 데이터는 10개의 기준 변수(나이, 성별, 체질량 지수, 평균 혈압 및 당뇨병 환자의 6가지 혈청 측정값)와 관심 반응(기준 시점 1년 후 질병 진행의 정량적 측정)으로 구성되며, 이는 **Y**로 레이블(labelled)되어 있습니다.
 
-1. The data is loaded as a Spark dataframe. Scikit-learn will expect the input dataset to be a Pandas dataframe. Run the code below to convert your dataset to a Pandas dataframe:
+1. 데이터는 Spark 데이터프레임으로 로드됩니다. Scikit-learn은 입력 데이터셋이 Pandas 데이터프레임일 것으로 예상합니다. 데이터셋을 Pandas 데이터프레임으로 변환하려면 아래 코드를 실행합니다.
 
     ```python
    df = df.toPandas()
    df.head()
     ```
 
-## Check the shape of the data
+## 데이터 형태 확인
 
-Now that you've loaded the data, you can check the structure of the dataset, such as the number of rows and columns, data types, and missing values.
+이제 데이터를 로드했으므로 행과 열의 수, 데이터 유형, 누락된 값(missing values)과 같은 데이터셋의 구조를 확인할 수 있습니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code in it:
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    # Display the number of rows and columns in the dataset
@@ -117,11 +117,11 @@ Now that you've loaded the data, you can check the structure of the dataset, suc
    print(df.dtypes)
     ```
 
-    The dataset contains **442 rows** and **11 columns**. This means you have 442 samples and 11 features or variables in your dataset. The **SEX** variable likely contains categorical or string data.
+    데이터셋은 **442개의 행**과 **11개의 열**을 포함합니다. 이는 데이터셋에 442개의 샘플과 11개의 특징(features) 또는 변수가 있음을 의미합니다. **SEX** 변수는 범주형(categorical) 또는 문자열(string) 데이터를 포함할 가능성이 높습니다.
 
-## Check for missing data
+## 누락된 데이터 확인
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code in it:
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    missing_values = df.isnull().sum()
@@ -129,25 +129,25 @@ Now that you've loaded the data, you can check the structure of the dataset, suc
    print(missing_values)
     ```
 
-    The code checks for missing values. Observe that there's no missing data in the dataset.
+    이 코드는 누락된 값(missing values)을 확인합니다. 데이터셋에 누락된 데이터가 없음을 확인하십시오.
 
-## Generate descriptive statistics for numerical variables
+## 숫자 변수에 대한 기술 통계 생성
 
-Now, let's generate descriptive statistics to understand the distribution of numerical variables.
+이제 숫자 변수의 분포를 이해하기 위해 기술 통계(descriptive statistics)를 생성해 보겠습니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code.
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    df.describe()
     ```
 
-    The average age is approximately 48.5 years, with a standard deviation of 13.1 years. The youngest individual is 19 years old and the oldest is 79 years old. The average BMI is approximately 26.4, which falls in the **overweight** category according to [WHO standards](https://www.who.int/health-topics/obesity#tab=tab_1). The minimum BMI is 18 and the maximum is 42.2.
+    평균 연령은 약 48.5세이며, 표준 편차는 13.1세입니다. 가장 어린 개인은 19세이고 가장 나이 많은 개인은 79세입니다. 평균 BMI는 약 26.4이며, 이는 [WHO 표준](https://www.who.int/health-topics/obesity#tab=tab_1)에 따라 **과체중** 범주에 속합니다. 최소 BMI는 18이고 최대 BMI는 42.2입니다.
 
-## Plot the data distribution
+## 데이터 분포 플롯
 
-Let's verify the BMI feature, and plot its distribution to get a better understanding of its characteristics.
+BMI 특징(feature)을 확인하고, 그 특성을 더 잘 이해하기 위해 분포를 플롯(plot)해 보겠습니다.
 
-1. Add another code cell to the notebook. Then, enter the following code into this cell and execute it.
+1. Notebook에 다른 코드 셀을 추가합니다. 그런 다음, 이 셀에 다음 코드를 입력하고 실행합니다.
 
     ```python
    import matplotlib.pyplot as plt
@@ -174,13 +174,13 @@ Let's verify the BMI feature, and plot its distribution to get a better understa
    plt.show()
     ```
 
-    From this graph, you're able to observe the range and distribution of BMI in the dataset. For example, most of BMI fall within 23.2 and 29.2, and the data is right skewed.
+    이 그래프에서 데이터셋의 BMI 범위와 분포를 관찰할 수 있습니다. 예를 들어, 대부분의 BMI는 23.2에서 29.2 사이에 있으며, 데이터는 오른쪽으로 치우쳐(right skewed) 있습니다.
 
-## Perform multivariate analysis
+## 다변량 분석 수행
 
-Let's generate visualizations such as scatter plots and box plots to uncover patterns and relationships within the data.
+데이터 내의 패턴과 관계를 밝히기 위해 산점도(scatter plots) 및 상자 그림(box plots)과 같은 시각화를 생성해 보겠습니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code.
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    import matplotlib.pyplot as plt
@@ -195,9 +195,9 @@ Let's generate visualizations such as scatter plots and box plots to uncover pat
    plt.show()
     ```
 
-    We can see that as the BMI increases, the target variable also increases, indicating a positive linear relationship between these two variables.
+    BMI가 증가함에 따라 대상 변수(target variable)도 증가하는 것을 볼 수 있으며, 이는 이 두 변수 사이에 양의 선형 관계가 있음을 나타냅니다.
 
-1. Add another code cell to the notebook. Then, enter the following code into this cell and execute it.
+1. Notebook에 다른 코드 셀을 추가합니다. 그런 다음, 이 셀에 다음 코드를 입력하고 실행합니다.
 
     ```python
    import seaborn as sns
@@ -214,9 +214,9 @@ Let's generate visualizations such as scatter plots and box plots to uncover pat
    plt.show()
     ```
 
-    These observations suggest that there are differences in the blood pressure profiles of male and female patients. On average, female patients have a higher blood pressure than male patients.
+    이러한 관찰 결과는 남성 및 여성 환자의 혈압 프로필에 차이가 있음을 시사합니다. 평균적으로 여성 환자는 남성 환자보다 혈압이 더 높습니다.
 
-1. Aggregating the data can make it more manageable for visualization and analysis. Add another code cell to the notebook. Then, enter the following code into this cell and execute it.
+1. 데이터를 집계(aggregating)하면 시각화 및 분석을 위해 더 관리하기 쉽게 만들 수 있습니다. Notebook에 다른 코드 셀을 추가합니다. 그런 다음, 이 셀에 다음 코드를 입력하고 실행합니다.
 
     ```python
    import matplotlib.pyplot as plt
@@ -244,9 +244,9 @@ Let's generate visualizations such as scatter plots and box plots to uncover pat
    plt.show()
     ```
 
-    This graph shows that the average blood pressure is higher in female patients compared to male patients. Additionally, it shows that the average Body Mass Index (BMI) is slightly higher in females than in males.
+    이 그래프는 남성 환자에 비해 여성 환자의 평균 혈압이 더 높음을 보여줍니다. 또한 평균 체질량 지수(BMI)가 남성보다 여성에게서 약간 더 높음을 보여줍니다.
 
-1. Add another code cell to the notebook. Then, enter the following code into this cell and execute it.
+1. Notebook에 다른 코드 셀을 추가합니다. 그런 다음, 이 셀에 다음 코드를 입력하고 실행합니다.
 
     ```python
    import matplotlib.pyplot as plt
@@ -260,41 +260,41 @@ Let's generate visualizations such as scatter plots and box plots to uncover pat
    plt.show()
     ```
 
-    The age group of 19 to 30 years has the lowest average BMI values, while the highest average BMI is found in the age group of 65 to 79 years. Additionally, observe that the average BMI for most age groups falls within the overweight range.
+    19세에서 30세 사이의 연령 그룹은 평균 BMI 값이 가장 낮고, 65세에서 79세 사이의 연령 그룹에서 평균 BMI가 가장 높게 나타납니다. 또한 대부분의 연령 그룹에서 평균 BMI가 과체중 범위에 속함을 관찰할 수 있습니다.
 
-## Correlation analysis
+## 상관 분석
 
-Let's calculate correlations between different features to understand their relationships and dependencies.
+특징(features) 간의 관계와 의존성을 이해하기 위해 서로 다른 특징 간의 상관 관계를 계산해 보겠습니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code.
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 Notebook에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    df.corr(numeric_only=True)
     ```
 
-1. A heatmap is a useful tool for quickly visualizing the strength and direction of relationships between variable pairs. It can highlight strong positive or negative correlations, and identify pairs that lack any correlation. To create a heatmap, add another code cell to the notebook, and enter the following code.
+1. 히트맵(heatmap)은 변수 쌍 간의 관계 강도와 방향을 빠르게 시각화하는 데 유용한 도구입니다. 이는 강한 양의 상관 관계 또는 음의 상관 관계를 강조하고, 상관 관계가 없는 쌍을 식별할 수 있습니다. 히트맵을 생성하려면 Notebook에 다른 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    plt.figure(figsize=(15, 7))
    sns.heatmap(df.corr(numeric_only=True), annot=True, vmin=-1, vmax=1, cmap="Blues")
     ```
 
-    S1 and S2 variables have a high positive correlation of **0.89**, indicating that they move in the same direction. When S1 increases, S2 also tends to increase, and vice versa. Additionally, S3 and S4 have a strong negative correlation of **-0.73**. This means that as S3 increases, S4 tends to decrease.
+    S1 및 S2 변수는 **0.89**의 높은 양의 상관 관계를 가지며, 이는 같은 방향으로 움직임을 나타냅니다. S1이 증가하면 S2도 증가하는 경향이 있고 그 반대도 마찬가지입니다. 또한 S3 및 S4는 **-0.73**의 강한 음의 상관 관계를 가집니다. 이는 S3이 증가함에 따라 S4가 감소하는 경향이 있음을 의미합니다.
 
-## Save the notebook and end the Spark session
+## Notebook 저장 및 Spark 세션 종료
 
-Now that you've finished exploring the data, you can save the notebook with a meaningful name and end the Spark session.
+이제 데이터 탐색을 마쳤으므로 의미 있는 이름으로 Notebook을 저장하고 Spark 세션을 종료할 수 있습니다.
 
-1. In the notebook menu bar, use the ⚙️ **Settings** icon to view the notebook settings.
-2. Set the **Name** of the notebook to **Explore data for data science**, and then close the settings pane.
-3. On the notebook menu, select **Stop session** to end the Spark session.
+1. Notebook 메뉴 바에서 ⚙️ **설정** 아이콘을 사용하여 Notebook 설정을 봅니다.
+2. Notebook의 **이름**을 **Explore data for data science**로 설정한 다음, 설정 창을 닫습니다.
+3. Notebook 메뉴에서 **세션 중지**를 선택하여 Spark 세션을 종료합니다.
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you've created and used notebooks for data exploration. You've also executed code to calculate summary statistics, and create visualizations to better understand the patterns and relationships in the data.
+이 실습에서는 데이터 탐색을 위해 Notebook을 생성하고 사용했습니다. 또한 요약 통계(summary statistics)를 계산하고, 데이터의 패턴과 관계를 더 잘 이해하기 위한 시각화를 생성하는 코드를 실행했습니다.
 
-If you've finished exploring your model and experiments, you can delete the workspace you created for this exercise.
+모델 및 실험(experiments) 탐색을 마쳤으면 이 실습을 위해 생성한 워크스페이스를 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-2. In the **...** menu on the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace**.
+1. 왼쪽 바에서 워크스페이스 아이콘을 선택하여 포함된 모든 항목을 봅니다.
+2. 도구 모음의 **...** 메뉴에서 **워크스페이스 설정**을 선택합니다.
+3. **일반** 섹션에서 **이 워크스페이스 제거**를 선택합니다.

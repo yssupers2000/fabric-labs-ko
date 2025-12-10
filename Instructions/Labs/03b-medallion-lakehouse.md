@@ -6,60 +6,59 @@ lab:
 
 # Create a medallion architecture in a Microsoft Fabric lakehouse
 
-In this exercise you will build out a medallion architecture in a Fabric lakehouse using notebooks. You will create a workspace, create a lakehouse, upload data to the bronze layer, transform the data and load it to the silver Delta table, transform the data further and load it to the gold Delta tables, and then explore the semantic model and create relationships.
+이 실습에서는 Notebook을 사용하여 Fabric Lakehouse에 메달리온 아키텍처를 구축합니다. 작업 영역을 생성하고, Lakehouse를 생성하며, 브론즈 계층에 데이터를 업로드하고, 데이터를 변환하여 실버 Delta 테이블에 로드하고, 데이터를 추가로 변환하여 골드 Delta 테이블에 로드한 다음, 의미론적 모델을 탐색하고 관계를 생성합니다.
 
-This exercise should take approximately **45** minutes to complete
+이 실습을 완료하는 데 약 **45**분이 소요됩니다.
 
-> [!Note] 
-> You need access to a [Microsoft Fabric tenant](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> [!Note]
+> 이 실습을 완료하려면 [Microsoft Fabric 테넌트](https://learn.microsoft.com/fabric/get-started/fabric-trial)에 액세스해야 합니다.
 
-## Create a workspace
+## 작업 영역 생성
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성화된 작업 영역을 생성해야 합니다.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric-developer) at `https://app.fabric.microsoft.com/home?experience=fabric-developer` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode in the **Advanced** section that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric-developer` 주소의 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric-developer)로 이동하여 Fabric 자격 증명으로 로그인하세요.
+2. 왼쪽 메뉴 모음에서 **작업 영역 (Workspaces)**을 선택합니다 (아이콘은 &#128455;와 비슷합니다).
+3. 원하는 이름으로 새 작업 영역을 생성하고, **고급 (Advanced)** 섹션에서 Fabric Capacity(*Trial*, *Premium*, *Fabric*)를 포함하는 라이선싱 모드를 선택합니다.
+4. 새 작업 영역이 열리면 비어 있어야 합니다.
 
-    ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
+    ![Fabric의 빈 작업 영역 스크린샷](./Images/new-workspace.png)
 
+## Lakehouse 생성 및 브론즈 계층에 데이터 업로드
 
-## Create a lakehouse and upload data to bronze layer
+이제 작업 영역이 생겼으므로, 분석할 데이터를 위한 데이터 Lakehouse를 생성할 차례입니다.
 
-Now that you have a workspace, it's time to create a data lakehouse for the data you're going to analyze.
+1. 방금 생성한 작업 영역에서 **+ 새로 만들기 (+ New item)** 버튼을 선택하여 **Sales**라는 새 **Lakehouse**를 생성합니다.
 
-1. In the workspace you just created, create a new **Lakehouse** named **Sales** by selecting the **+ New item** button.
+    잠시 후 새 빈 Lakehouse가 생성됩니다. 다음으로, 분석을 위해 일부 데이터를 데이터 Lakehouse로 수집합니다. 여러 가지 방법이 있지만, 이 실습에서는 간단히 텍스트 파일을 로컬 컴퓨터(또는 해당되는 경우 랩 VM)에 다운로드한 다음 Lakehouse에 업로드합니다.
 
-    After a minute or so, a new empty lakehouse will be created. Next, you'll ingest some data into the data lakehouse for analysis. There are multiple ways to do this, but in this exercise you'll simply download a text file to your local computer (or lab VM if applicable) and then upload it to your lakehouse.
+2. `https://github.com/MicrosoftLearning/dp-data/blob/main/orders.zip`에서 이 실습용 데이터 파일을 다운로드하세요. 파일을 추출하고 로컬 컴퓨터(또는 해당되는 경우 랩 VM)에 원래 이름으로 저장합니다. 3년간의 판매 데이터가 포함된 3개의 파일(2019.csv, 2020.csv, 2021.csv)이 있어야 합니다.
 
-1. Download the data file for this exercise from `https://github.com/MicrosoftLearning/dp-data/blob/main/orders.zip`. Extract the files and save them with their original names on your local computer (or lab VM if applicable). There should be 3 files containing sales data for 3 years: 2019.csv, 2020.csv, and 2021.csv.
+3. Lakehouse가 있는 웹 브라우저 탭으로 돌아가서, **탐색기 (Explorer)** 창의 **Files** 폴더에 있는 **...** 메뉴에서 **새 하위 폴더 (New subfolder)**를 선택하고 **bronze**라는 폴더를 생성합니다.
 
-1. Return to the web browser tab containing your lakehouse, and in the **...** menu for the **Files** folder in the **Explorer** pane, select **New subfolder** and create a folder named **bronze**.
+4. **bronze** 폴더의 **...** 메뉴에서 **업로드 (Upload)** 및 **파일 업로드 (Upload files)**를 선택한 다음, 로컬 컴퓨터(또는 해당되는 경우 랩 VM)에서 3개의 파일(2019.csv, 2020.csv, 2021.csv)을 Lakehouse로 업로드합니다. Shift 키를 사용하여 세 개의 파일을 한 번에 업로드하세요.
 
-1. In the **...** menu for the **bronze** folder, select **Upload** and **Upload files**, and then upload the 3 files (2019.csv, 2020.csv, and 2021.csv) from your local computer (or lab VM if applicable) to the lakehouse. Use the shift key to upload all 3 files at once.
+5. 파일이 업로드된 후 **bronze** 폴더를 선택하고, 여기에 표시된 대로 파일이 업로드되었는지 확인합니다.
 
-1. After the files have been uploaded, select the **bronze** folder; and verify that the files have been uploaded, as shown here:
+    ![Lakehouse에 업로드된 products.csv 파일 스크린샷](./Images/bronze-files.png)
 
-    ![Screenshot of uploaded products.csv file in a lakehouse.](./Images/bronze-files.png)
+## 데이터 변환 및 실버 Delta 테이블에 로드
 
-## Transform data and load to silver Delta table
+이제 Lakehouse의 브론즈 계층에 데이터가 있으므로, Notebook을 사용하여 데이터를 변환하고 실버 계층의 Delta 테이블에 로드할 수 있습니다.
 
-Now that you have some data in the bronze layer of your lakehouse, you can use a notebook to transform the data and load it to a delta table in the silver layer.
+1. 데이터 레이크의 **bronze** 폴더 내용을 보는 동안 **홈 (Home)** 페이지에서 **Notebook 열기 (Open notebook)** 메뉴에서 **새 Notebook (New notebook)**을 선택합니다.
 
-1. On the **Home** page while viewing the contents of the **bronze** folder in your data lake, in the **Open notebook** menu, select **New notebook**.
+    몇 초 후에 단일 *셀*을 포함하는 새 Notebook이 열립니다. Notebook은 *코드* 또는 *Markdown* (형식화된 텍스트)을 포함할 수 있는 하나 이상의 셀로 구성됩니다.
 
-    After a few seconds, a new notebook containing a single *cell* will open. Notebooks are made up of one or more cells that can contain *code* or *markdown* (formatted text).
+2. Notebook이 열리면 Notebook 왼쪽 상단에 있는 **Notebook xxxx** 텍스트를 선택하고 새 이름을 입력하여 `Transform data for Silver`로 이름을 변경합니다.
 
-1. When the notebook opens, rename it to `Transform data for Silver` by selecting the **Notebook xxxx** text at the top left of the notebook and entering the new name.
+    ![Transform data for silver로 이름이 지정된 새 Notebook 스크린샷](./Images/sales-notebook-rename.png)
 
-    ![Screenshot of a new notebook named Transform data for silver.](./Images/sales-notebook-rename.png)
+3. Notebook에서 간단한 주석 처리된 코드가 포함된 기존 셀을 선택합니다. 이 두 줄을 강조 표시하고 삭제하세요. 이 코드는 필요하지 않습니다.
 
-1. Select the existing cell in the notebook, which contains some simple commented-out code. Highlight and delete these two lines - you will not need this code.
+   > **참고**: Notebook은 Python, Scala, SQL을 포함한 다양한 언어로 코드를 실행할 수 있도록 합니다. 이 실습에서는 PySpark와 SQL을 사용합니다. 코드 문서화를 위해 형식화된 텍스트와 이미지를 제공하는 Markdown 셀을 추가할 수도 있습니다.
 
-   > **Note**: Notebooks enable you to run code in a variety of languages, including Python, Scala, and SQL. In this exercise, you'll use PySpark and SQL. You can also add markdown cells to provide formatted text and images to document your code.
-
-1. **Paste** the following code into the cell:
+4. 다음 코드를 셀에 **붙여넣기**하세요:
 
     ```python
    from pyspark.sql.types import *
@@ -84,11 +83,11 @@ Now that you have some data in the bronze layer of your lakehouse, you can use a
    display(df.head(10))
     ```
 
-1. Use the ****&#9655;** (*Run cell*)** button on the left of the cell to run the code.
+5. 셀 왼쪽에 있는 ****&#9655;** (셀 실행)** 버튼을 사용하여 코드를 실행합니다.
 
-    > **Note**: Since this is the first time you've run any Spark code in this notebook, a Spark session must be started. This means that the first run can take a minute or so to complete. Subsequent runs will be quicker.
+    > **참고**: 이 Notebook에서 Spark 코드를 처음 실행하는 것이므로 Spark 세션이 시작되어야 합니다. 이는 첫 실행에 약 1분 정도 걸릴 수 있음을 의미합니다. 이후 실행은 더 빨라집니다.
 
-1. When the cell command has completed, **review the output** below the cell, which should look similar to this:
+6. 셀 명령이 완료되면 셀 아래의 **출력을 검토**하세요. 출력은 다음과 유사해야 합니다:
 
     | Index | SalesOrderNumber | SalesOrderLineNumber | OrderDate | CustomerName | Email | Item | Quantity | UnitPrice | Tax |
     | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
@@ -96,11 +95,11 @@ Now that you have some data in the bronze layer of your lakehouse, you can use a
     | 2 |  SO49173 | 1 | 2021-01-01 | Linda Alvarez | linda19@adventure-works.com | Mountain-200 Silver, 38 | 1 | 2071.4197 | 165.7136 |
     | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-    The code you ran loaded the data from the CSV files in the **bronze** folder into a Spark dataframe, and then displayed the first few rows of the dataframe.
+    실행한 코드는 **bronze** 폴더의 CSV 파일에서 데이터를 Spark dataframe으로 로드한 다음, dataframe의 첫 몇 행을 표시했습니다.
 
-    > **Note**: You can clear, hide, and auto-resize the contents of the cell output by selecting the **...** menu at the top left of the output pane.
+    > **참고**: 출력 창의 왼쪽 상단에 있는 **...** 메뉴를 선택하여 셀 출력 내용을 지우거나 숨기거나 자동으로 크기를 조정할 수 있습니다.
 
-1. Now you'll **add columns for data validation and cleanup**, using a PySpark dataframe to add columns and update the values of some of the existing columns. Use the **+ Code** button to **add a new code block** and add the following code to the cell:
+7. 이제 PySpark dataframe을 사용하여 열을 추가하고 기존 열의 일부 값을 업데이트하여 **데이터 유효성 검사 및 정리용 열을 추가**합니다. **+ 코드 (Code)** 버튼을 사용하여 **새 코드 블록을 추가**하고 다음 코드를 셀에 추가하세요:
 
     ```python
    from pyspark.sql.functions import when, lit, col, current_timestamp, input_file_name
@@ -114,13 +113,13 @@ Now that you have some data in the bronze layer of your lakehouse, you can use a
    df = df.withColumn("CustomerName", when((col("CustomerName").isNull() | (col("CustomerName")=="")),lit("Unknown")).otherwise(col("CustomerName")))
     ```
 
-    The first line of the code imports the necessary functions from PySpark. You're then adding new columns to the dataframe so you can track the source file name, whether the order was flagged as being a before the fiscal year of interest, and when the row was created and modified.
+    코드의 첫 줄은 PySpark에서 필요한 함수를 가져옵니다. 그런 다음 원본 파일 이름, 관심 회계 연도 이전에 주문이 플래그 지정되었는지 여부, 행이 생성 및 수정된 시기를 추적할 수 있도록 새 열을 dataframe에 추가합니다.
 
-    Finally, you're updating the CustomerName column to "Unknown" if it's null or empty.
+    마지막으로, CustomerName 열이 null이거나 비어 있으면 "Unknown"으로 업데이트합니다.
 
-1. Run the cell to execute the code using the ****&#9655;** (*Run cell*)** button.
+8. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
 
-1. Next, you'll define the schema for the **sales_silver** table in the sales database using Delta Lake format. Create a new code block and add the following code to the cell:
+9. 다음으로, Delta Lake 형식을 사용하여 sales 데이터베이스의 **sales_silver** 테이블에 대한 스키마를 정의합니다. 새 코드 블록을 생성하고 다음 코드를 셀에 추가하세요:
 
     ```python
    # Define the schema for the sales_silver table
@@ -146,13 +145,13 @@ Now that you have some data in the bronze layer of your lakehouse, you can use a
        .execute()
     ```
 
-1. Run the cell to execute the code using the ****&#9655;** (*Run cell*)** button.
+10. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
 
-1. Select the **...** in the Tables section of the Explorer pane and select **Refresh**. You should now see the new **sales_silver** table listed. The **&#9650;** (triangle icon) indicates that it's a Delta table.
+11. 탐색기 (Explorer) 창의 테이블 섹션에서 **...**를 선택하고 **새로 고침 (Refresh)**을 선택합니다. 이제 새 **sales_silver** 테이블이 나열된 것을 볼 수 있습니다. **&#9650;** (삼각형 아이콘)은 Delta 테이블임을 나타냅니다.
 
-    > **Note**: If you don't see the new table, wait a few seconds and then select **Refresh** again, or refresh the entire browser tab.
+    > **참고**: 새 테이블이 보이지 않으면 몇 초 기다린 다음 다시 **새로 고침 (Refresh)**을 선택하거나 전체 브라우저 탭을 새로 고침하세요.
 
-1. Now you're going to perform an **upsert operation** on a Delta table, updating existing records based on specific conditions and inserting new records when no match is found. Add a new code block and paste the following code:
+12. 이제 Delta 테이블에서 **upsert 작업 (upsert operation)**을 수행하여 특정 조건에 따라 기존 레코드를 업데이트하고 일치하는 항목이 없는 경우 새 레코드를 삽입합니다. 새 코드 블록을 추가하고 다음 코드를 붙여넣으세요:
 
     ```python
    # Update existing records and insert new ones based on a condition defined by the columns SalesOrderNumber, OrderDate, CustomerName, and Item.
@@ -193,27 +192,27 @@ Now that you have some data in the bronze layer of your lakehouse, you can use a
      .execute()
     ```
 
-1. Run the cell to execute the code using the ****&#9655;** (*Run cell*)** button.
+13. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
 
-    This operation is important because it enables you to update existing records in the table based on the values of specific columns, and insert new records when no match is found. This is a common requirement when you're loading data from a source system that may contain updates to existing and new records.
+    이 작업은 특정 열의 값을 기반으로 테이블의 기존 레코드를 업데이트하고 일치하는 항목이 없는 경우 새 레코드를 삽입할 수 있도록 하므로 중요합니다. 이는 기존 및 새 레코드에 대한 업데이트를 포함할 수 있는 원본 시스템에서 데이터를 로드할 때 흔히 요구되는 사항입니다.
 
-    You now have data in your silver delta table that is ready for further transformation and modeling.
+    이제 추가 변환 및 모델링을 위해 실버 Delta 테이블에 데이터가 준비되었습니다.
 
-1. After running the last cell, select the **Run** tab above the ribbon and then select **Stop session** to stop the compute resource being used by the notebook.
+14. 마지막 셀을 실행한 후 리본 위에 있는 **실행 (Run)** 탭을 선택한 다음 **세션 중지 (Stop session)**를 선택하여 Notebook에서 사용 중인 컴퓨팅 리소스를 중지합니다.
 
-## Explore data in the silver layer using the SQL endpoint
+## SQL endpoint를 사용하여 실버 계층의 데이터 탐색
 
-Now that you have data in your silver layer, you can use the SQL analytics endpoint to explore the data and perform some basic analysis. This is useful if you're familiar with SQL and want to do some basic exploration of your data. In this exercise we're using the SQL endpoint view in Fabric, but you can use other tools like SQL Server Management Studio (SSMS) and Azure Data Explorer.
+이제 실버 계층에 데이터가 있으므로, SQL 분석 엔드포인트 (SQL analytics endpoint)를 사용하여 데이터를 탐색하고 몇 가지 기본 분석을 수행할 수 있습니다. 이는 SQL에 익숙하고 데이터에 대한 기본적인 탐색을 수행하려는 경우 유용합니다. 이 실습에서는 Fabric의 SQL endpoint 보기를 사용하지만, SQL Server Management Studio (SSMS) 및 Azure Data Explorer와 같은 다른 도구를 사용할 수도 있습니다.
 
-1. Navigate back to your workspace and notice that you now have several items listed. Select the **Sales SQL analytics endpoint** to open your lakehouse in the SQL analytics endpoint view.
+1. 작업 영역으로 돌아가면 이제 여러 항목이 나열되어 있음을 알 수 있습니다. **Sales SQL 분석 엔드포인트 (Sales SQL analytics endpoint)**를 선택하여 Lakehouse를 SQL 분석 엔드포인트 보기에서 엽니다.
 
-    ![Screenshot of the SQL endpoint in a lakehouse.](./Images/sql-endpoint-item.png)
+    ![Lakehouse의 SQL endpoint 스크린샷](./Images/sql-endpoint-item.png)
 
-1. Select **New SQL query** from the ribbon, which will open a SQL query editor. Note that you can rename your query using the **...** menu item next to the existing query name in the Explorer pane.
+2. 리본에서 **새 SQL 쿼리 (New SQL query)**를 선택하면 SQL 쿼리 편집기가 열립니다. 탐색기 (Explorer) 창의 기존 쿼리 이름 옆에 있는 **...** 메뉴 항목을 사용하여 쿼리 이름을 변경할 수 있습니다.
 
-   Next, you'll run two sql queries to explore the data.
+   다음으로, 데이터를 탐색하기 위해 두 개의 SQL 쿼리를 실행합니다.
 
-1. Paste the following query into the query editor and select **Run**:
+3. 다음 쿼리를 쿼리 편집기에 붙여넣고 **실행 (Run)**을 선택하세요:
 
     ```sql
    SELECT YEAR(OrderDate) AS Year
@@ -223,11 +222,11 @@ Now that you have data in your silver layer, you can use the SQL analytics endpo
    ORDER BY YEAR(OrderDate)
     ```
 
-    This query calculates the total sales for each year in the sales_silver table. Your results should look like this:
+    이 쿼리는 sales_silver 테이블에서 각 연도의 총 매출을 계산합니다. 결과는 다음과 같아야 합니다:
 
-    ![Screenshot of the results of a SQL query in a lakehouse.](./Images/total-sales-sql.png)
+    ![Lakehouse에서 SQL 쿼리 결과 스크린샷](./Images/total-sales-sql.png)
 
-1. Next you'll review which customers are purchasing the most (in terms of quantity). Paste the following query into the query editor and select **Run**:
+4. 다음으로, 어떤 고객이 가장 많이 구매하는지(수량 측면에서) 검토합니다. 다음 쿼리를 쿼리 편집기에 붙여넣고 **실행 (Run)**을 선택하세요:
 
     ```sql
    SELECT TOP 10 CustomerName, SUM(Quantity) AS TotalQuantity
@@ -236,30 +235,30 @@ Now that you have data in your silver layer, you can use the SQL analytics endpo
    ORDER BY TotalQuantity DESC
     ```
 
-    This query calculates the total quantity of items purchased by each customer in the sales_silver table, and then returns the top 10 customers in terms of quantity.
+    이 쿼리는 sales_silver 테이블에서 각 고객이 구매한 항목의 총 수량을 계산한 다음, 수량 측면에서 상위 10명의 고객을 반환합니다.
 
-    Data exploration at the silver layer is useful for basic analysis, but you'll need to transform the data further and model it into a star schema to enable more advanced analysis and reporting. You'll do that in the next section.
+    실버 계층에서의 데이터 탐색은 기본적인 분석에 유용하지만, 더 고급 분석 및 보고를 가능하게 하려면 데이터를 추가로 변환하고 스타 스키마로 모델링해야 합니다. 다음 섹션에서 이를 수행합니다.
 
-## Transform data for gold layer
+## 골드 계층을 위한 데이터 변환
 
-You have successfully taken data from your bronze layer, transformed it, and loaded it into a silver Delta table. Now you'll use a new notebook to transform the data further, model it into a star schema, and load it into gold Delta tables.
+브론즈 계층에서 데이터를 가져와 변환하고 실버 Delta 테이블에 로드하는 데 성공했습니다. 이제 새 Notebook을 사용하여 데이터를 추가로 변환하고 스타 스키마로 모델링한 다음, 골드 Delta 테이블에 로드합니다.
 
-You could have done all of this in a single notebook, but for this exercise you're using separate notebooks to demonstrate the process of transforming data from bronze to silver and then from silver to gold. This can help with debugging, troubleshooting, and reuse.
+이 모든 작업을 단일 Notebook에서 수행할 수도 있었지만, 이 실습에서는 데이터를 브론즈에서 실버로, 그리고 실버에서 골드로 변환하는 프로세스를 보여주기 위해 별도의 Notebook을 사용합니다. 이는 디버깅, 문제 해결 및 재사용에 도움이 될 수 있습니다.
 
-1. Return to the workspace home page and create a new notebook called `Transform data for Gold`.
+1. 작업 영역 홈 페이지로 돌아가서 `Transform data for Gold`라는 새 Notebook을 생성합니다.
 
-1. In the Explorer pane, add your **Sales** lakehouse by selecting **Add data items** and then selecting the **Sales** lakehouse you created earlier. You should see the **sales_silver** table listed in the **Tables** section of the explorer pane.
+2. 탐색기 (Explorer) 창에서 **데이터 항목 추가 (Add data items)**를 선택한 다음 이전에 생성한 **Sales** Lakehouse를 선택하여 **Sales** Lakehouse를 추가합니다. 탐색기 (Explorer) 창의 **테이블 (Tables)** 섹션에 **sales_silver** 테이블이 나열된 것을 볼 수 있습니다.
 
-1. In the existing code block, remove the commented text and **add the following code** to load data to your dataframe and start building your star schema, then run it:
+3. 기존 코드 블록에서 주석 처리된 텍스트를 제거하고, dataframe에 데이터를 로드하고 스타 스키마 구축을 시작하기 위해 **다음 코드를 추가**한 다음 실행합니다:
 
     ```python
    # Load data to the dataframe as a starting point to create the gold layer
    df = spark.read.table("Sales.sales_silver")
     ```
 
-    > **Note**: If you receive a `[TooManyRequestsForCapacity]` error when running the first cell, make sure you stopped the session previously running in the first notebook.
+    > **참고**: 첫 번째 셀을 실행할 때 `[TooManyRequestsForCapacity]` 오류가 발생하면, 첫 번째 Notebook에서 이전에 실행 중이던 세션을 중지했는지 확인하십시오.
  
-1. **Add a new code block** and paste the following code to create your date dimension table and run it:
+4. **새 코드 블록을 추가**하고 다음 코드를 붙여넣어 날짜 차원 테이블을 생성하고 실행합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -277,9 +276,9 @@ You could have done all of this in a single notebook, but for this exercise you'
        .execute()
     ```
 
-    > **Note**: You can run the `display(df)` command at any time to check the progress of your work. In this case, you'd run 'display(dfdimDate_gold)' to see the contents of the dimDate_gold dataframe.
+    > **참고**: 언제든지 `display(df)` 명령을 실행하여 작업 진행 상황을 확인할 수 있습니다. 이 경우 'display(dfdimDate_gold)'를 실행하여 dimDate_gold dataframe의 내용을 볼 수 있습니다.
 
-1. In a new code block, **add and run the following code** to create a dataframe for your date dimension, **dimdate_gold**:
+5. 새 코드 블록에서 날짜 차원인 **dimdate_gold**에 대한 dataframe을 생성하기 위해 **다음 코드를 추가하고 실행**합니다:
 
     ```python
    from pyspark.sql.functions import col, dayofmonth, month, year, date_format
@@ -299,7 +298,7 @@ You could have done all of this in a single notebook, but for this exercise you'
    display(dfdimDate_gold.head(10))
     ```
 
-1. You're separating the code out into new code blocks so that you can understand and watch what's happening in the notebook as you transform the data. In another new code block, **add and run the following code** to update the date dimension as new data comes in:
+6. 데이터를 변환할 때 Notebook에서 무슨 일이 일어나는지 이해하고 확인할 수 있도록 코드를 새 코드 블록으로 분리하고 있습니다. 다른 새 코드 블록에서 새 데이터가 들어올 때 날짜 차원을 업데이트하기 위해 **다음 코드를 추가하고 실행**합니다:
 
     ```python
    from delta.tables import *
@@ -331,8 +330,8 @@ You could have done all of this in a single notebook, but for this exercise you'
      .execute()
     ```
 
-    The date dimension is now set up. Now you'll create your customer dimension.
-1. To build out the customer dimension table, **add a new code block**, paste and run the following code:
+    이제 날짜 차원이 설정되었습니다. 이제 고객 차원을 생성합니다.
+7. 고객 차원 테이블을 구축하기 위해 **새 코드 블록을 추가**하고 다음 코드를 붙여넣고 실행합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -349,7 +348,7 @@ You could have done all of this in a single notebook, but for this exercise you'
        .execute()
     ```
 
-1. In a new code block, **add and run the following code** to drop duplicate customers, select specific columns, and split the "CustomerName" column to create "First" and "Last" name columns:
+8. 새 코드 블록에서 중복 고객을 제거하고, 특정 열을 선택하고, "CustomerName" 열을 분할하여 "First" 및 "Last" 이름 열을 생성하기 위해 **다음 코드를 추가하고 실행**합니다:
 
     ```python
    from pyspark.sql.functions import col, split
@@ -365,9 +364,9 @@ You could have done all of this in a single notebook, but for this exercise you'
    display(dfdimCustomer_silver.head(10))
     ```
 
-    Here you have created a new DataFrame dfdimCustomer_silver by performing various transformations such as dropping duplicates, selecting specific columns, and splitting the "CustomerName" column to create "First" and "Last" name columns. The result is a DataFrame with cleaned and structured customer data, including separate "First" and "Last" name columns extracted from the "CustomerName" column.
+    여기서는 중복 제거, 특정 열 선택, "CustomerName" 열을 분할하여 "First" 및 "Last" 이름 열을 생성하는 등 다양한 변환을 수행하여 새 DataFrame dfdimCustomer_silver를 생성했습니다. 결과는 "CustomerName" 열에서 추출된 별도의 "First" 및 "Last" 이름 열을 포함하여 정리되고 구조화된 고객 데이터가 있는 DataFrame입니다.
 
-1. Next we'll **create the ID column for our customers**. In a new code block, paste and run the following:
+9. 다음으로 **고객을 위한 ID 열을 생성**합니다. 새 코드 블록에 다음을 붙여넣고 실행합니다:
 
     ```python
    from pyspark.sql.functions import monotonically_increasing_id, col, when, coalesce, max, lit
@@ -385,9 +384,9 @@ You could have done all of this in a single notebook, but for this exercise you'
    display(dfdimCustomer_gold.head(10))
     ```
 
-    Here you're cleaning and transforming customer data (dfdimCustomer_silver) by performing a left anti join to exclude duplicates that already exist in the dimCustomer_gold table, and then generating unique CustomerID values using the monotonically_increasing_id() function.
+    여기서는 dimCustomer_gold 테이블에 이미 존재하는 중복을 제외하기 위해 left anti join을 수행하고, monotonically_increasing_id() 함수를 사용하여 고유한 CustomerID 값을 생성함으로써 고객 데이터(dfdimCustomer_silver)를 정리하고 변환합니다.
 
-1. Now you'll ensure that your customer table remains up-to-date as new data comes in. **In a new code block**, paste and run the following:
+10. 이제 새 데이터가 들어올 때 고객 테이블이 최신 상태를 유지하도록 합니다. **새 코드 블록에** 다음을 붙여넣고 실행합니다:
 
     ```python
    from delta.tables import *
@@ -418,7 +417,7 @@ You could have done all of this in a single notebook, but for this exercise you'
      .execute()
     ```
 
-1. Now you'll **repeat those steps to create your product dimension**. In a new code block, paste and run the following:
+11. 이제 **이러한 단계를 반복하여 제품 차원을 생성**합니다. 새 코드 블록에 다음을 붙여넣고 실행합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -432,7 +431,7 @@ You could have done all of this in a single notebook, but for this exercise you'
        .execute()
     ```
 
-1. **Add another code block** to create the **product_silver** dataframe.
+12. **새 코드 블록을 추가**하여 **product_silver** dataframe을 생성합니다.
   
     ```python
    from pyspark.sql.functions import col, split, lit, when
@@ -448,7 +447,7 @@ You could have done all of this in a single notebook, but for this exercise you'
    display(dfdimProduct_silver.head(10))
     ```
 
-1. Now you'll create IDs for your **dimProduct_gold table**. Add the following syntax to a new code block and run it:
+13. 이제 **dimProduct_gold 테이블**을 위한 ID를 생성합니다. 다음 구문을 새 코드 블록에 추가하고 실행합니다:
 
     ```python
    from pyspark.sql.functions import monotonically_increasing_id, col, lit, max, coalesce
@@ -467,9 +466,9 @@ You could have done all of this in a single notebook, but for this exercise you'
    display(dfdimProduct_gold.head(10))
     ```
 
-    This calculates the next available product ID based on the current data in the table, assigns these new IDs to the products, and then displays the updated product information.
+    이는 테이블의 현재 데이터를 기반으로 다음 사용 가능한 제품 ID를 계산하고, 이 새 ID를 제품에 할당한 다음, 업데이트된 제품 정보를 표시합니다.
 
-1. Similar to what you've done with your other dimensions, you need to ensure that your product table remains up-to-date as new data comes in. **In a new code block**, paste and run the following:
+14. 다른 차원과 마찬가지로, 새 데이터가 들어올 때 제품 테이블이 최신 상태를 유지하도록 해야 합니다. **새 코드 블록에** 다음을 붙여넣고 실행합니다:
 
     ```python
    from delta.tables import *
@@ -498,9 +497,9 @@ You could have done all of this in a single notebook, but for this exercise you'
              .execute()
     ```
 
-    Now that you have your dimensions built out, the final step is to create the fact table.
+    이제 차원이 구축되었으므로, 마지막 단계는 팩트 테이블을 생성하는 것입니다.
 
-1. **In a new code block**, paste and run the following code to create the **fact table**:
+15. **새 코드 블록에** 다음 코드를 붙여넣고 실행하여 **팩트 테이블**을 생성합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -517,7 +516,7 @@ You could have done all of this in a single notebook, but for this exercise you'
        .execute()
     ```
 
-1. **In a new code block**, paste and run the following code to create a **new dataframe** to combine sales data with customer and product information include customer ID, item ID, order date, quantity, unit price, and tax:
+16. **새 코드 블록에** 다음 코드를 붙여넣고 실행하여 고객 ID, 항목 ID, 주문 날짜, 수량, 단가 및 세금을 포함한 고객 및 제품 정보와 판매 데이터를 결합하는 **새 dataframe**을 생성합니다:
 
     ```python
    from pyspark.sql.functions import col
@@ -546,7 +545,7 @@ You could have done all of this in a single notebook, but for this exercise you'
    display(dffactSales_gold.head(10))
     ```
 
-1. Now you'll ensure that sales data remains up-to-date by running the following code in a **new code block**:
+17. 이제 **새 코드 블록에** 다음 코드를 실행하여 판매 데이터가 최신 상태를 유지하도록 합니다:
 
     ```python
    from delta.tables import *
@@ -578,39 +577,39 @@ You could have done all of this in a single notebook, but for this exercise you'
      .execute()
     ```
 
-    Here you're using Delta Lake's merge operation to synchronize and update the factsales_gold table with new sales data (dffactSales_gold). The operation compares the order date, customer ID, and item ID between the existing data (silver table) and the new data (updates DataFrame), updating matching records and inserting new records as needed.
+    여기서는 Delta Lake의 병합 (merge) 작업을 사용하여 factsales_gold 테이블을 새로운 판매 데이터(dffactSales_gold)와 동기화하고 업데이트합니다. 이 작업은 기존 데이터(실버 테이블)와 새 데이터(업데이트 DataFrame) 간의 주문 날짜, 고객 ID, 항목 ID를 비교하여 일치하는 레코드를 업데이트하고 필요에 따라 새 레코드를 삽입합니다.
 
-You now have a curated, modeled **gold** layer that can be used for reporting and analysis.
+이제 보고 및 분석에 사용할 수 있는 큐레이션되고 모델링된 **골드** 계층이 생겼습니다.
 
-## (OPTIONAL) Create a semantic model
+## (선택 사항) 의미론적 모델 생성
 
-**Note**: While this task is entirely optional, you need a Power BI license or Fabric F64 SKU to create and edit semantic models.
+**참고**: 이 작업은 완전히 선택 사항이지만, 의미론적 모델을 생성하고 편집하려면 Power BI 라이선스 또는 Fabric F64 SKU가 필요합니다.
 
-In your workspace, you can now use the gold layer to create a report and analyze the data. You can access the semantic model directly in your workspace to create relationships and measures for reporting.
+작업 영역에서 이제 골드 계층을 사용하여 보고서를 생성하고 데이터를 분석할 수 있습니다. 작업 영역에서 의미론적 모델 (semantic model)에 직접 액세스하여 보고를 위한 관계 및 측정값을 생성할 수 있습니다.
 
-Note that you can't use the **default semantic model** that is automatically created when you create a lakehouse. You must create a new semantic model that includes the gold tables you created in this exercise, from the Explorer.
+Lakehouse를 생성할 때 자동으로 생성되는 **기본 의미론적 모델 (default semantic model)**은 사용할 수 없습니다. 탐색기 (Explorer)에서 이 실습에서 생성한 골드 테이블을 포함하는 새 의미론적 모델을 생성해야 합니다.
 
-1. In your workspace, navigate to your **Sales** lakehouse.
-1. Select **New semantic model** from the ribbon of the Explorer view.
-1. Assign the name **Sales_Gold** to your new semantic model.
-1. Select your transformed gold tables to include in your semantic model and select **Confirm**.
+1. 작업 영역에서 **Sales** Lakehouse로 이동합니다.
+2. 탐색기 보기의 리본에서 **새 의미론적 모델 (New semantic model)**을 선택합니다.
+3. 새 의미론적 모델에 **Sales_Gold** 이름을 할당합니다.
+4. 변환된 골드 테이블을 선택하여 의미론적 모델에 포함하고 **확인 (Confirm)**을 선택합니다.
    - dimdate_gold
    - dimcustomer_gold
    - dimproduct_gold
    - factsales_gold
 
-    This will open the semantic model in Fabric where you can create relationships and measures, as shown here:
+    이렇게 하면 Fabric에서 의미론적 모델이 열리며, 여기에 표시된 대로 관계 및 측정값을 생성할 수 있습니다:
 
-    ![Screenshot of a semantic model in Fabric.](./Images/dataset-relationships.png)
+    ![Fabric의 의미론적 모델 스크린샷](./Images/dataset-relationships.png)
 
-From here, you or other members of your data team can create reports and dashboards based on the data in your lakehouse. These reports will be connected directly to the gold layer of your lakehouse, so they'll always reflect the latest data.
+여기에서 사용자 또는 데이터 팀의 다른 구성원은 Lakehouse의 데이터를 기반으로 보고서 및 대시보드를 생성할 수 있습니다. 이 보고서들은 Lakehouse의 골드 계층에 직접 연결되므로 항상 최신 데이터를 반영합니다.
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you've learned how to create a medallion architecture in a Microsoft Fabric lakehouse.
+이 실습에서는 Microsoft Fabric Lakehouse에 메달리온 아키텍처를 생성하는 방법을 배웠습니다.
 
-If you've finished exploring your lakehouse, you can delete the workspace you created for this exercise.
+Lakehouse 탐색을 마쳤으면 이 실습을 위해 생성한 작업 영역을 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-1. In the **...** menu on the toolbar, select **Workspace settings**.
-1. In the **General** section, select **Remove this workspace**.
+1. 왼쪽 막대에서 작업 영역 아이콘을 선택하여 포함된 모든 항목을 봅니다.
+2. 도구 모음의 **...** 메뉴에서 **작업 영역 설정 (Workspace settings)**을 선택합니다.
+3. **일반 (General)** 섹션에서 **이 작업 영역 제거 (Remove this workspace)**를 선택합니다.

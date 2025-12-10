@@ -1,20 +1,11 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+# 모듈: 00
+## 랩/데모: 00
+### 작업: 00
+#### 단계: 00
 
----
+문제 설명
 
-# Module: 00
-## Lab/Demo: 00
-### Task: 00
-#### Step: 00
-
-Description of issue
-
-Repro steps:
+재현 단계:
 
 1.
 1.
