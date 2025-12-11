@@ -1,4 +1,4 @@
-`---
+---
 lab:
     title: 'Create and use Dataflows (Gen2) in Microsoft Fabric'
     module: 'Ingest Data with Dataflows Gen2 in Microsoft Fabric'

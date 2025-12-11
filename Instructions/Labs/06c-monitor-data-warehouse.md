@@ -1,4 +1,3 @@
-```yaml
 ---
 lab:
     title: 'Monitor a data warehouse in Microsoft Fabric'
