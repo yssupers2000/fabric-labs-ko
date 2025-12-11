@@ -4,7 +4,7 @@ lab:
     module: 'Organize a Fabric lakehouse using medallion architecture design'
 ---
 
-# Create a medallion architecture in a Microsoft Fabric lakehouse
+# Microsoft Fabric 레이크하우스에 메달리온 아키텍처 구축하기
 
 이 실습에서는 Notebook을 사용하여 Fabric Lakehouse에 메달리온 아키텍처를 구축합니다. 작업 영역을 생성하고, Lakehouse를 생성하며, 브론즈 계층에 데이터를 업로드하고, 데이터를 변환하여 실버 Delta 테이블에 로드하고, 데이터를 추가로 변환하여 골드 Delta 테이블에 로드한 다음, 의미론적 모델을 탐색하고 관계를 생성합니다.
 
