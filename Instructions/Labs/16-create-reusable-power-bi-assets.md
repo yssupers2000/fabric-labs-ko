@@ -213,6 +213,7 @@ Power BI Desktop의 변경 사항이 .tmdl 파일에 어떻게 반영되는지 �
 1. **보기(View)** 리본 메뉴에서 **고급 편집기(Advanced Editor)**를 선택합니다.
 1. 쿼리(query)가 region-north.csv로 하드코딩(hard-coded)되어 있음을 확인합니다.
 
+{% raw %}
     ```m
     let
         Source = Csv.Document(File.Contents("C:\Users\Student\Downloads\16-reusable-assets\data\region-north.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
@@ -221,9 +222,11 @@ Power BI Desktop의 변경 사항이 .tmdl 파일에 어떻게 반영되는지 �
     in
         #"Changed Type"
     ```
+{% endraw %}
     
 1. 하드코딩된 Region (north)을 parameter **Region**으로 대체합니다. 
-    
+
+{% raw %}
     ```m
     let
         Source = Csv.Document(File.Contents("C:\Users\Student\Downloads\16-reusable-assets\data\region-" & Region & ".csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
@@ -232,6 +235,7 @@ Power BI Desktop의 변경 사항이 .tmdl 파일에 어떻게 반영되는지 �
     in
         #"Changed Type"
     ```
+{% endraw %}
     
     > **참고**: Power Query (M language)에서 텍스트 값은 따옴표 " " 안에 있어야 하며, 앰퍼샌드(&) 연산자를 사용하여 텍스트 조각을 결합(concatenate)합니다.
 
