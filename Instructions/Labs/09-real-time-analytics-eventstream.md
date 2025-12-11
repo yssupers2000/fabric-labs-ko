@@ -3,93 +3,93 @@ lab:
     title: 'Ingest real-time data with Eventstream in Microsoft Fabric'
     module: 'Ingest real-time data with Eventstream in Microsoft Fabric'
 ---
-# Ingest real-time data with Eventstream in Microsoft Fabric
+# Microsoft Fabric에서 Eventstream을 사용하여 실시간 데이터 수집
 
-Eventstream is a feature in Microsoft Fabric that captures, transforms, and routes real-time events to various destinations. You can add event data sources, destinations, and transformations to the eventstream.
+Eventstream은 Microsoft Fabric의 기능으로, 실시간 이벤트를 캡처, 변환 및 다양한 대상으로 라우팅합니다. Eventstream에 이벤트 데이터 원본, 대상 및 변환을 추가할 수 있습니다.
 
-In this exercise, you'll ingest data from a sample data source that emits a stream of events related to observations of bicycle collection points in a bike-share system in which people can rent bikes within a city.
+이 연습에서는 도시 내에서 자전거를 대여할 수 있는 자전거 공유 시스템의 자전거 수거 지점 관찰과 관련된 이벤트 스트림을 내보내는 샘플 데이터 원본에서 데이터를 수집합니다.
 
-This lab takes approximately **30** minutes to complete.
+이 랩은 완료하는 데 약 **30**분 정도 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric tenant](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 연습을 완료하려면 [Microsoft Fabric 테넌트](https://learn.microsoft.com/fabric/get-started/fabric-trial)가 필요합니다.
 
-## Create a workspace
+## 작업 영역 만들기
 
-Before working with data in Fabric, you need to create a workspace with the Fabric capacity enabled.
+Fabric에서 데이터를 사용하기 전에, Fabric Capacity가 활성화된 작업 영역을 만들어야 합니다.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`의 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하고 Fabric 자격 증명으로 로그인합니다.
+1. 왼쪽 메뉴 바에서 **Workspaces**를 선택합니다(아이콘은 &#128455;와 비슷하게 생겼습니다).
+1. 원하는 이름으로 새 작업 영역을 만들고, Fabric Capacity가 포함된 라이선싱 모드(*Trial*, *Premium*, 또는 *Fabric*)를 선택합니다.
+1. 새 작업 영역이 열리면 비어 있어야 합니다.
 
-    ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
+    ![Fabric의 빈 작업 영역 스크린샷](./Images/new-workspace.png)
 
-## Create an eventhouse
+## Eventhouse 만들기
 
-Now that you have a workspace, you can start creating the Fabric items you'll need for your real-time intelligence solution. we'll start by creating an eventhouse.
+이제 작업 영역이 있으므로, 실시간 인텔리전스 솔루션에 필요한 Fabric 항목을 만들기 시작할 수 있습니다. Eventhouse를 만드는 것부터 시작하겠습니다.
 
-1. In the workspace you just created, select **+ New item**. In the *New item* pane, select **Eventhouse**, giving it a unique name of your choice.
-1. Close any tips or prompts that are displayed until you see your new empty eventhouse.
+1. 방금 만든 작업 영역에서 **+ 새 항목**을 선택합니다. *새 항목* 창에서 **Eventhouse**를 선택하고, 원하는 고유한 이름을 지정합니다.
+1. 새 비어 있는 Eventhouse가 보일 때까지 표시되는 모든 팁이나 프롬프트를 닫습니다.
 
-    ![Screenshot of a new eventhouse](./Images/create-eventhouse.png)
+    ![새 Eventhouse 스크린샷](./Images/create-eventhouse.png)
 
-1. In the pane on the left, note that your eventhouse contains a KQL database with the same name as the eventhouse.
-1. Select the KQL database to view it.
+1. 왼쪽 창에서 Eventhouse와 동일한 이름의 KQL database가 Eventhouse에 포함되어 있음을 확인합니다.
+1. KQL database를 선택하여 확인합니다.
 
-    Currently there are no tables in the database. In the rest of this exercise you'll use an eventstream to load data from a real-time source into a table.
+    현재 database에는 테이블이 없습니다. 이 연습의 나머지 부분에서는 Eventstream을 사용하여 실시간 원본에서 테이블로 데이터를 로드합니다.
 
-## Create an Eventstream
+## Eventstream 만들기
 
-1. In the main page of your KQL database, select **Get data**.
-2. For the data source, select **Eventstream** > **New eventstream**. Name the Eventstream `Bicycle-data`.
+1. KQL database의 기본 페이지에서 **데이터 가져오기**를 선택합니다.
+2. 데이터 원본으로 **Eventstream** > **새 Eventstream**을 선택합니다. Eventstream 이름을 `Bicycle-data`로 지정합니다.
 
-    The creation of your new event stream in the workspace will be completed in just a few moments. Once established, you will be automatically redirected to the primary editor, ready to begin integrating sources into your event stream.
+    작업 영역에 새 Eventstream이 몇 분 안에 생성될 것입니다. 생성되면 기본 편집기로 자동 리디렉션되며, Eventstream에 원본을 통합할 준비가 된 것입니다.
 
-    ![Screenshot of a new eventstream.](./Images/empty-eventstream.png)
+    ![새 Eventstream 스크린샷](./Images/empty-eventstream.png)
 
-## Add a source
+## 원본 추가
 
-1. In the Eventstream canvas, select **Use sample data**.
-2. Name the source `Bicycles`, and select the **Bicycles** sample data.
+1. Eventstream 캔버스에서 **샘플 데이터 사용**을 선택합니다.
+2. 원본 이름을 `Bicycles`로 지정하고, **Bicycles** 샘플 데이터를 선택합니다.
 
-    Your stream will be mapped and you will be automatically displayed on the **eventstream canvas**.
+    스트림이 매핑되고 **Eventstream 캔버스**에 자동으로 표시됩니다.
 
-   ![Review the eventstream canvas](./Images/real-time-intelligence-eventstream-sourced.png)
+   ![Eventstream 캔버스 검토](./Images/real-time-intelligence-eventstream-sourced.png)
 
-## Add a destination
+## 대상 추가
 
-1. Select the **Transform events or add destination** tile and search for **Eventhouse**.
-1. In the **Eventhouse** pane, configure the following setup options.
-   - **Data ingestion mode:**: Event processing before ingestion
-   - **Destination name:** `bikes-table`
-   - **Workspace:** *Select the workspace you created at the beginning of this exercise*
-   - **Eventhouse**: *Select your eventhouse*
-   - **KQL database:** *Select your KQL database*
-   - **Destination table:** Create a new table named `bikes`
-   - **Input data format:** JSON
+1. **이벤트 변환 또는 대상 추가** 타일을 선택하고 **Eventhouse**를 검색합니다.
+1. **Eventhouse** 창에서 다음 설정 옵션을 구성합니다.
+   - **데이터 수집 모드**: 수집 전 이벤트 처리
+   - **대상 이름**: `bikes-table`
+   - **작업 영역**: *이 연습 시작 시 생성한 작업 영역을 선택합니다.*
+   - **Eventhouse**: *Eventhouse를 선택합니다.*
+   - **KQL database**: *KQL database를 선택합니다.*
+   - **대상 테이블**: `bikes`라는 새 테이블을 만듭니다.
+   - **입력 데이터 형식**: JSON
 
-   ![Eventstream destination settings.](./Images/kql-database-event-processing-before-ingestion.png)
+   ![Eventstream 대상 설정.](./Images/kql-database-event-processing-before-ingestion.png)
 
-1. In the **Eventhouse** pane, select **Save**. 
-1. On the toolbar, select **Publish**.
-1. Wait a minute or so for the data destination to become active. Then select the **bikes-table** node in the design canvas and view the **Data preview** pane underneath to see the latest data that has been ingested:
+1. **Eventhouse** 창에서 **저장**을 선택합니다.
+1. 도구 모음에서 **게시**를 선택합니다.
+1. 데이터 대상이 활성화될 때까지 1분 정도 기다립니다. 그런 다음 디자인 캔버스에서 **bikes-table** 노드를 선택하고 아래의 **데이터 미리 보기** 창을 확인하여 수집된 최신 데이터를 봅니다.
 
-   ![A destination table in an eventstream.](./Images/stream-data-preview.png)
+   ![Eventstream의 대상 테이블.](./Images/stream-data-preview.png)
 
-1. Wait a few minutes and then use the **Refresh** button to refresh the **Data preview** pane. The stream is running perpetually, so new data may have been added to the table.
-1. Beneath the eventstream design canvas, view the **Data insights** tab to see details of the data events that have been captured.
+1. 몇 분 정도 기다린 다음 **새로 고침** 버튼을 사용하여 **데이터 미리 보기** 창을 새로 고칩니다. 스트림은 영구적으로 실행되므로, 새 데이터가 테이블에 추가되었을 수 있습니다.
+1. Eventstream 디자인 캔버스 아래에서 **데이터 인사이트** 탭을 확인하여 캡처된 데이터 이벤트의 세부 정보를 봅니다.
 
-## Query captured data
+## 캡처된 데이터 쿼리
 
-The eventstream you have created takes data from the sample source of bicycle data and loads it into the database in your eventhouse. You can analyze the captured data by querying the table in the database.
+생성한 Eventstream은 자전거 데이터의 샘플 원본에서 데이터를 가져와 Eventhouse의 database로 로드합니다. database의 테이블을 쿼리하여 캡처된 데이터를 분석할 수 있습니다.
 
-1. In the menu bar on the left, select your KQL database.
-1. On the **database** tab, in the toolbar for your KQL database, use the **Refresh** button to refresh the view until you see the **bikes** table under the database. Then select the **bikes** table.
+1. 왼쪽 메뉴 바에서 KQL database를 선택합니다.
+1. 1. **database** 탭에서 KQL database의 도구 모음에서 **새로 고침** 버튼을 사용하여 database 아래에 **bikes** 테이블이 보일 때까지 보기를 새로 고칩니다. 그런 다음 **bikes** 테이블을 선택합니다.
 
-   ![A table in a KQL database.](./Images/kql-table.png)
+   ![KQL database의 테이블.](./Images/kql-table.png)
 
-1. In the **...** menu for the **bikes** table, select **Query table** > **Records ingested in the last 24 hours**.
-1. In the query pane, note that the following query has been generated and run, with the results shown beneath:
+1. **bikes** 테이블의 **...** 메뉴에서 **테이블 쿼리** > **지난 24시간 동안 수집된 레코드**를 선택합니다.
+1. 쿼리 창에서 다음 쿼리가 생성 및 실행되었음을 확인하고, 결과는 아래에 표시됩니다.
 
     ```kql
     // See the most recent data - records ingested in the last 24 hours.
@@ -97,70 +97,70 @@ The eventstream you have created takes data from the sample source of bicycle da
     | where ingestion_time() between (now(-1d) .. now())
     ```
 
-1. Select the query code and run it to see 24 hours of data from the table.
+1. 쿼리 코드를 선택하고 실행하여 테이블에서 24시간 동안의 데이터를 확인합니다.
 
-    ![Screenshot of a KQL query.](./Images/kql-query.png)
+    ![KQL 쿼리 스크린샷.](./Images/kql-query.png)
 
-## Transform event data
+## 이벤트 데이터 변환
 
-The data you've captured is unaltered from the source. In many scenarios, you may want to transform the data in the event stream before loading it into a destination.
+캡처한 데이터는 원본에서 변경되지 않았습니다. 많은 시나리오에서 Eventstream에서 대상으로 로드하기 전에 데이터를 변환해야 할 수 있습니다.
 
-1. In the menu bar on the left, select the **Bicycle-data** eventstream.
-1. On the toolbar, select **Edit** to edit the eventstream.
-1. In the **Transform events** menu, select **Group by** to add a new **Group by** node to the eventstream.
-1. Drag a connection from the output of the **Bicycle-data** node to the input of the new **Group by** node Then use the *pencil* icon in the **Group by** node to edit it.
+1. 왼쪽 메뉴 바에서 **Bicycle-data** Eventstream을 선택합니다.
+1. 도구 모음에서 **편집**을 선택하여 Eventstream을 편집합니다.
+1. **이벤트 변환** 메뉴에서 **Group by**를 선택하여 Eventstream에 새 **Group by** 노드를 추가합니다.
+1. **Bicycle-data** 노드의 출력에서 새 **Group by** 노드의 입력으로 연결을 끕니다. 그런 다음 **Group by** 노드의 *연필* 아이콘을 사용하여 편집합니다.
 
-   ![Add group by to the transformation event.](./Images/eventstream-add-aggregates.png)
+   ![변환 이벤트에 Group by 추가.](./Images/eventstream-add-aggregates.png)
 
-1. Configure out the properties of the **Group by** settings section:
-    - **Operation name:** GroupByStreet
-    - **Aggregate type:** *Select* Sum
-    - **Field:** *select* No_Bikes. *Then select **Add** to create the function* SUM of No_Bikes
-    - **Group aggregations by (optional):** Street
-    - **Time window**: Tumbling
-    - **Duration**: 5 seconds
-    - **Offset**: 0 seconds
+1. **Group by** 설정 섹션의 속성을 구성합니다.
+    - **작업 이름**: GroupByStreet
+    - **집계 유형**: *합계* 선택
+    - **필드**: *No_Bikes*를 선택합니다. *그런 다음 **추가**를 선택하여 함수* SUM of No_Bikes*를 만듭니다.
+    - **집계 그룹화 기준 (선택 사항)**: Street
+    - **시간 창**: Tumbling
+    - **기간**: 5초
+    - **오프셋**: 0초
 
-    > **Note**: This configuration will cause the eventstream to calculate the total number of bicycles in each street every 5 seconds.
-      
-1. Save the configuration and return to the eventstream canvas, where an error is indicated (because you need to store the output from the transformation somewhere!).
+    > **참고**: 이 구성은 Eventstream이 각 Street에서 5초마다 총 자전거 수를 계산하도록 합니다.
 
-1. Use the **+** icon to the right of the **GroupByStreet** node to add a new **Eventhouse** node.
-1. Configure the new eventhouse node with the following options:
-   - **Data ingestion mode:**: Event processing before ingestion
-   - **Destination name:** `bikes-by-street-table`
-   - **Workspace:** *Select the workspace you created at the beginning of this exercise*
-   - **Eventhouse**: *Select your eventhouse*
-   - **KQL database:** *Select your KQL database*
-   - **Destination table:** Create a new table named `bikes-by-street`
-   - **Input data format:** JSON
+1. 구성을 저장하고 Eventstream 캔버스로 돌아가면, 오류가 표시됩니다(변환의 출력을 어딘가에 저장해야 하기 때문입니다!).
 
-    ![Screenshot of a table for grouped data.](./Images/group-by-table.png)
+1. **GroupByStreet** 노드 오른쪽에 있는 **+** 아이콘을 사용하여 새 **Eventhouse** 노드를 추가합니다.
+1. 새 Eventhouse 노드를 다음 옵션으로 구성합니다.
+   - **데이터 수집 모드**: 수집 전 이벤트 처리
+   - **대상 이름**: `bikes-by-street-table`
+   - **작업 영역**: *이 연습 시작 시 생성한 작업 영역을 선택합니다.*
+   - **Eventhouse**: *Eventhouse를 선택합니다.*
+   - **KQL database**: *KQL database를 선택합니다.*
+   - **대상 테이블**: `bikes-by-street`라는 새 테이블을 만듭니다.
+   - **입력 데이터 형식**: JSON
 
-1. In the **Eventhouse** pane, select **Save**. 
-1. On the toolbar, select **Publish**.
-1. Wait a minute or so for the changes to become active.
-1. In the design canvas, select the **bikes-by-street-table** node, and view the **data preview** pane beneath the canvas.
+    ![그룹화된 데이터용 테이블 스크린샷.](./Images/group-by-table.png)
 
-    ![Screenshot of a table for grouped data.](./Images/stream-table-with-windows.png)
+1. **Eventhouse** 창에서 **저장**을 선택합니다.
+1. 도구 모음에서 **게시**를 선택합니다.
+1. 변경 사항이 활성화될 때까지 1분 정도 기다립니다.
+1. 디자인 캔버스에서 **bikes-by-street-table** 노드를 선택하고, 캔버스 아래의 **데이터 미리 보기** 창을 확인합니다.
 
-    Note that the trasformed data includes the grouping field you specified (**Street**), the aggregation you specified (**SUM_no_Bikes**), and a timestamp field indicating the end of the 5 second tumbling window in which the event occurred (**Window_End_Time**).
+    ![그룹화된 데이터가 있는 테이블 스크린샷.](./Images/stream-table-with-windows.png)
 
-## Query the transformed data
+    변환된 데이터에는 지정한 그룹화 필드(**Street**), 지정한 집계(**SUM_no_Bikes**), 그리고 이벤트가 발생한 5초 Tumbling Window의 끝을 나타내는 타임스탬프 필드(**Window_End_Time**)가 포함됩니다.
 
-Now you can query the bicycle data that has been transformed and loaded into a table by your eventstream
+## 변환된 데이터 쿼리
 
-1. In the menu bar on the left, select your KQL database.
-1. 1. On the **database** tab, in the toolbar for your KQL database, use the **Refresh** button to refresh the view until you see the **bikes-by-street** table under the database.
-1. In the **...** menu for the **bikes-by-street** table, select **Query data** > **Show any 100 records**.
-1. In the query pane, note that the following query is generated and run:
+이제 Eventstream에 의해 변환되어 테이블로 로드된 자전거 데이터를 쿼리할 수 있습니다.
+
+1. 왼쪽 메뉴 바에서 KQL database를 선택합니다.
+1. 1. **database** 탭에서 KQL database의 도구 모음에서 **새로 고침** 버튼을 사용하여 database 아래에 **bikes-by-street** 테이블이 보일 때까지 보기를 새로 고칩니다.
+1. **bikes-by-street** 테이블의 **...** 메뉴에서 **데이터 쿼리** > **임의 레코드 100개 표시**를 선택합니다.
+1. 쿼리 창에서 다음 쿼리가 생성 및 실행되었음을 확인합니다.
 
     ```kql
     ['bikes-by-street']
     | take 100
     ```
 
-1. Modify the KQL query to retrieve the total number of bikes per street within each 5 second window:
+1. KQL 쿼리를 수정하여 각 5초 창 내에서 각 Street별 총 자전거 수를 검색합니다.
 
     ```kql
     ['bikes-by-street']
@@ -168,11 +168,11 @@ Now you can query the bicycle data that has been transformed and loaded into a t
     | sort by Window_End_Time desc , Street asc
     ```
 
-1. Select the modified query and run it.
+1. 수정된 쿼리를 선택하고 실행합니다.
 
-    The results show the number of bikes observed in each street within each 5 second time period.
+    결과는 각 5초 시간 기간 내 각 Street에서 관찰된 자전거 수를 보여줍니다.
 
-    ![Screenshot of a query returning grouped data.](./Images/kql-group-query.png)
+    ![그룹화된 데이터를 반환하는 쿼리 스크린샷.](./Images/kql-group-query.png)
 
 <!--
 ## Add an Activator destination
@@ -232,13 +232,13 @@ So far, you've used an eventstream to load data into tables in an eventhouse. Yo
 
 -->
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you have created an eventhouse and pipulated tables in its database by using an eventstream.
+이 연습에서는 Eventhouse를 만들고 Eventstream을 사용하여 해당 database에 테이블을 채웠습니다.
 
-When you've finished exploring your KQL database, you can delete the workspace you created for this exercise.
+KQL database 탐색을 마쳤으면, 이 연습을 위해 생성한 작업 영역을 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace.
-2. In the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace**.
+1. 왼쪽 바에서 작업 영역 아이콘을 선택합니다.
+2. 도구 모음에서 **작업 영역 설정**을 선택합니다.
+3. **일반** 섹션에서 **이 작업 영역 제거**를 선택합니다.
 .

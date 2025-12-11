@@ -5,161 +5,165 @@ lab:
 ---
 
 # Secure data access in Microsoft Fabric
+```
 
-Microsoft Fabric has a multi-layer security model for managing data access. Security can be set for an entire workspace, for individual items, or through granular permissions in each Fabric engine. In this exercise, you secure data using workspace, and item access controls and OneLake data access roles.
+# Microsoft Fabric에서 데이터 액세스 보안 설정
 
-> **Note**: To complete the exercises in this lab, you'll need two users: one user should be assigned the Workspace Admin role, and the other should have the Workspace Viewer role. To assign roles to workspaces see [Give access to your workspace](https://learn.microsoft.com/fabric/get-started/give-access-workspaces). If you don't have access to a second account in the same organization, you can still do the exercise as an Workspace Admin and skip the steps done as an Workspace Viewer account, referring to the exercise's screenshots to see what an Workspace Viewer account has access to.
+Microsoft Fabric은 데이터 액세스를 관리하기 위한 다계층 보안 모델을 제공합니다. 보안은 전체 Workspace, 개별 Item 또는 각 Fabric 엔진 내의 세분화된 권한을 통해 설정할 수 있습니다. 이 실습에서는 Workspace 및 Item 액세스 제어와 OneLake 데이터 액세스 역할을 사용하여 데이터를 보호합니다.
 
-This lab takes approximately **45** minutes to complete.
+> **참고**: 이 랩의 실습을 완료하려면 두 명의 사용자가 필요합니다. 한 사용자에게는 Workspace Admin 역할이 할당되어야 하고, 다른 사용자에게는 Workspace Viewer 역할이 있어야 합니다. Workspace에 역할을 할당하는 방법은 [Workspace에 액세스 권한 부여](https://learn.microsoft.com/fabric/get-started/give-access-workspaces)를 참조하세요. 동일한 조직 내에 두 번째 계정이 없는 경우에도 Workspace Admin으로 실습을 수행하고, Workspace Viewer 계정으로 수행하는 단계는 건너뛸 수 있으며, 실습 스크린샷을 참조하여 Workspace Viewer 계정이 액세스할 수 있는 내용을 확인할 수 있습니다.
 
-## Create a workspace
+이 랩은 완료하는 데 약 **45**분이 소요됩니다.
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+## Workspace 생성
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성화된 Workspace를 생성하세요.
+
+1.  브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`의 [Microsoft Fabric 홈페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+2.  왼쪽 메뉴 바에서 **Workspaces** (아이콘은 &#128455;와 유사합니다.)를 선택합니다.
+3.  원하는 이름으로 새 Workspace를 생성하고, Fabric Capacity를 포함하는 라이선싱 모드 (*Trial*, *Premium*, 또는 *Fabric*)를 선택합니다.
+4.  새 Workspace가 열리면 비어 있어야 합니다.
 
     ![Screenshot of an empty workspace in Fabric.](./Images/new-empty-workspace.png)
 
-> **Note**: When you create a workspace, you automatically become a member of the Workspace Admin role.
+> **참고**: Workspace를 생성하면 자동으로 Workspace Admin 역할의 구성원이 됩니다.
 
-## Create a data warehouse
+## Data Warehouse 생성
 
-Next, create a data warehouse in the workspace you created:
+다음으로, 생성한 Workspace에 Data Warehouse를 생성합니다:
 
-1. Click **+ New Item**. On the *New item* page, under the *Store Data* section, select **Sample warehouse** and create a new data warehouse with a name of your choice.
+1.  **+ New Item**을 클릭하세요. *새 Item* 페이지의 *데이터 저장* 섹션 아래에서 **Sample warehouse**를 선택하고 원하는 이름으로 새 Data Warehouse를 생성합니다.
 
-     After a minute or so, a new warehouse will be created:
+    1분 정도 지나면 새 Warehouse가 생성됩니다:
 
     ![Screenshot of a new warehouse.](./Images/new-sample-warehouse.png)
 
-## Create a lakehouse
-Next, create a lakehouse in the workspace you created.
+## Lakehouse 생성
 
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to 🗇).
-2. Select the workspace you created.
-3. In the workspace, select the **+ New Item** button and then select **Lakehouse**. Create a new Lakehouse with the name of your choice. Make sure the "Lakehouse schemas (Public Preview)" option is disabled.
+다음으로, 생성한 Workspace에 Lakehouse를 생성합니다.
 
-   After a minute or so, a new Lakehouse will be created:
+1.  왼쪽 메뉴 바에서 **Workspaces** (아이콘은 🗇와 유사합니다.)를 선택합니다.
+2.  생성한 Workspace를 선택합니다.
+3.  Workspace에서 **+ New Item** 버튼을 선택한 다음 **Lakehouse**를 선택합니다. 원하는 이름으로 새 Lakehouse를 생성합니다. "Lakehouse schemas (Public Preview)" 옵션이 비활성화되어 있는지 확인하세요.
+
+    1분 정도 지나면 새 Lakehouse가 생성됩니다:
 
     ![Screenshot of a new lakehouse in Fabric.](./Images/new-sample-lakehouse.png)
 
-4. Select the **Start with sample data** tile and then select the **Public holidays** sample. After a minute or so, the lakehouse will be populated with data.
+4.  **Start with sample data** 타일을 선택한 다음 **Public holidays** 샘플을 선택합니다. 1분 정도 지나면 Lakehouse에 데이터가 채워집니다.
 
-## Apply workspace access controls
+## Workspace 액세스 제어 적용
 
-Workspace roles are used to control access to workspaces and the content within them. Workspace roles can be assigned when users need to see all items in a workspace, when they need to manage workspace access, or create new Fabric items, or when they need specific permissions to view, modify or share content in the workspace.  
+Workspace 역할은 Workspace 및 그 안에 있는 콘텐츠에 대한 액세스를 제어하는 데 사용됩니다. Workspace 역할은 사용자가 Workspace의 모든 Item을 보거나, Workspace 액세스를 관리하거나, 새 Fabric Item을 생성하거나, Workspace에서 콘텐츠를 보거나, 수정하거나, 공유할 수 있는 특정 권한이 필요할 때 할당될 수 있습니다.
 
-In this exercise, you add a user to a workspace role, apply permissions and, see what is viewable when each set of permissions is applied. You open two browsers and sign-in as different users. In one browser, you'll be a **Workspace Admin** and in the other, you'll sign-in as a second, less privileged user. In one browser, the Workspace Admin changes permissions for the second user and in the second browser, you're able to see the effects of changing permissions.  
+이 실습에서는 Workspace 역할에 사용자를 추가하고, 권한을 적용하며, 각 권한 세트가 적용될 때 무엇을 볼 수 있는지 확인합니다. 두 개의 브라우저를 열고 다른 사용자로 로그인합니다. 한 브라우저에서는 **Workspace Admin**으로, 다른 브라우저에서는 두 번째로 권한이 적은 사용자로 로그인합니다. 한 브라우저에서는 Workspace Admin이 두 번째 사용자의 권한을 변경하고, 다른 브라우저에서는 권한 변경의 영향을 확인할 수 있습니다.
 
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-2. Next select the workspace you created.
-3. Select on **Manage access** on the top of the screen.
+1.  왼쪽 메뉴 바에서 **Workspaces** (아이콘은 &#128455;와 유사합니다.)를 선택합니다.
+2.  다음으로, 생성한 Workspace를 선택합니다.
+3.  화면 상단의 **Manage access**를 선택합니다.
 
-> **Note**: You'll see the user you're logged, who is a a member of the **Workspace Admin** role because you created the workspace. No other users are assigned access to the workspace yet.
+> **참고**: Workspace를 생성했기 때문에 **Workspace Admin** 역할의 구성원인 로그인한 사용자를 볼 수 있습니다. 아직 다른 사용자에게 Workspace에 대한 액세스 권한이 할당되지 않았습니다.
 
-4. Next, you'll see what a user without permissions on the workspace can view. In your browser, open an InPrivate window. In the Microsoft Edge browser, select the ellipse at the top right corner and select **New InPrivate Window**.
-5. Enter https://app.fabric.microsoft.com and sign-in as the second user you're using for testing.  
-6. On the bottom left corner of your screen, select **Microsoft Fabric** and then select **Data Warehouse**. Next select **Workspaces** (the icon looks similar to &#128455;).  
+4.  다음으로, Workspace에 대한 권한이 없는 사용자가 무엇을 볼 수 있는지 확인합니다. 브라우저에서 InPrivate 창을 엽니다. Microsoft Edge 브라우저에서는 오른쪽 상단 모서리에 있는 줄임표(…)를 선택하고 **New InPrivate Window**를 선택합니다.
+5.  https://app.fabric.microsoft.com을 입력하고 테스트를 위해 사용하는 두 번째 사용자로 로그인합니다.
+6.  화면 왼쪽 하단에서 **Microsoft Fabric**을 선택한 다음 **Data Warehouse**를 선택합니다. 다음으로 **Workspaces** (아이콘은 &#128455;와 유사합니다.)를 선택합니다.
 
-> **Note:** The second user doesn't have access to the workspace, so it's not viewable.
+> **참고:** 두 번째 사용자는 Workspace에 대한 액세스 권한이 없으므로 볼 수 없습니다.
 
-7. Next, you assign the **Workspace Viewer** role to the second user and see that the role grants read access to the warehouse in the workspace.  
-8. Return to the browser window where you're logged in as the Workspace Admin. Ensure you're still on the page that shows the workspace you created. It should have your new workspace items, and the sample warehouse and lakehouse, listed at the bottom of the page.
-9. Select **Manage access** at the top right of the screen.
-10. Select **Add people or groups**. Enter the email of the second user you're testing with. Select **Add** to assign the user to the workspace **Viewer** role.
-11. Return to the InPrivate browser window where you're logged in as the second user and select refresh button on the browser to refresh session permissions assigned to the second user.
-12. Select the **Workspaces** icon on the left menu bar (the icon looks similar to &#128455;) and select on the workspace name you created as the Workspace Admin user. The second user can now see all of the items in the workspace because they were assigned the **Workspace Viewer** role.
+7.  다음으로, 두 번째 사용자에게 **Workspace Viewer** 역할을 할당하고 해당 역할이 Workspace의 Warehouse에 읽기 액세스 권한을 부여하는지 확인합니다.
+8.  Workspace Admin으로 로그인한 브라우저 창으로 돌아갑니다. 생성한 Workspace를 보여주는 페이지에 계속 있는지 확인하세요. 페이지 하단에는 새 Workspace Item과 샘플 Warehouse 및 Lakehouse가 나열되어 있어야 합니다.
+9.  화면 오른쪽 상단의 **Manage access**를 선택합니다.
+10. **Add people or groups**를 선택합니다. 테스트 중인 두 번째 사용자의 이메일을 입력합니다. **Add**를 선택하여 사용자에게 Workspace **Viewer** 역할을 할당합니다.
+11. 두 번째 사용자로 로그인한 InPrivate 브라우저 창으로 돌아가서 브라우저의 새로고침 버튼을 선택하여 두 번째 사용자에게 할당된 세션 권한을 새로고침합니다.
+12. 왼쪽 메뉴 바의 **Workspaces** 아이콘 (아이콘은 &#128455;와 유사합니다.)을 선택하고 Workspace Admin 사용자로 생성한 Workspace 이름을 선택합니다. 두 번째 사용자는 **Workspace Viewer** 역할이 할당되었기 때문에 이제 Workspace의 모든 Item을 볼 수 있습니다.
 
     ![Screenshot of workspace items in Fabric.](./Images/workspace-viewer-view.png)
 
-13. Select the warehouse and open it.
-14. Select the **Date** table and wait for the rows to be loaded. You can see the rows because as a member of the Workspace Viewer role, you have CONNECT and ReadData permission on tables in the warehouse. For more information on permissions granted to the Workspace Viewer role, see [Workspace roles](https://learn.microsoft.com/en-us/fabric/data-warehouse/workspace-roles).
-15. Next, select the **Workspaces** icon on the left menu bar, then select the lakehouse.
-16. When the lakehouse opens, click on the dropdown box at the top right corner of the screen that says **Lakehouse** and select **SQL analytics endpoint**.
-17. Select the **publicholidays** table and wait for the data to be displayed. Data in the lakehouse table is readable from the SQL analytics endpoint because the user is a member of the Workspace Viewer role that grants read permissions on the SQL analytics endpoint.
+13. Warehouse를 선택하고 엽니다.
+14. **Date** 테이블을 선택하고 행이 로드될 때까지 기다립니다. Workspace Viewer 역할의 구성원으로서 Warehouse의 테이블에 대한 CONNECT 및 ReadData 권한을 가지고 있으므로 행을 볼 수 있습니다. Workspace Viewer 역할에 부여된 권한에 대한 자세한 정보는 [Workspace 역할](https://learn.microsoft.com/en-us/fabric/data-warehouse/workspace-roles)을 참조하세요.
+15. 다음으로, 왼쪽 메뉴 바에서 **Workspaces** 아이콘을 선택한 다음 Lakehouse를 선택합니다.
+16. Lakehouse가 열리면 화면 오른쪽 상단 모서리에 **Lakehouse**라고 표시된 드롭다운 상자를 클릭하고 **SQL analytics endpoint**를 선택합니다.
+17. **publicholidays** 테이블을 선택하고 데이터가 표시될 때까지 기다립니다. 사용자가 SQL analytics endpoint에 대한 읽기 권한을 부여하는 Workspace Viewer 역할의 구성원이므로 Lakehouse 테이블의 데이터는 SQL analytics endpoint에서 읽을 수 있습니다.
 
-## Apply item access control
+## Item 액세스 제어 적용
 
-Item permissions control access to individual Fabric items within a workspace, like warehouses, lakehouses and semantic models. In this exercise, you remove the **Workspace Viewer** permissions applied in the previous exercise and then apply item level permissions on the warehouse so a less privileged user can only view the warehouse data, not the lakehouse data.
+Item 권한은 Workspace 내의 Warehouse, Lakehouse 및 Semantic models와 같은 개별 Fabric Item에 대한 액세스를 제어합니다. 이 실습에서는 이전 실습에서 적용된 **Workspace Viewer** 권한을 제거한 다음, Warehouse에 Item 수준 권한을 적용하여 권한이 적은 사용자가 Warehouse 데이터만 볼 수 있고 Lakehouse 데이터는 볼 수 없도록 합니다.
 
-1. Return to the browser window where you're logged in as the Workspace Admin. Select **Workspaces** from the left navigation pane. 
-2. Select the workspace that you created to open it.
-3. Select **Manage access** from the top of the screen.
-4. Select the word **Viewer** under the name of the second user. On the menu that appears, select **Remove**.
+1.  Workspace Admin으로 로그인한 브라우저 창으로 돌아갑니다. 왼쪽 탐색 창에서 **Workspaces**를 선택합니다.
+2.  생성한 Workspace를 선택하여 엽니다.
+3.  화면 상단의 **Manage access**를 선택합니다.
+4.  두 번째 사용자 이름 아래의 **Viewer**라는 단어를 선택합니다. 나타나는 메뉴에서 **Remove**를 선택합니다.
 
-   ![Screenshot of workspace access dropdown in Fabric.](./Images/workspace-access.png)
+    ![Screenshot of workspace access dropdown in Fabric.](./Images/workspace-access.png)
 
-5. Close the **Manage access** section.
-6. In the workspace, hover over the name of your warehouse and an ellipse (**...**) will appear. Select the ellipse and select **Manage permissions**
-7. Select **Add user** and enter the name of the second user. 
-8. In the box that appears, under **Additional permissions** check **Read all data using SQL (ReadData)** and uncheck all other boxes.
+5.  **Manage access** 섹션을 닫습니다.
+6.  Workspace에서 Warehouse 이름 위로 마우스를 가져가면 줄임표(**...**)가 나타납니다. 줄임표를 선택하고 **Manage permissions**를 선택합니다.
+7.  **Add user**를 선택하고 두 번째 사용자의 이름을 입력합니다.
+8.  나타나는 상자에서 **Additional permissions** 아래의 **Read all data using SQL (ReadData)**를 선택하고 다른 모든 상자는 선택을 해제합니다.
 
     ![Screenshot of warehouse permissions being granted in Fabric.](./Images/grant-warehouse-access.png)
 
-9. Select **Grant**
-10. Return to the browser window where you're logged in as the second user. Refresh the browser view.
-11. The second user no longer has access to the workspace and instead has access to only the warehouse. You can no longer browse workspaces on the left navigation pane to find the warehouse. Select **OneLake catalog** on the left navigation menu to find the warehouse: 
+9.  **Grant**를 선택합니다.
+10. 두 번째 사용자로 로그인한 브라우저 창으로 돌아갑니다. 브라우저 보기를 새로고침합니다.
+11. 두 번째 사용자는 더 이상 Workspace에 대한 액세스 권한이 없으며 대신 Warehouse에만 액세스할 수 있습니다. 왼쪽 탐색 창에서 Workspace를 탐색하여 Warehouse를 찾을 수 없습니다. 왼쪽 탐색 메뉴에서 **OneLake catalog**를 선택하여 Warehouse를 찾으세요:
 
     ![Screenshot of OneLake catalog.](./Images/onelake-catalog.png)
 
-12. Select the warehouse. On the screen that appears, select **Open** from the top menu bar.
-13. When the warehouse view appears, select the **Date** table to view table data. The rows are viewable because the user still has read access to the warehouse because ReadData permissions were applied by using item permissions on the warehouse.
+12. Warehouse를 선택합니다. 나타나는 화면에서 상단 메뉴 바에서 **Open**을 선택합니다.
+13. Warehouse 보기가 나타나면 **Date** 테이블을 선택하여 테이블 데이터를 봅니다. Warehouse에 Item 권한을 사용하여 ReadData 권한이 적용되었기 때문에 사용자가 여전히 Warehouse에 대한 읽기 액세스 권한을 가지고 있으므로 행을 볼 수 있습니다.
 
-## Apply OneLake data access roles in a Lakehouse
+## Lakehouse에서 OneLake 데이터 액세스 역할 적용
 
-OneLake data access roles let you create custom roles within a Lakehouse and grant read permissions to folders you specify. OneLake data access roles is currently a Preview feature.
+OneLake 데이터 액세스 역할은 Lakehouse 내에서 사용자 지정 역할을 생성하고, 지정한 폴더에 읽기 권한을 부여할 수 있도록 합니다. OneLake 데이터 액세스 역할은 현재 미리 보기(Preview) 기능입니다.
 
-In this exercise, you assign an item permission and create a OneLake data access role and experiment with how they work together to restrict access to data in a Lakehouse.  
+이 실습에서는 Item 권한을 할당하고 OneLake 데이터 액세스 역할을 생성하며, 이들이 Lakehouse의 데이터에 대한 액세스를 제한하기 위해 어떻게 함께 작동하는지 실험합니다.
 
-1. Stay in the browser where you're logged in as the second user.  
-2. Select **OneLake catalog** on the left navigation bar. The second user doesn't see the lakehouse.  
-3. Return to the browser where you're logged in as the Workspace Admin.
-4. Select **Workspaces** on the left menu and select your workspace. Hover over the name of the lakehouse.  
-5. Select on the ellipse (**...**) to the right of the ellipse and select **Manage permissions**
+1.  두 번째 사용자로 로그인한 브라우저에 머무르세요.
+2.  왼쪽 탐색 바에서 **OneLake catalog**를 선택합니다. 두 번째 사용자는 Lakehouse를 볼 수 없습니다.
+3.  Workspace Admin으로 로그인한 브라우저로 돌아갑니다.
+4.  왼쪽 메뉴에서 **Workspaces**를 선택하고 Workspace를 선택합니다. Lakehouse 이름 위로 마우스를 가져갑니다.
+5.  줄임표(**...**) 오른쪽에 있는 줄임표를 선택하고 **Manage permissions**를 선택합니다.
 
     ![Screenshot of setting permissions on a lakehouse in Fabric.](./Images/lakehouse-manage-permissions.png)
 
-6. On the screen that appears, select **Add user**. 
-7. Assign the second user to the lakehouse and ensure none of the checkboxes on the **Grant People Access** window are checked.  
+6.  나타나는 화면에서 **Add user**를 선택합니다.
+7.  두 번째 사용자에게 Lakehouse를 할당하고 **Grant People Access** 창의 체크박스 중 어떤 것도 선택되어 있지 않은지 확인합니다.
 
     ![Screenshot of the grant access lakehouse window in Fabric.](./Images/grant-people-access-window.png)
 
-8. Select **Grant**. The second user now has read permissions on the lakehouse. Read permission only allows the user to see metadata for the lakehouse but not the underlying data. Next we'll validate this.
-9. Return to the browser where you're logged in as the second user. Refresh the browser.
-10. Select **OneLake** in the left navigation pane.  
-11. Select the lakehouse and open it. 
-12. Select **Open** on the top menu bar. You're unable to expand the tables or files even though read permission was granted.
+8.  **Grant**를 선택합니다. 두 번째 사용자는 이제 Lakehouse에 대한 읽기 권한을 가집니다. 읽기 권한은 사용자에게 Lakehouse의 메타데이터만 볼 수 있도록 허용하며, 기본 데이터는 볼 수 없습니다. 다음으로 이를 검증합니다.
+9.  두 번째 사용자로 로그인한 브라우저로 돌아갑니다. 브라우저를 새로고침합니다.
+10. 왼쪽 탐색 창에서 **OneLake**를 선택합니다.
+11. Lakehouse를 선택하고 엽니다.
+12. 상단 메뉴 바에서 **Open**을 선택합니다. 읽기 권한이 부여되었음에도 불구하고 테이블이나 파일을 확장할 수 없습니다.
 
     ![Screenshot of lakehouse unable to load data.](./Images/lakehouse-metadata-only-access.png)
 
-13. Next, you grant the second user access to a specific folder using OneLake data access permissions.
-14. Return to the browser where you're logged in as the workspace administrator.
-15. Select **Workspaces** from the left navigation bar.
-16. Select your workspace name.
-17. Select the lakehouse.
-18. When the lakehouse opens, select **Manage OneLake data access** on the top menu bar and enable the feature by selecting the **Continue** button.
+13. 다음으로, OneLake 데이터 액세스 권한을 사용하여 두 번째 사용자에게 특정 폴더에 대한 액세스 권한을 부여합니다.
+14. Workspace 관리자로 로그인한 브라우저로 돌아갑니다.
+15. 왼쪽 탐색 바에서 **Workspaces**를 선택합니다.
+16. Workspace 이름을 선택합니다.
+17. Lakehouse를 선택합니다.
+18. Lakehouse가 열리면 상단 메뉴 바에서 **Manage OneLake data access**를 선택하고 **Continue** 버튼을 선택하여 기능을 활성화합니다.
 
     ![Screenshot of the Manage OneLake data access (preview) feature on the menu bar in Fabric.](./Images/manage-onelake-roles.png)
 
-19. Select **+ New** on the **OneLake security** screen that appears.
-  
+19. 나타나는 **OneLake security** 화면에서 **+ New**를 선택합니다.
+
     ![Screenshot of the new role functionality in the manage OneLake data access feature.](./Images/create-onelake-role.png)
 
-20. Create a new role called **publicholidays**, then select **Selected data** and **Browse Lakehouse**. In the new window, select the publicholidays table.
-21. In the **Add members to your role** field, add your second user.
-22. In the **Preview role** section, confirm that the **publicholidays** table is added to the **Data preview** tab with Read permissions and your second user is added to the **Members preview** tab. Select **Create role**.
-23. Return to the browser where you're logged in as the second user. Ensure you're still on the page where the lakehouse is open. Refresh the browser.  
-24. Select the **publicholidays** table and wait for the data to load. Only the data in the publicholidays table is accessible to the user because the user was assigned to the custom OneLake data access role. The role permits them to see only the data in the publicholidays table, not data in any of the other tables, files, or folders.
+20. **publicholidays**라는 새 역할을 생성한 다음, **Selected data**와 **Browse Lakehouse**를 선택합니다. 새 창에서 publicholidays 테이블을 선택합니다.
+21. **Add members to your role** 필드에 두 번째 사용자를 추가합니다.
+22. **Preview role** 섹션에서 **publicholidays** 테이블이 읽기 권한과 함께 **Data preview** 탭에 추가되었는지, 그리고 두 번째 사용자가 **Members preview** 탭에 추가되었는지 확인합니다. **Create role**을 선택합니다.
+23. 두 번째 사용자로 로그인한 브라우저로 돌아갑니다. Lakehouse가 열려 있는 페이지에 계속 있는지 확인하세요. 브라우저를 새로고침합니다.
+24. **publicholidays** 테이블을 선택하고 데이터가 로드될 때까지 기다립니다. 사용자가 사용자 지정 OneLake 데이터 액세스 역할에 할당되었기 때문에 publicholidays 테이블의 데이터만 액세스할 수 있습니다. 이 역할은 publicholidays 테이블의 데이터만 볼 수 있도록 허용하며, 다른 테이블, 파일 또는 폴더의 데이터는 볼 수 없습니다.
 
     ![Screenshot of the lakehouse with table access.](./Images/lakehouse-table-access.png)
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you secured data using workspace access controls, item access controls and, OneLake data access roles.
+이 실습에서는 Workspace 액세스 제어, Item 액세스 제어 및 OneLake 데이터 액세스 역할을 사용하여 데이터를 보호했습니다.
 
-1. In the left navigation bar, select the icon for your workspace to view all of the items it contains.
-2. In the menu on the top toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace**.
+1.  왼쪽 탐색 바에서 Workspace 아이콘을 선택하여 포함된 모든 Item을 봅니다.
+2.  상단 도구 모음의 메뉴에서 **Workspace settings**를 선택합니다.
+3.  **General** 섹션에서 **Remove this workspace**를 선택합니다.

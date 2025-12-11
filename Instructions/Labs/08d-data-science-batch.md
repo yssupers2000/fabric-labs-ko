@@ -6,54 +6,54 @@ lab:
 
 # Generate batch predictions using a deployed model in Microsoft Fabric
 
-In this lab, you'll use a machine learning model to predict a quantitative measure of diabetes.
+이 랩에서는 머신러닝 모델을 사용하여 당뇨병의 정량적 측정값을 예측합니다.
 
-By completing this lab, you'll gain hands-on experience in generating predictions and visualizing the results.
+이 랩을 완료하면 예측을 생성하고 결과를 시각화하는 실습 경험을 얻게 됩니다.
 
-This lab will take approximately **20** minutes to complete.
+이 랩을 완료하는 데 약 **20**분이 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric trial](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 연습을 완료하려면 [Microsoft Fabric 평가판](https://learn.microsoft.com/fabric/get-started/fabric-trial)이 필요합니다.
 
-## Create a workspace
+## 작업 영역 만들기
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성화된 작업 영역을 생성합니다.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`에 있는 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+1. 왼쪽 메뉴 바에서 **작업 영역**(아이콘은 &#128455;와 유사하게 생겼습니다.)을 선택합니다.
+1. 원하는 이름으로 새 작업 영역을 생성하고, Fabric Capacity(*평가판*, *Premium* 또는 *Fabric*)를 포함하는 라이선스 모드를 선택합니다.
+1. 새 작업 영역이 열리면 비어 있어야 합니다.
 
-    ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
+    ![Fabric의 빈 작업 영역 스크린샷](./Images/new-workspace.png)
 
-## Create a notebook
+## Notebook 만들기
 
-You'll use a *notebook* to train and use a model in this exercise.
+이 연습에서는 *Notebook*을 사용하여 모델을 학습하고 사용합니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Data Science* section, select **Notebook**. Give it a unique name of your choice.
+1. 왼쪽 메뉴 바에서 **만들기**를 선택합니다. *새로 만들기* 페이지의 *데이터 과학* 섹션에서 **Notebook**을 선택합니다. 원하는 고유한 이름을 지정합니다.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**참고**: **만들기** 옵션이 사이드바에 고정되어 있지 않은 경우 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-    After a few seconds, a new notebook containing a single *cell* will open. Notebooks are made up of one or more cells that can contain *code* or *markdown* (formatted text).
+    몇 초 후에 단일 *셀*이 포함된 새 Notebook이 열립니다. Notebook은 *코드* 또는 *Markdown*(서식 있는 텍스트)을 포함할 수 있는 하나 이상의 셀로 구성됩니다.
 
-1. Select the first cell (which is currently a *code* cell), and then in the dynamic tool bar at its top-right, use the **M&#8595;** button to convert the cell to a *markdown* cell.
+1. 첫 번째 셀(현재 *코드* 셀)을 선택한 다음, 셀의 오른쪽 상단에 있는 동적 도구 모음에서 **M&#8595;** 버튼을 사용하여 셀을 *Markdown* 셀로 변환합니다.
 
-    When the cell changes to a markdown cell, the text it contains is rendered.
+    셀이 Markdown 셀로 변경되면 포함된 텍스트가 렌더링됩니다.
 
-1. If necessary, use the **&#128393;** (Edit) button to switch the cell to editing mode, then delete the content and enter the following text:
+1. 필요한 경우 **&#128393;** (편집) 버튼을 사용하여 셀을 편집 모드로 전환한 다음, 내용을 삭제하고 다음 텍스트를 입력합니다.
 
     ```text
    # Train and use a machine learning model
     ```
 
-## Train a machine learning model
+## 머신러닝 모델 학습
 
-First, let's train a machine learning model that uses a *regression* algorithm to predict the response of interest for diabetes patients (a quantitative measure of disease progression one year after baseline)
+먼저, *회귀* 알고리즘을 사용하여 당뇨병 환자의 관심 반응(baseline 1년 후 질병 진행의 정량적 측정값)을 예측하는 머신러닝 모델을 학습시켜 보겠습니다.
 
-1. In your notebook, use the **+ Code** icon below the latest cell to add a new code cell to the notebook.
+1. Notebook에서 최신 셀 아래에 있는 **+ 코드** 아이콘을 사용하여 새 코드 셀을 Notebook에 추가합니다.
 
-    > **Tip**: To see the **+ Code** icon, move the mouse to just below and to the left of the output from the current cell. Alternatively, in the menu bar, on the **Edit** tab, select **+ Add code cell**.
+    > **팁**: **+ 코드** 아이콘을 보려면 마우스를 현재 셀 출력 바로 아래 왼쪽으로 이동합니다. 또는 메뉴 바의 **편집** 탭에서 **+ 코드 셀 추가**를 선택합니다.
 
-1. Enter the following code to load and prepare data and use it to train a model.
+1. 다음 코드를 입력하여 데이터를 로드하고 준비한 다음 모델을 학습하는 데 사용합니다.
 
     ```python
    import pandas as pd
@@ -104,11 +104,11 @@ First, let's train a machine learning model that uses a *regression* algorithm t
        mlflow.sklearn.log_model(model, "model", signature=signature)
     ```
 
-1. Use the **&#9655; Run cell** button on the left of the cell to run it. Alternatively, you can press **SHIFT** + **ENTER** on your keyboard to run a cell.
+1. 셀의 왼쪽에 있는 **&#9655; 셀 실행** 버튼을 사용하여 셀을 실행합니다. 또는 키보드에서 **SHIFT** + **ENTER**를 눌러 셀을 실행할 수 있습니다.
 
-    > **Note**: Since this is the first time you've run any Spark code in this session, the Spark pool must be started. This means that the first run in the session can take a minute or so to complete. Subsequent runs will be quicker.
+    > **참고**: 이 세션에서 Spark 코드를 처음 실행하는 것이므로 Spark Pool이 시작되어야 합니다. 즉, 세션의 첫 번째 실행은 완료하는 데 약 1분 정도 걸릴 수 있습니다. 이후 실행은 더 빨라집니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code to register the model that was trained by the experiment in the previous cell:
+1. 셀 출력 아래에 있는 **+ 코드** 아이콘을 사용하여 새 코드 셀을 Notebook에 추가하고, 이전 셀에서 실험을 통해 학습된 모델을 등록하는 다음 코드를 입력합니다.
 
     ```python
    # Get the most recent experiement run
@@ -124,16 +124,16 @@ First, let's train a machine learning model that uses a *regression* algorithm t
    print("Version: {}".format(mv.version))
     ```
 
-    Your model is now saved in your workspace as **diabetes-model**. Optionally, you can use the browse feature in your workspace to find the model in the workspace and explore it using the UI.
+    이제 모델이 **diabetes-model**로 작업 영역에 저장됩니다. 선택적으로 작업 영역의 찾아보기 기능을 사용하여 작업 영역에서 모델을 찾고 UI를 사용하여 탐색할 수 있습니다.
 
-## Create a test dataset in a lakehouse
+## Lakehouse에서 테스트 데이터 세트 만들기
 
-To use the model, you're going to need a dataset of patient details for whom you need to predict a diabetes diagnosis. You'll create this dataset as a table in a Microsoft Fabric Lakehouse.
+모델을 사용하려면 당뇨병 진단을 예측해야 하는 환자 세부 정보 데이터 세트가 필요합니다. 이 데이터 세트를 Microsoft Fabric Lakehouse의 테이블로 생성합니다.
 
-1. In the Notebook editor, in the **Explorer** pane on the left, select **+ Data sources** to add a lakehouse.
-1. Select **New lakehouse** and select **Add**, and create a new **Lakehouse** with a valid name of your choice.
-1. When asked to stop the current session, select **Stop now** to restart the notebook.
-1. When the lakehouse is created and attached to your notebook, add a new code cell run the following code to create a dataset and save it in a table in the lakehouse:
+1. Notebook 편집기에서 왼쪽의 **탐색기** 창에 있는 **+ 데이터 원본**을 선택하여 Lakehouse를 추가합니다.
+1. **새 Lakehouse**를 선택하고 **추가**를 선택한 다음, 원하는 유효한 이름으로 새 **Lakehouse**를 생성합니다.
+1. 현재 세션을 중지하라는 메시지가 나타나면 **지금 중지**를 선택하여 Notebook을 다시 시작합니다.
+1. Lakehouse가 생성되어 Notebook에 연결되면 새 코드 셀을 추가하고 다음 코드를 실행하여 데이터 세트를 생성하고 Lakehouse의 테이블에 저장합니다.
 
     ```python
    from pyspark.sql.types import IntegerType, DoubleType
@@ -172,14 +172,14 @@ To use the model, you're going to need a dataset of patient details for whom you
    print(f"Spark dataframe saved to delta table: {table_name}")
     ```
 
-1. When the code has completed, select the **...** next to the **Tables** in the **Lakehouse explorer** pane, and select **Refresh**. The **diabetes_test** table should appear.
-1. Expand the **diabetes_test** table in the left pane to view all fields it includes.
+1. 코드가 완료되면 **Lakehouse 탐색기** 창에서 **테이블** 옆의 **...**을 선택하고 **새로 고침**을 선택합니다. **diabetes_test** 테이블이 나타나야 합니다.
+1. 왼쪽 창에서 **diabetes_test** 테이블을 확장하여 포함된 모든 필드를 확인합니다.
 
-## Apply the model to generate predictions
+## 예측을 생성하기 위해 모델 적용
 
-Now you can use the model you trained previously to generate diabetes progression predictions for the rows of patient data in your table.
+이제 이전에 학습한 모델을 사용하여 테이블에 있는 환자 데이터 행에 대한 당뇨병 진행 예측을 생성할 수 있습니다.
 
-1. Add a new code cell and run the following code:
+1. 새 코드 셀을 추가하고 다음 코드를 실행합니다.
 
     ```python
    import mlflow
@@ -200,15 +200,15 @@ Now you can use the model you trained previously to generate diabetes progressio
    df_test.write.format('delta').mode("overwrite").option("mergeSchema", "true").saveAsTable(table_name)
     ```
 
-1. After the code has finished, select the **...** next to the **diabetes_test** table in the **Lakehouse explorer** pane, and select **Refresh**. A new field **predictions** has been added.
-1. Add a new code cell to the notebook and drag the **diabetes_test** table to it. The necessary code to view the table's contents will appear. Run the cell to display the data.
+1. 코드가 완료되면 **Lakehouse 탐색기** 창에서 **diabetes_test** 테이블 옆의 **...**을 선택하고 **새로 고침**을 선택합니다. 새 필드 **predictions**가 추가됩니다.
+1. Notebook에 새 코드 셀을 추가하고 **diabetes_test** 테이블을 해당 셀로 끌어옵니다. 테이블 내용을 볼 수 있는 필요한 코드가 나타납니다. 셀을 실행하여 데이터를 표시합니다.
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you have used a model to generate batch predictions.
+이 연습에서는 모델을 사용하여 배치 예측(batch predictions)을 생성했습니다.
 
-If you've finished exploring the notebook, you can delete the workspace that you created for this exercise.
+Notebook 탐색을 완료했다면 이 연습을 위해 생성한 작업 영역을 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-2. In the **...** menu on the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace** .
+1. 왼쪽 바에서 작업 영역 아이콘을 선택하여 포함된 모든 항목을 확인합니다.
+2. 도구 모음의 **...** 메뉴에서 **작업 영역 설정**을 선택합니다.
+3. **일반** 섹션에서 **이 작업 영역 제거**를 선택합니다.

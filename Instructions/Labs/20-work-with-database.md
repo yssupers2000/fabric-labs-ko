@@ -6,45 +6,45 @@ lab:
 
 # Work with SQL Database in Microsoft Fabric
 
-SQL database in Microsoft Fabric is a developer-friendly transactional database, based on Azure SQL Database, that allow you to easily create your operational database in Fabric. A SQL database in Fabric uses the SQL Database engine as Azure SQL Database.
+Microsoft Fabric의 SQL Database는 Azure SQL Database를 기반으로 하는 개발자 친화적인 트랜잭션 데이터베이스로, Fabric에서 운영 데이터베이스를 쉽게 생성할 수 있도록 해줍니다. Fabric의 SQL Database는 Azure SQL Database와 동일한 SQL Database 엔진을 사용합니다.
 
-This lab will take approximately **30** minutes to complete.
+이 랩을 완료하는 데 약 **30**분이 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric trial](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 실습을 완료하려면 [Microsoft Fabric 평가판](https://learn.microsoft.com/fabric/get-started/fabric-trial)이 필요합니다.
 
-## Create a workspace
+## 작업 영역 생성
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터를 사용하기 전에 Fabric 평가판이 활성화된 작업 영역을 생성합니다.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **New workspace**.
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`에 있는 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+1. 왼쪽의 메뉴 모음에서 **새 작업 영역**을 선택합니다.
+1. 원하는 이름으로 새 작업 영역을 생성하고, Fabric Capacity(*평가판*, *Premium* 또는 *Fabric*)를 포함하는 라이선스 모드를 선택합니다.
+1. 새 작업 영역이 열리면 비어 있어야 합니다.
 
     ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
 
-## Create a SQL database with sample data
+## 샘플 데이터가 포함된 SQL database 생성
 
-Now that you have a workspace, it's time to create a SQL database.
+작업 영역을 생성했으므로 이제 SQL database를 생성할 차례입니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Databases* section, select **SQL database**.
+1. 왼쪽의 메뉴 모음에서 **만들기**를 선택합니다. *새로 만들기* 페이지의 *데이터베이스* 섹션 아래에서 **SQL database**를 선택합니다.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**참고**: **만들기** 옵션이 사이드바에 고정되어 있지 않은 경우 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-1. Enter **AdventureWorksLT** as the database name, and select **Create**.
-1. Once you have created your database, you can load sample data into your database from **Sample data** card.
+1. 데이터베이스 이름으로 **AdventureWorksLT**를 입력하고 **만들기**를 선택합니다.
+1. 데이터베이스를 생성한 후 **샘플 데이터** 카드에서 데이터베이스에 샘플 데이터를 로드할 수 있습니다.
 
-    After a minute or so, your database will be populated with sample data for your scenario.
+    약 1분 정도 지나면 데이터베이스가 시나리오에 맞는 샘플 데이터로 채워집니다.
 
     ![Screenshot of a new database loaded with sample data.](./Images/sql-database-sample.png)
 
-## Query a SQL database
+## SQL database 쿼리
 
-The SQL query editor provides support for IntelliSense, code completion, syntax highlighting, client-side parsing, and validation. You can run Data Definition Language (DDL), Data Manipulation Language (DML) and Data Control Language (DCL) statements.
+SQL 쿼리 편집기는 IntelliSense, 코드 완성(code completion), 구문 강조 표시(syntax highlighting), 클라이언트 측 구문 분석(client-side parsing) 및 유효성 검사(validation)를 지원합니다. Data Definition Language (DDL), Data Manipulation Language (DML) 및 Data Control Language (DCL) 문을 실행할 수 있습니다.
 
-1. In the **AdventureWorksLT** database page, navigate to **Home**, and select **New query**.
+1. **AdventureWorksLT** 데이터베이스 페이지에서 **홈**으로 이동하여 **새 쿼리**를 선택합니다.
 
-1. In the new blank query pane, enter and run the following T-SQL code.
+1. 새로운 빈 쿼리 창에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     SELECT 
@@ -59,9 +59,9 @@ The SQL query editor provides support for IntelliSense, code completion, syntax 
     p.ListPrice DESC;
     ```
     
-    This query joins the `Product` and `ProductCategory` tables to display the product names, their categories, and their list prices, sorted by price in descending order.
+    이 쿼리는 `Product` 및 `ProductCategory` 테이블을 조인하여 제품 이름, 카테고리 및 정가를 가격 내림차순으로 정렬하여 표시합니다.
 
-1. In a new query editor, enter and run the following T-SQL code.
+1. 새 쿼리 편집기에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
    SELECT 
@@ -77,17 +77,17 @@ The SQL query editor provides support for IntelliSense, code completion, syntax 
         soh.OrderDate DESC;
     ```
 
-    This query retrieves a list of customers along with their order dates and subtotals, sorted by the order date in descending order. 
+    이 쿼리는 고객 목록과 해당 주문 날짜 및 소계(subtotal)를 주문 날짜 내림차순으로 정렬하여 검색합니다. 
 
-1. Close all query tabs.
+1. 모든 쿼리 탭을 닫습니다.
 
-## Integrate data with external data sources
+## 외부 데이터 원본과 데이터 통합
 
-You will integrate an external data about public holidays with sales order. Then, you'll  identify sales orders that coincide with public holidays, providing insights into how holidays might impact sales activities.
+공휴일에 대한 외부 데이터를 판매 주문과 통합할 것입니다. 그런 다음, 공휴일과 겹치는 판매 주문을 식별하여 공휴일이 판매 활동에 어떤 영향을 미치는지에 대한 통찰력을 제공합니다.
 
-1. Navigate to **Home**, and select **New query**.
+1. **홈**으로 이동하여 **새 쿼리**를 선택합니다.
 
-1. In the new blank query pane, enter and run the following T-SQL code.
+1. 새로운 빈 쿼리 창에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     CREATE TABLE SalesLT.PublicHolidays (
@@ -98,9 +98,9 @@ You will integrate an external data about public holidays with sales order. Then
     );
     ```
 
-    This query creates the `SalesLT.PublicHolidays` table in preparation to the next step.
+    이 쿼리는 다음 단계를 위해 `SalesLT.PublicHolidays` 테이블을 생성합니다.
 
-1. In a new query editor, enter and run the following T-SQL code.
+1. 새 쿼리 편집기에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     INSERT INTO SalesLT.PublicHolidays (CountryOrRegion, HolidayName, Date, IsPaidTimeOff)
@@ -111,9 +111,9 @@ You will integrate an external data about public holidays with sales order. Then
         ('United States', 'Thanksgiving Day', '2024-11-28', 1);
     ```
     
-    In this example, this query inserts holidays for Canada, the United Kingdom, and the United States for the year 2024 into the `SalesLT.PublicHolidays` table.    
+    이 예시에서 이 쿼리는 2024년 캐나다, 영국, 미국 공휴일을 `SalesLT.PublicHolidays` 테이블에 삽입합니다.    
 
-1. In a new or existing query editor, enter and execute the following T-SQL code.
+1. 새로운 또는 기존 쿼리 편집기에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     -- Insert new addresses into SalesLT.Address
@@ -136,9 +136,9 @@ You will integrate an external data about public holidays with sales order. Then
         (1004, 1, '2024-05-27', '2024-06-01', '2024-05-28', 1, 1, 'PO98765', 'AN321', 4, (SELECT TOP 1 AddressID FROM SalesLT.Address WHERE AddressLine1 = '789 Oak St'), (SELECT TOP 1 AddressID FROM SalesLT.Address WHERE AddressLine1 = '789 Oak St'), 'Ground', '98765', 400.00, 40.00, 20.00, 'New Order 4', NEWID(), GETDATE());
     ```
 
-    This code adds new addresses and orders to the database, simulating fictitious orders from different countries.
+    이 코드는 데이터베이스에 새로운 주소와 주문을 추가하여 여러 국가의 가상 주문을 시뮬레이션합니다.
 
-1. In a new or existing query editor, enter and execute the following T-SQL code.
+1. 새로운 또는 기존 쿼리 편집기에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     SELECT DISTINCT soh.SalesOrderID, soh.OrderDate, ph.HolidayName, ph.CountryOrRegion
@@ -149,17 +149,17 @@ You will integrate an external data about public holidays with sales order. Then
         ON soh.OrderDate = ph.Date AND a.CountryRegion = ph.CountryOrRegion
     ```
 
-    Take a moment to observe the results, noting how the query identifies sales orders that coincide with public holidays in the respective countries. This can provide valuable insights into order patterns and potential impacts of holidays on sales activities.
+    잠시 시간을 내어 결과를 확인하고, 쿼리가 각 국가의 공휴일과 겹치는 판매 주문을 어떻게 식별하는지 주목합니다. 이는 주문 패턴과 공휴일이 판매 활동에 미칠 수 있는 잠재적 영향에 대한 귀중한 통찰력을 제공할 수 있습니다.
 
-1. Close all query tabs.
+1. 모든 쿼리 탭을 닫습니다.
 
-## Secure data
+## 데이터 보안
 
-Suppose a specific group of users should only have access to data from the United States to generate reports.
+특정 사용자 그룹이 보고서 생성을 위해 미국 데이터에만 액세스해야 한다고 가정해 봅시다.
 
-Let's create a view based on the query we used earlier, and add a filter to it.
+이전에 사용했던 쿼리를 기반으로 View를 생성하고 필터를 추가해 보겠습니다.
 
-1. In the new blank query pane, enter and run the following T-SQL code.
+1. 새로운 빈 쿼리 창에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     CREATE VIEW SalesLT.vw_SalesOrderHoliday AS
@@ -172,7 +172,7 @@ Let's create a view based on the query we used earlier, and add a filter to it.
     WHERE a.CountryRegion = 'United Kingdom';
     ```
 
-1. In a new or existing query editor, enter and execute the following T-SQL code.
+1. 새로운 또는 기존 쿼리 편집기에 다음 T-SQL 코드를 입력하고 실행합니다.
 
     ```sql
     -- Create the role
@@ -182,21 +182,21 @@ Let's create a view based on the query we used earlier, and add a filter to it.
     GRANT SELECT ON SalesLT.vw_SalesOrderHoliday TO SalesOrderRole;
     ```
 
-    Any user added as a member to the `SalesOrderRole` role will have access only to the filtered view. If a user in this role attempts to access any other user objects, they will receive an error message similar to this:
+    `SalesOrderRole` Role에 멤버로 추가된 모든 사용자는 필터링된 View에만 액세스할 수 있습니다. 이 Role의 사용자가 다른 사용자 개체에 액세스하려고 하면 다음과 유사한 오류 메시지를 받게 됩니다.
 
     ```
     Msg 229, Level 14, State 5, Line 1
     The SELECT permission was denied on the object 'ObjectName', database 'DatabaseName', schema 'SchemaName'.
     ```
 
-> **Further Information**: See [What is Microsoft Fabric?](https://learn.microsoft.com/fabric/get-started/microsoft-fabric-overview) in the Microsoft Fabric documentation to learn more about other components available in the platform.
+> **추가 정보**: 플랫폼에서 사용할 수 있는 다른 구성 요소에 대해 자세히 알아보려면 Microsoft Fabric 설명서의 [Microsoft Fabric이란 무엇입니까?](https://learn.microsoft.com/fabric/get-started/microsoft-fabric-overview)를 참조하세요.
 
-In this exercise, you have created, queried, and secured data in a SQL database in Microsoft Fabric.
+이 실습에서는 Microsoft Fabric의 SQL database에서 데이터를 생성하고, 쿼리하고, 보안을 설정했습니다.
 
-## Clean up resources
+## 리소스 정리
 
-If you've finished exploring your database, you can delete the workspace you created for this exercise.
+데이터베이스 탐색을 마쳤다면 이 실습을 위해 생성한 작업 영역을 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-2. In the **...** menu on the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace**.
+1. 왼쪽 바에서 작업 영역 아이콘을 선택하여 포함된 모든 항목을 확인합니다.
+2. 도구 모음의 **...** 메뉴에서 **작업 영역 설정**을 선택합니다.
+3. **일반** 섹션에서 **이 작업 영역 제거**를 선택합니다.

@@ -4,63 +4,63 @@ lab:
     module: 'Work with data in a Microsoft Fabric eventhouse'
 ---
 
-# Work with data in a Microsoft Fabric eventhouse
+# Microsoft Fabric Eventhouse에서 데이터 작업
 
-In Microsoft Fabric, an *eventhouse* is used to store real-time data related to events; often captured from a streaming data source by an *eventstream*.
+Microsoft Fabric에서 *Eventhouse*는 이벤트와 관련된 실시간 데이터를 저장하는 데 사용되며, 종종 스트리밍 데이터 소스에서 *Eventstream*을 통해 캡처됩니다.
 
-Within an eventhouse, the data is stored in one or more KQL databases, each of which contains tables and other objects that you can query by using Kusto Query Language (KQL) or a subset of Structured Query Language (SQL).
+Eventhouse 내에서 데이터는 하나 이상의 KQL database에 저장되며, 각 KQL database는 Kusto Query Language (KQL) 또는 Structured Query Language (SQL)의 하위 집합을 사용하여 쿼리할 수 있는 테이블 및 기타 개체를 포함합니다.
 
-In this exercise, you'll create and populate an eventhouse with some sample data related to taxi rides, and then query the data using KQL and SQL.
+이 실습에서는 택시 탑승과 관련된 일부 샘플 데이터로 Eventhouse를 생성하고 채운 다음, KQL 및 SQL을 사용하여 데이터를 쿼리합니다.
 
-This exercise takes approximately **25** minutes to complete.
+이 실습을 완료하는 데 약 **25**분이 소요됩니다.
 
-## Create a workspace
+## Workspace 생성
 
-Before working with data in Fabric, create a workspace with the Fabric capacity enabled.
+Fabric에서 데이터 작업을 시작하기 전에, Fabric Capacity가 활성화된 Workspace를 생성하세요.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1.  브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`의 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+2.  왼쪽의 메뉴 바에서 **Workspaces**를 선택하세요 (아이콘은 &#128455;와 비슷하게 생겼습니다).
+3.  원하는 이름으로 새 Workspace를 생성하고, Fabric Capacity를 포함하는 라이선스 모드(*Trial*, *Premium*, 또는 *Fabric*)를 선택하세요.
+4.  새 Workspace가 열리면 비어 있어야 합니다.
 
     ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
 
-## Create an Eventhouse
+## Eventhouse 생성
 
-Now that you have a workspace with support for a Fabric capacity, you can create an eventhouse in it.
+이제 Fabric Capacity를 지원하는 Workspace가 있으므로, 그 안에 Eventhouse를 생성할 수 있습니다.
 
-1. In the menu bar on the left, select **Workloads**. Then, select the **Real-Time Intelligence** tile.
-1. On the **Real-Time Intelligence** home page, select the **Explore Real-Time Intelligence Sample** tile. It will automatically create an eventhouse called **RTISample**:
+1.  왼쪽의 메뉴 바에서 **Workloads**를 선택하세요. 그런 다음 **Real-Time Intelligence** 타일(tile)을 선택하세요.
+2.  **Real-Time Intelligence** 홈 페이지에서 **Explore Real-Time Intelligence Sample** 타일(tile)을 선택하세요. 그러면 자동으로 **RTISample**이라는 Eventhouse가 생성됩니다:
 
    ![Screenshot of a new eventhouse with sample data.](./Images/create-eventhouse-sample.png)
 
-1. In the pane on the left, note that your eventhouse contains a KQL database with the same name as the eventhouse.
-1. Verify that a **Bikestream** table has also been created.
+3.  왼쪽 창에서 Eventhouse가 Eventhouse와 동일한 이름의 KQL database를 포함하고 있음을 확인하세요.
+4.  **Bikestream** 테이블도 생성되었는지 확인하세요.
 
-## Query data by using KQL
+## KQL을 사용하여 데이터 쿼리
 
-Kusto Query Language (KQL) is an intuitive, comprehensive language that you can use to query a KQL database.
+Kusto Query Language (KQL)는 KQL database를 쿼리하는 데 사용할 수 있는 직관적이고 포괄적인 언어입니다.
 
-### Retrieve data from a table with KQL
+### KQL을 사용하여 테이블에서 데이터 검색
 
-1. In the left pane of the eventhouse window, under your KQL database, select the default **queryset** file. This file contains some sample KQL queries to get you started.
-1. Modify the first example query as follows.
+1.  Eventhouse 창의 왼쪽 창에서 KQL database 아래에 있는 기본 **queryset** 파일을 선택하세요. 이 파일에는 시작하는 데 도움이 되는 몇 가지 샘플 KQL 쿼리가 포함되어 있습니다.
+2.  첫 번째 예제 쿼리를 다음과 같이 수정하세요.
 
     ```kql
     Bikestream
     | take 100
     ```
 
-    > **NOTE:**
-    > The Pipe ( | ) character is used for two purposes in KQL including to separate query operators in a tabular expression statement. It is also used as a logical OR operator within square or round brackets to denote that you may specify one of the items separated by the pipe character.
+    > **참고:**
+    > KQL에서 Pipe ( | ) 문자는 테이블 형식 표현식 문장에서 쿼리 Operator를 구분하는 것을 포함하여 두 가지 용도로 사용됩니다. 또한 대괄호 또는 둥근 괄호 내에서 논리적 OR Operator로 사용하여 파이프 문자로 구분된 항목 중 하나를 지정할 수 있음을 나타냅니다.
 
-1. Select the query code and run it to return 100 rows from the table.
+3.  쿼리 코드를 선택하고 실행하여 테이블에서 100개 행을 반환하세요.
 
    ![Screenshot of the KQL query editor.](./Images/kql-take-100-query.png)
 
-    You can be more precise by adding specific attributes you want to query using the `project` keyword and then using the `take` keyword to tell the engine how many records to return.
+    `project` Keyword를 사용하여 쿼리하려는 특정 Attribute를 추가하고, `take` Keyword를 사용하여 엔진에 반환할 레코드 수를 알려줌으로써 더 정확하게 지정할 수 있습니다.
 
-1. Type, select, and run the following query:
+4.  다음 쿼리를 입력, 선택 및 실행하세요:
 
     ```kql
     // Use 'project' and 'take' to view a sample number of records in the table and check the data.
@@ -69,23 +69,23 @@ Kusto Query Language (KQL) is an intuitive, comprehensive language that you can 
     | take 10
     ```
 
-    > **NOTE:** The use of // denotes a comment.
+    > **참고:** //의 사용은 Comment를 나타냅니다.
 
-    Another common practice in the analysis is renaming columns in our queryset to make them more user-friendly.
+    분석에서 또 다른 일반적인 관행은 Queryset의 Column 이름을 변경하여 더 사용자 친화적으로 만드는 것입니다.
 
-1. Try the following query:
+5.  다음 쿼리를 시도해 보세요:
 
     ```kql
-    Bikestream 
+    Bikestream
     | project Street, ["Number of Empty Docks"] = No_Empty_Docks
     | take 10
     ```
 
-### Summarize data by using KQL
+### KQL을 사용하여 데이터 요약
 
-You can use the *summarize* keyword with a function to aggregate and otherwise manipulate data.
+*summarize* Keyword를 Function과 함께 사용하여 데이터를 집계하고 조작할 수 있습니다.
 
-1. Try the following query, which uses the **sum** function to summarize the rental data to see how many bikes are available in total:
+1.  다음 쿼리를 시도해 보세요. 이 쿼리는 **sum** Function을 사용하여 대여 데이터를 요약하여 총 자전거 수를 확인합니다:
 
     ```kql
 
@@ -93,9 +93,9 @@ You can use the *summarize* keyword with a function to aggregate and otherwise m
     | summarize ["Total Number of Bikes"] = sum(No_Bikes)
     ```
 
-    You can group the summarized data by a specified column or expression.
+    지정된 Column 또는 Expression별로 요약된 데이터를 그룹화할 수 있습니다.
 
-1. Run the following query to group the number of bikes by neighbourhood to determine the amount of available bikes in each neighbourhood:
+2.  다음 쿼리를 실행하여 각 지역에서 사용 가능한 자전거 수를 확인하기 위해 지역별로 자전거 수를 그룹화하세요:
 
     ```kql
     Bikestream
@@ -103,9 +103,9 @@ You can use the *summarize* keyword with a function to aggregate and otherwise m
     | project Neighbourhood, ["Total Number of Bikes"]
     ```
 
-    If any of the bike points has a null or empty entry for neighbourhood, the results of summarization will include a blank value, which is never good for analysis.
+    어떤 자전거 지점에 Neighbourhood(지역)에 대한 null 또는 비어 있는 항목이 있는 경우, 요약 결과에는 비어 있는 값이 포함되며, 이는 분석에 결코 좋지 않습니다.
 
-1. Modify the query as shown here to use the *case* function along with the *isempty* and *isnull* functions to group all trips for which the neighbourhood is unknown into a ***Unidentified*** category for follow-up.
+3.  여기에 표시된 대로 쿼리를 수정하여 *case* Function과 *isempty*, *isnull* Function을 함께 사용하여 Neighbourhood(지역)가 알려지지 않은 모든 Trip을 후속 조치를 위해 ***Unidentified*** Category로 그룹화하세요.
 
     ```kql
     Bikestream
@@ -113,13 +113,13 @@ You can use the *summarize* keyword with a function to aggregate and otherwise m
     | project Neighbourhood = case(isempty(Neighbourhood) or isnull(Neighbourhood), "Unidentified", Neighbourhood), ["Total Number of Bikes"]
     ```
 
-    >**Note**: As this sample dataset is well-maintained, you might not have an Unidentified field in the query result.
+    >**참고**: 이 샘플 Dataset은 잘 관리되어 있으므로, 쿼리 결과에 Unidentified 필드가 없을 수도 있습니다.
 
-### Sort data by using KQL
+### KQL을 사용하여 데이터 정렬
 
-To make more sense of our data, we typically order it by a column, and this process is done in KQL with either a *sort by* or *order by* operator (they act the same way).
+데이터를 더 잘 이해하기 위해 일반적으로 Column별로 데이터를 정렬하며, 이 과정은 KQL에서 *sort by* 또는 *order by* Operator를 사용하여 수행됩니다 (두 Operator는 동일하게 작동합니다).
 
-1. Try the following query:
+1.  다음 쿼리를 시도해 보세요:
 
     ```kql
     Bikestream
@@ -128,7 +128,7 @@ To make more sense of our data, we typically order it by a column, and this proc
     | sort by Neighbourhood asc
     ```
 
-1. Modify the query as follows and run it again, and note that the *order by* operator works the same way as *sort by*:
+2.  쿼리를 다음과 같이 수정하고 다시 실행하여, *order by* Operator가 *sort by*와 동일하게 작동함을 확인하세요:
 
     ```kql
     Bikestream
@@ -137,11 +137,11 @@ To make more sense of our data, we typically order it by a column, and this proc
     | order by Neighbourhood asc
     ```
 
-### Filter data by using KQL
+### KQL을 사용하여 데이터 필터링
 
-In KQL, the *where* clause is used to filter data. You can combine conditions in a *where* clause by using *and* and *or* logical operators.
+KQL에서 *where* Clause는 데이터를 필터링하는 데 사용됩니다. *and* 및 *or* 논리 Operator를 사용하여 *where* Clause의 조건을 결합할 수 있습니다.
 
-1. Run the following query to filter the bike data to include only bike points in the Chelsea neighbourhood:
+1.  다음 쿼리를 실행하여 Chelsea 지역의 자전거 지점만 포함하도록 자전거 데이터를 필터링하세요:
 
     ```kql
     Bikestream
@@ -151,42 +151,42 @@ In KQL, the *where* clause is used to filter data. You can combine conditions in
     | sort by Neighbourhood asc
     ```
 
-## Query data by using Transact-SQL
+## Transact-SQL을 사용하여 데이터 쿼리
 
-KQL Database doesn't support Transact-SQL natively, but it provides a T-SQL endpoint that emulates Microsoft SQL Server and allows you to run T-SQL queries on your data. The T-SQL endpoint has some limitations and differences from the native SQL Server. For example, it doesn't support creating, altering, or dropping tables, or inserting, updating, or deleting data. It also doesn't support some T-SQL functions and syntax that aren't compatible with KQL. It was created to allow systems that didn't support KQL to use T-SQL to query the data within a KQL Database. So, it's recommended to use KQL as the primary query language for KQL Database, as it offers more capabilities and performance than T-SQL. You can also use some SQL functions that are supported by KQL, such as count, sum, avg, min, max, and so on.
+KQL Database는 Transact-SQL을 기본적으로 지원하지 않지만, Microsoft SQL Server를 에뮬레이트하고 데이터를 T-SQL 쿼리할 수 있도록 하는 T-SQL Endpoint를 제공합니다. T-SQL Endpoint는 네이티브 SQL Server와 몇 가지 제한 및 차이점이 있습니다. 예를 들어, 테이블 생성, 변경 또는 삭제, 데이터 삽입, 업데이트 또는 삭제를 지원하지 않습니다. 또한 KQL과 호환되지 않는 일부 T-SQL Function 및 Syntax도 지원하지 않습니다. KQL을 지원하지 않는 시스템이 KQL Database 내의 데이터를 T-SQL로 쿼리할 수 있도록 하기 위해 생성되었습니다. 따라서 KQL Database의 기본 쿼리 언어로는 T-SQL보다 더 많은 기능과 성능을 제공하는 KQL을 사용하는 것이 좋습니다. KQL이 지원하는 count, sum, avg, min, max 등과 같은 일부 SQL Function도 사용할 수 있습니다.
 
-### Retrieve data from a table by using Transact-SQL
+### Transact-SQL을 사용하여 테이블에서 데이터 검색
 
-1. In your queryset, add and run the following Transact-SQL query: 
+1.  Queryset에서 다음 Transact-SQL 쿼리를 추가하고 실행하세요:
 
     ```sql
     SELECT TOP 100 * from Bikestream
     ```
 
-1. Modify the query as follows to retrieve specific columns
+2.  특정 Column을 검색하기 위해 쿼리를 다음과 같이 수정하세요:
 
     ```sql
     SELECT TOP 10 Street, No_Bikes
     FROM Bikestream
     ```
 
-1. Modify the query to assign an alias that renames **No_Empty_Docks** to a more user-friendly name.
+3.  **No_Empty_Docks**를 더 사용자 친화적인 이름으로 변경하는 Alias를 할당하도록 쿼리를 수정하세요.
 
     ```sql
     SELECT TOP 10 Street, No_Empty_Docks as [Number of Empty Docks]
     from Bikestream
     ```
 
-### Summarize data by using Transact-SQL
+### Transact-SQL을 사용하여 데이터 요약
 
-1. Run the following query to find the total number of bikes available:
+1.  다음 쿼리를 실행하여 사용 가능한 총 자전거 수를 찾으세요:
 
     ```sql
     SELECT sum(No_Bikes) AS [Total Number of Bikes]
     FROM Bikestream
     ```
 
-1. Modify the query to group the total number of bikes by neighbourhood:
+2.  쿼리를 수정하여 지역별로 총 자전거 수를 그룹화하세요:
 
     ```sql
     SELECT Neighbourhood, Sum(No_Bikes) AS [Total Number of Bikes]
@@ -194,7 +194,7 @@ KQL Database doesn't support Transact-SQL natively, but it provides a T-SQL endp
     GROUP BY Neighbourhood
     ```
 
-1. Modify the query further to use a *CASE* statement to group bike points with an unknown origin into a ***Unidentified*** category for follow-up. 
+3.  쿼리를 추가로 수정하여 *CASE* Statement를 사용하여 출처를 알 수 없는 자전거 지점을 후속 조치를 위해 ***Unidentified*** Category로 그룹화하세요.
 
     ```sql
     SELECT CASE
@@ -209,10 +209,10 @@ KQL Database doesn't support Transact-SQL natively, but it provides a T-SQL endp
              END;
     ```
 
-### Sort data by using Transact-SQL
+### Transact-SQL을 사용하여 데이터 정렬
 
-1. Run the following query to order the grouped results by neighbourhood:
- 
+1.  다음 쿼리를 실행하여 그룹화된 결과를 지역별로 정렬하세요:
+
     ```sql
     SELECT CASE
              WHEN Neighbourhood IS NULL OR Neighbourhood = '' THEN 'Unidentified'
@@ -227,9 +227,9 @@ KQL Database doesn't support Transact-SQL natively, but it provides a T-SQL endp
     ORDER BY Neighbourhood ASC;
     ```
 
-### Filter data by using Transact-SQL
-    
-1. Run the following query to filter the grouped data so that only rows having a neighbourhood of "Chelsea" are included in the results
+### Transact-SQL을 사용하여 데이터 필터링
+
+1.  다음 쿼리를 실행하여 그룹화된 데이터를 필터링하여 "Chelsea" 지역을 가진 행만 결과에 포함되도록 하세요:
 
     ```sql
     SELECT CASE
@@ -246,12 +246,12 @@ KQL Database doesn't support Transact-SQL natively, but it provides a T-SQL endp
     ORDER BY Neighbourhood ASC;
     ```
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you have created an eventhouse and queried data using KQL and SQL.
+이 실습에서는 Eventhouse를 생성하고 KQL 및 SQL을 사용하여 데이터를 쿼리했습니다.
 
-When you've finished exploring your KQL database, you can delete the workspace you created for this exercise.
+KQL database 탐색을 마쳤으면, 이 실습을 위해 생성한 Workspace를 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace.
-2. In the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace**.
+1.  왼쪽 바에서 Workspace 아이콘을 선택하세요.
+2.  툴바에서 **Workspace settings**를 선택하세요.
+3.  **General** 섹션에서 **Remove this workspace**를 선택하세요.

@@ -4,56 +4,56 @@ lab:
     module: 'Train and track machine learning models with MLflow in Microsoft Fabric'
 ---
 
-# Train and track machine learning models with MLflow in Microsoft Fabric
+# Microsoft Fabric에서 MLflow를 사용하여 머신러닝 모델 훈련 및 추적
 
-In this lab, you'll train a machine learning model to predict a quantitative measure of diabetes. You'll train a regression model with scikit-learn, and track and compare your models with MLflow.
+이 실습에서는 당뇨병의 정량적 측정값을 예측하기 위해 머신러닝 모델을 훈련합니다. scikit-learn으로 회귀 모델을 훈련하고, MLflow를 사용하여 모델을 추적하고 비교합니다.
 
-By completing this lab, you'll gain hands-on experience in machine learning and model tracking, and learn how to work with *notebooks*, *experiments*, and *models* in Microsoft Fabric.
+이 실습을 완료함으로써 머신러닝 및 모델 추적에 대한 실습 경험을 얻고, Microsoft Fabric에서 *노트북*, *실험 (Experiment)* 및 *모델* 작업 방법을 학습합니다.
 
-This lab will take approximately **25** minutes to complete.
+이 실습은 완료하는 데 약 **25**분 정도 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric trial](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **Note**: 이 연습을 완료하려면 [Microsoft Fabric 평가판 (trial)](https://learn.microsoft.com/fabric/get-started/fabric-trial)이 필요합니다.
 
-## Create a workspace
+## 워크스페이스 (workspace) 만들기
 
-Before working with data in Fabric, create a workspace with the Fabric trial enabled.
+Fabric에서 데이터를 사용하기 전에 Fabric 평가판 (trial)이 활성화된 워크스페이스를 만드세요.
 
-1. Navigate to the[Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`의 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+1. 왼쪽 메뉴 모음에서 **Workspaces** (아이콘은 &#128455;와 유사하게 생겼습니다)를 선택합니다.
+1. 원하는 이름으로 새 워크스페이스를 만들고, Fabric Capacity를 포함하는 라이선스 모드(*Trial*, *Premium* 또는 *Fabric*)를 선택합니다.
+1. 새 워크스페이스가 열리면 비어 있어야 합니다.
 
     ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
 
-## Create a notebook
+## 노트북 만들기
 
-To train a model, you can create a *notebook*. Notebooks provide an interactive environment in which you can write and run code (in multiple languages).
+모델을 훈련하려면 *노트북*을 만들 수 있습니다. 노트북은 여러 언어로 코드를 작성하고 실행할 수 있는 대화형 환경을 제공합니다.
 
-1. In the menu bar on the left, select **Create**. In the *New* page, under the *Data Science* section, select **Notebook**. Give it a unique name of your choice.
+1. 왼쪽 메뉴 모음에서 **만들기**를 선택합니다. *새로 만들기* 페이지의 *데이터 과학* 섹션 아래에서 **Notebook**을 선택합니다. 원하는 고유한 이름을 지정하세요.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**Note**: **만들기** 옵션이 사이드바에 고정되어 있지 않으면 먼저 줄임표 (**...**) 옵션을 선택해야 합니다.
 
-    After a few seconds, a new notebook containing a single *cell* will open. Notebooks are made up of one or more cells that can contain *code* or *markdown* (formatted text).
+    몇 초 후에 단일 *셀*을 포함하는 새 노트북이 열립니다. 노트북은 *코드* 또는 *마크다운* (서식 있는 텍스트)을 포함할 수 있는 하나 이상의 셀로 구성됩니다.
 
-1. Select the first cell (which is currently a *code* cell), and then in the dynamic tool bar at its top-right, use the **M&#8595;** button to convert the cell to a *markdown* cell.
+1. 첫 번째 셀 (현재 *코드* 셀임)을 선택한 다음, 오른쪽 상단의 동적 도구 모음에서 **M&#8595;** 버튼을 사용하여 셀을 *마크다운* 셀로 변환합니다.
 
-    When the cell changes to a markdown cell, the text it contains is rendered.
+    셀이 마크다운 셀로 변경되면 포함된 텍스트가 렌더링됩니다.
 
-1. If necessary, use the **&#128393;** (Edit) button to switch the cell to editing mode, then delete the content and enter the following text:
+1. 필요한 경우 **&#128393;** (편집) 버튼을 사용하여 셀을 편집 모드로 전환한 다음, 내용을 삭제하고 다음 텍스트를 입력합니다.
 
     ```text
    # Train a machine learning model and track with MLflow
     ```
 
-## Load data into a dataframe
+## 데이터를 데이터프레임 (dataframe)으로 로드
 
-Now you're ready to run code to get data and train a model. You'll work with the [diabetes dataset](https://learn.microsoft.com/azure/open-datasets/dataset-diabetes?tabs=azureml-opendatasets?azure-portal=true) from the Azure Open Datasets. After loading the data, you'll convert the data to a Pandas dataframe: a common structure for working with data in rows and columns.
+이제 데이터를 가져오고 모델을 훈련하기 위한 코드를 실행할 준비가 되었습니다. Azure Open Datasets의 [당뇨병 데이터셋](https://learn.microsoft.com/azure/open-datasets/dataset-diabetes?tabs=azureml-opendatasets?azure-portal=true)으로 작업합니다. 데이터를 로드한 후, 데이터를 Pandas 데이터프레임으로 변환합니다. Pandas 데이터프레임은 행과 열의 데이터를 다루는 일반적인 구조입니다.
 
-1. In your notebook, use the **+ Code** icon below the latest cell output to add a new code cell to the notebook.
+1. 노트북에서 가장 최근 셀 출력 아래의 **+ 코드** 아이콘을 사용하여 노트북에 새 코드 셀을 추가합니다.
 
-    > **Tip**: To see the **+ Code** icon, move the mouse to just below and to the left of the output from the current cell. Alternatively, in the menu bar, on the **Edit** tab, select **+ Add code cell**.
+    > **Tip**: **+ 코드** 아이콘을 보려면 마우스를 현재 셀의 출력 바로 아래 왼쪽으로 이동하세요. 또는 메뉴 모음의 **편집** 탭에서 **+ 코드 셀 추가**를 선택하세요.
 
-1. Enter the following code in it:
+1. 여기에 다음 코드를 입력합니다.
 
     ```python
    # Azure storage access info for open dataset diabetes
@@ -71,17 +71,17 @@ Now you're ready to run code to get data and train a model. You'll work with the
    df = spark.read.parquet(wasbs_path)
     ```
 
-1. Use the **&#9655; Run cell** button on the left of the cell to run it. Alternatively, you can press **SHIFT** + **ENTER** on your keyboard to run a cell.
+1. 셀 왼쪽의 **&#9655; 셀 실행** 버튼을 사용하여 실행합니다. 또는 키보드에서 **SHIFT** + **ENTER**를 눌러 셀을 실행할 수 있습니다.
 
-    > **Note**: Since this is the first time you've run any Spark code in this session, the Spark pool must be started. This means that the first run in the session can take a minute or so to complete. Subsequent runs will be quicker.
+    > **Note**: 이번 세션에서 Spark 코드를 처음 실행하는 경우 Spark 풀을 시작해야 합니다. 즉, 세션에서 첫 번째 실행은 완료하는 데 1분 정도 소요될 수 있습니다. 이후 실행은 더 빨라집니다.
 
-1. Use the **+ Code** icon below the cell output to add a new code cell to the notebook, and enter the following code in it:
+1. 셀 출력 아래의 **+ 코드** 아이콘을 사용하여 노트북에 새 코드 셀을 추가하고 다음 코드를 입력합니다.
 
     ```python
    display(df)
     ```
 
-1. When the cell command has completed, review the output below the cell, which should look similar to this:
+1. 셀 명령이 완료되면 셀 아래의 출력을 검토합니다. 출력은 다음과 유사해야 합니다.
 
     |AGE|SEX|BMI|BP|S1|S2|S3|S4|S5|S6|Y|
     |---|---|---|--|--|--|--|--|--|--|--|
@@ -92,9 +92,9 @@ Now you're ready to run code to get data and train a model. You'll work with the
     |50|1|23.0|101.0|192|125.4|52.0|4.0|4.2905|80|135|
     | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-    The output shows the rows and columns of the diabetes dataset.
+    출력은 당뇨병 데이터셋의 행과 열을 보여줍니다.
 
-1. The data is loaded as a Spark dataframe. Scikit-learn will expect the input dataset to be a Pandas dataframe. Run the code below to convert your dataset to a Pandas dataframe:
+1. 데이터는 Spark 데이터프레임으로 로드됩니다. scikit-learn은 입력 데이터셋이 Pandas 데이터프레임일 것으로 예상합니다. 데이터셋을 Pandas 데이터프레임으로 변환하려면 아래 코드를 실행합니다.
 
     ```python
    import pandas as pd
@@ -102,11 +102,11 @@ Now you're ready to run code to get data and train a model. You'll work with the
    df.head()
     ```
 
-## Train a machine learning model
+## 머신러닝 모델 훈련
 
-Now that you've loaded the data, you can use it to train a machine learning model and predict a quantitative measure of diabetes. You'll train a regression model using the scikit-learn library and track the model with MLflow.
+이제 데이터를 로드했으므로 이 데이터를 사용하여 머신러닝 모델을 훈련하고 당뇨병의 정량적 측정값을 예측할 수 있습니다. scikit-learn 라이브러리를 사용하여 회귀 모델을 훈련하고 MLflow로 모델을 추적합니다.
 
-1. Run the following code to split the data into a training and test dataset, and to separate the features from the label you want to predict:
+1. 데이터를 훈련 및 테스트 데이터셋으로 분할하고, 예측하려는 레이블에서 특성 (features)을 분리하려면 다음 코드를 실행합니다.
 
     ```python
    from sklearn.model_selection import train_test_split
@@ -116,7 +116,7 @@ Now that you've loaded the data, you can use it to train a machine learning mode
    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
     ```
 
-1. Add another new code cell to the notebook, enter the following code in it, and run it:
+1. 노트북에 새 코드 셀을 하나 더 추가하고 다음 코드를 입력한 후 실행합니다.
 
     ```python
    import mlflow
@@ -124,9 +124,9 @@ Now that you've loaded the data, you can use it to train a machine learning mode
    mlflow.set_experiment(experiment_name)
     ```
 
-    The code creates an MLflow experiment named **experiment-diabetes**. Your models will be tracked in this experiment.
+    이 코드는 **experiment-diabetes**라는 이름의 MLflow 실험 (Experiment)을 생성합니다. 모델은 이 실험 (Experiment)에서 추적됩니다.
 
-1. Add another new code cell to the notebook, enter the following code in it, and run it:
+1. 노트북에 새 코드 셀을 하나 더 추가하고 다음 코드를 입력한 후 실행합니다.
 
     ```python
    from sklearn.linear_model import LinearRegression
@@ -140,9 +140,9 @@ Now that you've loaded the data, you can use it to train a machine learning mode
       mlflow.log_param("estimator", "LinearRegression")
     ```
 
-    The code trains a regression model using Linear Regression. Parameters, metrics, and artifacts, are automatically logged with MLflow. Additionally, you're logging a parameter called **estimator** with the value *LinearRegression*.
+    이 코드는 Linear Regression을 사용하여 회귀 모델을 훈련합니다. 매개변수 (parameter), 메트릭 및 아티팩트가 MLflow로 자동으로 로깅됩니다. 또한 **estimator**라는 매개변수 (parameter)를 *LinearRegression* 값으로 로깅하고 있습니다.
 
-1. Add another new code cell to the notebook, enter the following code in it, and run it:
+1. 노트북에 새 코드 셀을 하나 더 추가하고 다음 코드를 입력한 후 실행합니다.
 
     ```python
    from sklearn.tree import DecisionTreeRegressor
@@ -156,13 +156,13 @@ Now that you've loaded the data, you can use it to train a machine learning mode
       mlflow.log_param("estimator", "DecisionTreeRegressor")
     ```
 
-    The code trains a regression model using Decision Tree Regressor. Parameters, metrics, and artifacts, are automatically logged with MLflow. Additionally, you're logging a parameter called **estimator** with the value *DecisionTreeRegressor*.
+    이 코드는 Decision Tree Regressor를 사용하여 회귀 모델을 훈련합니다. 매개변수 (parameter), 메트릭 및 아티팩트가 MLflow로 자동으로 로깅됩니다. 또한 **estimator**라는 매개변수 (parameter)를 *DecisionTreeRegressor* 값으로 로깅하고 있습니다.
 
-## Use MLflow to search and view your experiments
+## MLflow를 사용하여 실험 (Experiment) 검색 및 보기
 
-When you've trained and tracked models with MLflow, you can use the MLflow library to retrieve your experiments and its details.
+MLflow로 모델을 훈련하고 추적한 후 MLflow 라이브러리를 사용하여 실험 (Experiment)과 해당 세부 정보를 검색할 수 있습니다.
 
-1. To list all experiments, use the following code:
+1. 모든 실험 (Experiment)을 나열하려면 다음 코드를 사용합니다.
 
     ```python
    import mlflow
@@ -171,7 +171,7 @@ When you've trained and tracked models with MLflow, you can use the MLflow libra
        print(exp.name)
     ```
 
-1. To retrieve a specific experiment, you can get it by its name:
+1. 특정 실험 (Experiment)을 검색하려면 이름으로 가져올 수 있습니다.
 
     ```python
    experiment_name = "experiment-diabetes"
@@ -179,19 +179,19 @@ When you've trained and tracked models with MLflow, you can use the MLflow libra
    print(exp)
     ```
 
-1. Using an experiment name, you can retrieve all jobs of that experiment:
+1. 실험 (Experiment) 이름을 사용하여 해당 실험 (Experiment)의 모든 작업을 검색할 수 있습니다.
 
     ```python
    mlflow.search_runs(exp.experiment_id)
     ```
 
-1. To more easily compare job runs and outputs, you can configure the search to order the results. For example, the following cell orders the results by *start_time*, and only shows a maximum of 2 results:
+1. 작업 실행 (run) 및 출력을 더 쉽게 비교하려면 검색을 구성하여 결과를 정렬할 수 있습니다. 예를 들어, 다음 셀은 결과를 *start_time*으로 정렬하고 최대 2개의 결과만 표시합니다.
 
     ```python
    mlflow.search_runs(exp.experiment_id, order_by=["start_time DESC"], max_results=2)
     ```
 
-1. Finally, you can plot the evaluation metrics of multiple models next to each other to easily compare models:
+1. 마지막으로, 여러 모델의 평가 메트릭을 나란히 플로팅하여 모델을 쉽게 비교할 수 있습니다.
 
     ```python
    import matplotlib.pyplot as plt
@@ -208,63 +208,63 @@ When you've trained and tracked models with MLflow, you can use the MLflow libra
    plt.show()
     ```
 
-    The output should resemble the following image:
+    출력은 다음 이미지와 유사해야 합니다.
 
     ![Screenshot of the plotted evaluation metrics.](./Images/data-science-metrics.png)
 
-## Explore your experiments
+## 실험 (Experiment) 탐색
 
-Microsoft Fabric will keep track of all your experiments and allows you to visually explore them.
+Microsoft Fabric은 모든 실험 (Experiment)을 추적하고 시각적으로 탐색할 수 있도록 합니다.
 
-1. Navigate to your workspace from the menu bar on the left.
-1. Select the **experiment-diabetes** experiment to open it.
+1. 왼쪽 메뉴 모음에서 워크스페이스로 이동합니다.
+1. **experiment-diabetes** 실험 (Experiment)을 선택하여 엽니다.
 
     > **Tip:**
-    > If you don't see any logged experiment runs, refresh the page.
+    > 로깅된 실험 실행 (run)이 보이지 않으면 페이지를 새로 고침하세요.
 
-1. Select the **View** tab.
-1. Select **Run list**.
-1. Select the two latest runs by checking each box.
+1. **보기** 탭을 선택합니다.
+1. **실행 목록 (Run list)**을 선택합니다.
+1. 각 상자를 선택하여 최근 두 실행 (run)을 선택합니다.
 
-    As a result, your two last runs will be compared to each other in the **Metric comparison** pane. By default, the metrics are plotted by run name.
+    그 결과, 최근 두 실행 (run)이 **메트릭 비교** 창에서 서로 비교됩니다. 기본적으로 메트릭은 실행 (run) 이름별로 플로팅됩니다.
 
-1. Select the **&#128393;** (Edit) button of the graph visualizing the mean absolute error for each run.
-1. Change the **visualization type** to **bar**.
-1. Change the **X-axis** to **estimator**.
-1. Select **Replace** and explore the new graph.
-1. Optionally, you can repeat these steps for the other graphs in the **Metric comparison** pane.
+1. 각 실행 (run)에 대한 평균 절대 오차를 시각화하는 그래프의 **&#128393;** (편집) 버튼을 선택합니다.
+1. **시각화 유형**을 **막대**로 변경합니다.
+1. **X축**을 **estimator**로 변경합니다.
+1. **바꾸기**를 선택하고 새 그래프를 탐색합니다.
+1. 선택적으로, **메트릭 비교** 창의 다른 그래프에 대해서도 이 단계를 반복할 수 있습니다.
 
-By plotting the performance metrics per logged estimator, you can review which algorithm resulted in a better model.
+로깅된 추정기 (estimator)별로 성능 메트릭을 플로팅하여 어떤 알고리즘이 더 나은 모델을 만들었는지 검토할 수 있습니다.
 
-## Save the model
+## 모델 저장
 
-After comparing machine learning models that you've trained across experiment runs, you can choose the best performing model. To use the best performing model, save the model and use it to generate predictions.
+실험 실행 (run)을 통해 훈련한 머신러닝 모델을 비교한 후, 가장 성능이 좋은 모델을 선택할 수 있습니다. 가장 성능이 좋은 모델을 사용하려면 모델을 저장하고 예측을 생성하는 데 사용합니다.
 
-1. In the experiment overview, ensure the **View** tab is selected.
-1. Select **Run details**.
-1. Select the run with the highest Training R2 score.
-1. Select **Save** in the **Save run as model** box (you may need to scroll to the right to see this).
-1. Select **Create a new model** in the newly opened pop-up window.
-1. Select the **model** folder.
-1. Name the model `model-diabetes`, and select **Save**.
-1. Select **View ML model** in the notification that appears at the top right of your screen when the model is created. You can also refresh the window. The saved model is linked under **Model versions**.
+1. 실험 (Experiment) 개요에서 **보기** 탭이 선택되어 있는지 확인합니다.
+1. **실행 세부 정보**를 선택합니다.
+1. 가장 높은 훈련 R2 score를 가진 실행 (run)을 선택합니다.
+1. **실행 (run)을 모델로 저장** 상자에서 **저장**을 선택합니다 (이것이 보이지 않으면 오른쪽으로 스크롤해야 할 수 있습니다).
+1. 새로 열린 팝업 창에서 **새 모델 만들기**를 선택합니다.
+1. **모델** 폴더를 선택합니다.
+1. 모델 이름을 `model-diabetes`로 지정하고 **저장**을 선택합니다.
+1. 모델이 생성될 때 화면 오른쪽 상단에 나타나는 알림에서 **ML 모델 보기**를 선택합니다. 창을 새로 고침할 수도 있습니다. 저장된 모델은 **모델 버전** 아래에 연결됩니다.
 
-Note that the model, the experiment, and the experiment run are linked, allowing you to review how the model is trained.
+모델, 실험 (Experiment) 및 실험 실행 (run)이 연결되어 있어 모델이 어떻게 훈련되었는지 검토할 수 있습니다.
 
-## Save the notebook and end the Spark session
+## 노트북 저장 및 Spark 세션 종료
 
-Now that you've finished training and evaluating the models, you can save the notebook with a meaningful name and end the Spark session.
+이제 모델 훈련 및 평가를 마쳤으므로 의미 있는 이름으로 노트북을 저장하고 Spark 세션을 종료할 수 있습니다.
 
-1. Return to your notebook, and, in the notebook menu bar, use the ⚙️ **Settings** icon to view the notebook settings.
-2. Set the **Name** of the notebook to **Train and compare models**, and then close the settings pane.
-3. On the notebook menu, select **Stop session** to end the Spark session.
+1. 노트북으로 돌아가서 노트북 메뉴 모음에서 ⚙️ **설정** 아이콘을 사용하여 노트북 설정을 봅니다.
+2. 노트북의 **이름**을 **모델 훈련 및 비교**로 설정한 다음, 설정 창을 닫습니다.
+3. 노트북 메뉴에서 **세션 중지**를 선택하여 Spark 세션을 종료합니다.
 
-## Clean up resources
+## 리소스 정리
 
-In this exercise, you have created a notebook and trained a machine learning model. You used scikit-learn to train the model and MLflow to track its performance.
+이 연습에서는 노트북을 만들고 머신러닝 모델을 훈련했습니다. scikit-learn을 사용하여 모델을 훈련하고 MLflow를 사용하여 성능을 추적했습니다.
 
-If you've finished exploring your model and experiments, you can delete the workspace that you created for this exercise.
+모델 및 실험 (Experiment) 탐색을 마쳤다면 이 연습을 위해 생성한 워크스페이스를 삭제할 수 있습니다.
 
-1. In the bar on the left, select the icon for your workspace to view all of the items it contains.
-2. In the **...** menu on the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace** .
+1. 왼쪽 바에서 워크스페이스 아이콘을 선택하여 포함된 모든 항목을 봅니다.
+2. 도구 모음의 **...** 메뉴에서 **워크스페이스 설정**을 선택합니다.
+3. **일반** 섹션에서 **이 워크스페이스 제거**를 선택합니다.

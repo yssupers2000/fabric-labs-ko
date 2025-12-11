@@ -4,99 +4,98 @@ lab:
     module: 'Get started with Real-Time Dashboards in Microsoft Fabric'
 ---
 
-# Get started with Real-Time Dashboards in Microsoft Fabric
+# Microsoft Fabric에서 실시간 대시보드 시작하기
 
-Real-time dashboards in Microsoft Fabric enable you to visualize and explore streaming data using the Kusto Query Language (KQL).  In this exercise, you'll explore how to create and use a real-time dashboard based on a real-time data source.
+Microsoft Fabric의 실시간 대시보드는 Kusto Query Language(KQL)를 사용하여 스트리밍 데이터를 시각화하고 탐색할 수 있도록 합니다. 이 실습에서는 실시간 데이터 소스를 기반으로 실시간 대시보드를 생성하고 사용하는 방법을 알아봅니다.
 
-This lab takes approximately **25** minutes to complete.
+이 랩을 완료하는 데 약 **25**분이 소요됩니다.
 
-> **Note**: You need a [Microsoft Fabric tenant](https://learn.microsoft.com/fabric/get-started/fabric-trial) to complete this exercise.
+> **참고**: 이 실습을 완료하려면 [Microsoft Fabric 테넌트](https://learn.microsoft.com/fabric/get-started/fabric-trial)가 필요합니다.
 
-## Create a workspace
+## 작업 영역 만들기
 
-Before working with data in Fabric, you need to create a workspace with the Fabric capacity enabled.
+Fabric에서 데이터를 작업하기 전에 Fabric Capacity가 활성화된 작업 영역을 생성해야 합니다.
 
-1. Navigate to the [Microsoft Fabric home page](https://app.fabric.microsoft.com/home?experience=fabric) at `https://app.fabric.microsoft.com/home?experience=fabric` in a browser and sign in with your Fabric credentials.
-1. In the menu bar on the left, select **Workspaces** (the icon looks similar to &#128455;).
-1. Create a new workspace with a name of your choice, selecting a licensing mode that includes Fabric capacity (*Trial*, *Premium*, or *Fabric*).
-1. When your new workspace opens, it should be empty.
+1. 브라우저에서 `https://app.fabric.microsoft.com/home?experience=fabric`에 있는 [Microsoft Fabric 홈 페이지](https://app.fabric.microsoft.com/home?experience=fabric)로 이동하여 Fabric 자격 증명으로 로그인합니다.
+2. 왼쪽 메뉴 바에서 **작업 영역(Workspaces)** (아이콘은 &#128455;와 비슷합니다)을 선택합니다.
+3. 원하는 이름으로 새 작업 영역을 생성하고, Fabric Capacity를 포함하는 라이선스 모드(*Trial*, *Premium*, 또는 *Fabric*)를 선택합니다.
+4. 새 작업 영역이 열리면 비어 있어야 합니다.
 
-    ![Screenshot of an empty workspace in Fabric.](./Images/new-workspace.png)
+    ![Fabric의 빈 작업 영역 스크린샷.](./Images/new-workspace.png)
 
-## Create an eventhouse
+## Eventhouse 생성
 
-Now that you have a workspace, you can start creating the Fabric items you'll need for your real-time intelligence solution. we'll start by creating an eventhouse.
+이제 작업 영역이 있으므로 실시간 인텔리전스 솔루션에 필요한 Fabric 항목을 생성할 수 있습니다. Eventhouse를 생성하는 것부터 시작하겠습니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Real-Time Inteligence* section, select **Eventhouse**. Give it a unique name of your choice.
+1. 왼쪽 메뉴 바에서 **만들기(Create)** 를 선택합니다. *새로 만들기(New)* 페이지의 *실시간 인텔리전스(Real-Time Inteligence)* 섹션에서 **Eventhouse**를 선택합니다. 원하는 고유한 이름을 지정합니다.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first.
+    >**참고**: **만들기(Create)** 옵션이 사이드바에 고정되어 있지 않은 경우, 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-1. Close any tips or prompts that are displayed until you see your new empty eventhouse.
+2. 새롭고 비어 있는 Eventhouse가 표시될 때까지 표시되는 팁이나 프롬프트를 닫습니다.
 
-    ![Screenshot of a new eventhouse](./Images/create-eventhouse.png)
+    ![새 Eventhouse 스크린샷](./Images/create-eventhouse.png)
 
-1. In the pane on the left, note that your eventhouse contains a KQL database with the same name as the eventhouse.
-1. Select the KQL database to view it.
+3. 왼쪽 창에서 Eventhouse가 Eventhouse와 동일한 이름을 가진 KQL 데이터베이스를 포함하고 있음을 확인합니다.
+4. KQL 데이터베이스를 선택하여 확인합니다.
 
-## Create an eventstream
+## Eventstream 생성
 
-Currently there are no tables in the database. We'll use an eventstream to load data from a real-time source into a table.
+현재 데이터베이스에는 테이블이 없습니다. Eventstream을 사용하여 실시간 소스에서 테이블로 데이터를 로드할 것입니다.
 
-1. In the main page of your KQL database, select **Get data**.
-2. For the data source, select **Eventstream** > **New eventstream**. Name the eventstream `Bicycle-data`.
+1. KQL 데이터베이스의 메인 페이지에서 **데이터 가져오기(Get data)** 를 선택합니다.
+2. 데이터 소스(data source)로 **Eventstream** > **새 Eventstream(New eventstream)** 을 선택합니다. Eventstream 이름을 `Bicycle-data`로 지정합니다.
 
-    ![Screenshot of a new eventstream.](./Images/empty-eventstream.png)
+    ![새 Eventstream 스크린샷.](./Images/empty-eventstream.png)
 
-    The creation of your new event stream in the workspace will be completed in just a few moments. Once established, you will be automatically redirected to select a data source for your eventstream.
+    작업 영역에서 새 Eventstream 생성이 잠시 후 완료됩니다. 생성되면 Eventstream의 데이터 소스(data source)를 선택하도록 자동으로 리디렉션됩니다.
 
-1. Select **Use sample data**.
-1. Name the source name `Bicycles`, and select the **Bicycles** sample data.
+3. **샘플 데이터 사용(Use sample data)** 을 선택합니다.
+4. 소스 이름(source name)을 `Bicycles`로 지정하고, **Bicycles** 샘플 데이터를 선택합니다.
 
-    Your stream will be mapped and you will be automatically displayed on the **eventstream canvas**.
+    스트림이 매핑되고 **eventstream 캔버스**에 자동으로 표시됩니다.
 
-   ![Review the eventstream canvas](./Images/real-time-intelligence-eventstream-sourced.png)
+   ![Eventstream 캔버스 검토](./Images/real-time-intelligence-eventstream-sourced.png)
 
-1. In the **Add destination** drop-down list, select **Eventhouse**.
-1. In the **Eventhouse** pane, configure the following setup options.
-   - **Data ingestion mode:**: Event processing before ingestion
-   - **Destination name:** `bikes-table`
-   - **Workspace:** *Select the workspace you created at the beginning of this exercise*
-   - **Eventhouse**: *Select your eventhouse*
-   - **KQL database:** *Select your KQL database*
-   - **Destination table:** Create a new table named `bikes`
-   - **Input data format:** JSON
+5. **대상 추가(Add destination)** 드롭다운 목록에서 **Eventhouse**를 선택합니다.
+6. **Eventhouse** 창에서 다음 설정 옵션을 구성합니다.
+   - **데이터 수집 모드(Data ingestion mode)**: 수집 전 이벤트 처리
+   - **대상 이름(Destination name)**: `bikes-table`
+   - **작업 영역(Workspace)**: *이 실습 시작 시 생성한 작업 영역을 선택합니다.*
+   - **Eventhouse**: *Eventhouse를 선택합니다.*
+   - **KQL 데이터베이스(KQL database)**: *KQL 데이터베이스를 선택합니다.*
+   - **대상 테이블(Destination table)**: `bikes`라는 새 테이블을 생성합니다.
+   - **입력 데이터 형식(Input data format)**: JSON
 
-   ![Eventstream destination settings.](./Images/kql-database-event-processing-before-ingestion.png)
+   ![Eventstream 대상 설정.](./Images/kql-database-event-processing-before-ingestion.png)
 
-1. In the **Eventhouse** pane, select **Save**. 
-1. Connect the **Bicycles-data** node's output to the **bikes-table** node, then select **Publish**.
-1. Wait a minute or so for the data destination to become active. Then select the **bikes-table** node in the design canvas and view the **Data preview** pane underneath to see the latest data that has been ingested:
+7. **Eventhouse** 창에서 **저장(Save)** 을 선택합니다.
+8. **Bicycles-data** 노드의 출력을 **bikes-table** 노드에 연결한 다음 **게시(Publish)** 를 선택합니다.
+9. 데이터 대상이 활성화될 때까지 1분 정도 기다립니다. 그런 다음 디자인 캔버스에서 **bikes-table** 노드를 선택하고 아래의 **데이터 미리 보기(Data preview)** 창에서 수집된 최신 데이터를 확인합니다.
 
-   ![A screenshot of a destination table in an eventstream.](./Images/stream-data-preview.png)
+   ![Eventstream의 대상 테이블 스크린샷.](./Images/stream-data-preview.png)
 
-1. Wait a few minutes and then use the **Refresh** button to refresh the **Data preview** pane. The stream is running perpetually, so new data may have been added to the table.
+10. 몇 분 정도 기다린 다음 **새로 고침(Refresh)** 버튼을 사용하여 **데이터 미리 보기(Data preview)** 창을 새로 고칩니다. 스트림은 계속 실행되므로 새 데이터가 테이블에 추가되었을 수 있습니다.
 
-## Create a real-time dashboard
+## 실시간 대시보드 만들기
 
-Now that you have a stream of real-time data being loaded into a table in the eventhouse, you can visualize it with a real-time dashboard.
+이제 Eventhouse의 테이블로 실시간 데이터 스트림이 로드되므로, 실시간 대시보드를 사용하여 이를 시각화할 수 있습니다.
 
-1. On the menu bar on the left, select **Create**. In the *New* page, under the *Real-Time Inteligence* section, select **Real-Time Dashboard** and name it `bikes-dashboard`.
+1. 왼쪽 메뉴 바에서 **만들기(Create)** 를 선택합니다. *새로 만들기(New)* 페이지의 *실시간 인텔리전스(Real-Time Inteligence)* 섹션에서 **실시간 대시보드(Real-Time Dashboard)** 를 선택하고 `bikes-dashboard`라고 이름을 지정합니다.
 
-    >**Note**: If the **Create** option is not pinned to the sidebar, you need to select the ellipsis (**...**) option first. 
+    >**참고**: **만들기(Create)** 옵션이 사이드바에 고정되어 있지 않은 경우, 먼저 줄임표(**...**) 옵션을 선택해야 합니다.
 
-    A new empty dashboard is created.
+    새 비어 있는 대시보드가 생성됩니다.
 
+    ![새 대시보드 스크린샷.](./Images/new-dashboard.png)
 
-    ![A screenshot of a new dashboard.](./Images/new-dashboard.png)
+2. 도구 모음에서 **새 데이터 소스(New data source)** 를 선택한 다음 **Eventhouse / KQL Database**를 선택합니다. 그런 다음 Eventhouse를 선택하고 다음 설정으로 새 데이터 소스(data source)를 생성합니다.
+    - **표시 이름(Display name)**: `Bike Rental Data`
+    - **데이터베이스(Database)**: *Eventhouse의 기본 데이터베이스*.
+    - **패스스루 ID(Passthrough identity)**: *선택됨*
 
-1. In the toolbar, select **New data source**, and then select **Eventhouse / KQL Database**. Then select your eventhouse and create a new data source with the following settings:
-    - **Display name**: `Bike Rental Data`
-    - **Database**: *The default database in your eventhouse*.
-    - **Passthrough identity**: *Selected*
-
-1. Select **Add**.
-1. On the dashboard design canvas, select **Add tile**.
-1. In the query editor, ensure that the **Bike Rental Data** source is selected and enter the following KQL code:
+3. **추가(Add)** 를 선택합니다.
+4. 대시보드 디자인 캔버스에서 **타일 추가(Add tile)** 를 선택합니다.
+5. 쿼리 편집기에서 **Bike Rental Data** 소스(source)가 선택되어 있는지 확인하고 다음 KQL 코드를 입력합니다.
 
     ```kql
     bikes
@@ -106,28 +105,28 @@ Now that you have a stream of real-time data being loaded into a table in the ev
         | order by Neighbourhood asc
     ```
 
-1. Run the query, which shows the number of bikes and empty bike docks observed in each neighbourhood in the last 30 minutes.
-1. Apply the changes to see the data shown in a table in the tile on the dashboard.
+6. 쿼리를 실행하면 지난 30분 동안 각 Neighbourhood(지역)에서 관찰된 자전거 수와 빈 도크 수가 표시됩니다.
+7. 변경 사항을 적용하여 대시보드의 타일에서 테이블로 표시되는 데이터를 확인합니다.
 
-   ![A screenshot of a dashboard with a tile containing a table.](./Images/tile-table.png)
+   ![테이블을 포함하는 타일이 있는 대시보드 스크린샷.](./Images/tile-table.png)
 
-1. On the tile, select the **Edit** icon (which looks like a pencil). Then in the **Visual Formatting** pane, set the following properties:
-    - **Tile name**: Bikes and Docks
-    - **Visual type**: Bar chart
-    - **Visual format**: Stacked bar chart
-    - **Y columns**: No_Bikes, No-Empty_Docks
-    - **X column**: Neighbourhood
-    - **Series columns**: infer
-    - **Legend location**: Bottom
+8. 타일에서 **편집(Edit)** 아이콘(연필 모양)을 선택합니다. 그런 다음 **시각적 서식(Visual Formatting)** 창에서 다음 속성을 설정합니다.
+    - **타일 이름(Tile name)**: Bikes and Docks
+    - **시각화 유형(Visual type)**: Bar chart
+    - **시각화 형식(Visual format)**: Stacked bar chart
+    - **Y축 열(Y columns)**: No_Bikes, No-Empty_Docks
+    - **X축 열(X column)**: Neighbourhood
+    - **계열 열(Series columns)**: infer
+    - **범례 위치(Legend location)**: 하단
 
-    Your edited time should look like this:
+    편집된 타일은 다음과 같아야 합니다.
 
-   ![A screenshot of a tile being edited to include a bar chart.](./Images/tile-bar-chart.png)
+   ![막대 차트를 포함하도록 편집 중인 타일 스크린샷.](./Images/tile-bar-chart.png)
 
-1. Apply the changes and then resize the tile to take up the full height of the left side of the dashboard.
+9. 변경 사항을 적용한 다음 타일 크기를 조정하여 대시보드 왼쪽의 전체 높이를 차지하도록 합니다.
 
-1. In the toolbar, select **New tile**
-1. In the query editor, ensure that the **Bike Rental Data** source is selected and enter the following KQL code:
+10. 도구 모음에서 **새 타일(New tile)** 을 선택합니다.
+11. 쿼리 편집기에서 **Bike Rental Data** 소스(source)가 선택되어 있는지 확인하고 다음 KQL 코드를 입력합니다.
 
     ```kql
     bikes
@@ -137,40 +136,40 @@ Now that you have a stream of real-time data being loaded into a table in the ev
         | order by Neighbourhood asc
     ```
 
-1. Run the query, which shows the location and number of bikes observed in each neighbourhood in the last 30 minutes.
-1. Apply the changes to see the data shown in a table in the tile on the dashboard.
-1. On the tile, select the **Edit** icon (which looks like a pencil). Then in the **Visual Formatting** pane, set the following properties:
-    - **Tile name**: Bike Locations
-    - **Visual type**: Map
-    - **Define location by**: Latitude and longitude
-    - **Latitude column**: Latitude
-    - **Longitude column**: Longitude
-    - **Label column**: Neighbourhood
-    - **Size**: Show
-    - **Size column**: No_Bikes
+12. 쿼리를 실행하면 지난 30분 동안 각 Neighbourhood(지역)에서 관찰된 자전거의 위치와 수가 표시됩니다.
+13. 변경 사항을 적용하여 대시보드의 타일에서 테이블로 표시되는 데이터를 확인합니다.
+14. 타일에서 **편집(Edit)** 아이콘(연필 모양)을 선택합니다. 그런 다음 **시각적 서식(Visual Formatting)** 창에서 다음 속성을 설정합니다.
+    - **타일 이름(Tile name)**: Bike Locations
+    - **시각화 유형(Visual type)**: Map
+    - **위치 정의 기준(Define location by)**: Latitude and longitude
+    - **위도 열(Latitude column)**: Latitude
+    - **경도 열(Longitude column)**: Longitude
+    - **레이블 열(Label column)**: Neighbourhood
+    - **크기(Size)**: 표시
+    - **크기 열(Size column)**: No_Bikes
 
-1. Apply the changes, and then resize the map tile to fill the right side of the available space on the dashboard:
+15. 변경 사항을 적용한 다음 지도 타일의 크기를 조정하여 대시보드에서 사용 가능한 공간의 오른쪽을 채우도록 합니다.
 
-   ![A screenshot of a dashboard with a chart and a map.](./Images/dashboard-chart-map.png)
+   ![차트와 지도가 있는 대시보드 스크린샷.](./Images/dashboard-chart-map.png)
 
-## Create a base query
+## 기본 쿼리 생성
 
-Your dashboard contains two visuals that are based on similar queries. To avoid duplication and make your dashboard more maintainable, you can consolidate the common data into a single *base query*.
+대시보드에는 유사한 쿼리를 기반으로 하는 두 개의 시각화(visual)가 포함되어 있습니다. 중복을 피하고 대시보드의 유지 관리성을 높이려면 공통 데이터를 단일 *기본 쿼리(base query)* 로 통합할 수 있습니다.
 
-1. On the dashboard toolbar, select **Base queries**. Then select **+Add**.
-1. In the base query editor, set the **Variable name** to `base_bike_data` and ensure that the **Bike Rental Data** source is selected. Then enter the following query:
+1. 대시보드 도구 모음에서 **기본 쿼리(Base queries)** 를 선택합니다. 그런 다음 **+ 추가(+Add)** 를 선택합니다.
+2. 기본 쿼리 편집기에서 **변수 이름(Variable name)** 을 `base_bike_data`로 설정하고 **Bike Rental Data** 소스(source)가 선택되어 있는지 확인합니다. 그런 다음 다음 쿼리를 입력합니다.
 
     ```kql
     bikes
         | where ingestion_time() between (ago(30min) .. now())
         | summarize latest_observation = arg_max(ingestion_time(), *) by Neighbourhood
     ```
-1. Run the query and verify that it returns all of the columns needed for both visuals in the dashboard (and some others).
+3. 쿼리를 실행하고 대시보드의 두 시각화(visual) 모두에 필요한 모든 열(및 기타 일부 열)을 반환하는지 확인합니다.
 
-   ![A screenshot of a base query.](./Images/dashboard-base-query.png)
+   ![기본 쿼리 스크린샷.](./Images/dashboard-base-query.png)
 
-1. Select **Done** and then close the **Base queries** pane.
-1. Edit the **Bikes and Docks** bar chart visual, and change the query to the following code:
+4. **완료(Done)** 를 선택한 다음 **기본 쿼리(Base queries)** 창을 닫습니다.
+5. **Bikes and Docks** 막대 차트 시각화(visual)를 편집하고 쿼리를 다음 코드로 변경합니다.
 
     ```kql
     base_bike_data
@@ -178,9 +177,9 @@ Your dashboard contains two visuals that are based on similar queries. To avoid 
     | order by Neighbourhood asc
     ```
 
-1. Apply the changes and verify that the bar chart still displays data for all neighbourhoods.
+6. 변경 사항을 적용하고 막대 차트가 여전히 모든 Neighbourhood(지역)에 대한 데이터를 표시하는지 확인합니다.
 
-1. Edit the **Bike Locations** map visual, and change the query to the following code:
+7. **Bike Locations** 지도 시각화(visual)를 편집하고 쿼리를 다음 코드로 변경합니다.
 
     ```kql
     base_bike_data
@@ -188,25 +187,25 @@ Your dashboard contains two visuals that are based on similar queries. To avoid 
     | order by Neighbourhood asc
     ```
 
-1. Apply the changes and verify that the map still displays data for all neighbourhoods.
+8. 변경 사항을 적용하고 지도가 여전히 모든 Neighbourhood(지역)에 대한 데이터를 표시하는지 확인합니다.
 
-## Add a parameter
+## 매개 변수 추가
 
-Your dashboard currently shows the latest bike, dock, and location data for all neighbourhoods. Now lets add a parameter so you can select a specific neighbourhood.
+대시보드는 현재 모든 Neighbourhood(지역)에 대한 최신 자전거, 도크 및 위치 데이터를 표시합니다. 이제 특정 Neighbourhood(지역)를 선택할 수 있도록 매개 변수(parameter)를 추가해 보겠습니다.
 
-1. On the dashboard toolbar, on the **Manage** tab, select **Parameters**.
-1. Note any existing parameters that have been automatically created (for example a *Time range* parameter). Then **Delete** them.
-1. Select **+ Add**.
-1. Add a parameter with the following settings:
-    - **Label**: `Neighbourhood`
-    - **Parameter type**: Multiple selection
-    - **Description**: `Choose neighbourhoods`
-    - **Variable name**: `selected_neighbourhoods`
-    - **Data type**: string
-    - **Show on pages**: Select all
-    - **Source**: Query
-    - **Data source**: Bike Rental Data
-    - **Edit query**:
+1. 대시보드 도구 모음의 **관리(Manage)** 탭에서 **매개 변수(Parameters)** 를 선택합니다.
+2. 자동으로 생성된 기존 매개 변수(예: *시간 범위(Time range)* 매개 변수)를 확인합니다. 그런 다음 **삭제(Delete)** 합니다.
+3. **+ 추가(+ Add)** 를 선택합니다.
+4. 다음 설정으로 매개 변수(parameter)를 추가합니다.
+    - **레이블(Label)**: `Neighbourhood`
+    - **매개 변수 유형(Parameter type)**: 다중 선택
+    - **설명(Description)**: `Choose neighbourhoods`
+    - **변수 이름(Variable name)**: `selected_neighbourhoods`
+    - **데이터 유형(Data type)**: string
+    - **페이지에 표시(Show on pages)**: 모두 선택
+    - **소스(Source)**: 쿼리
+    - **데이터 소스(Data source)**: Bike Rental Data
+    - **쿼리 편집(Edit query)**:
 
         ```kql
         bikes
@@ -214,18 +213,18 @@ Your dashboard currently shows the latest bike, dock, and location data for all 
         | order by Neighbourhood asc
         ```
 
-    - **Value column**: Neighbourhood
-    - **Label column**: Match value selection
-    - **Add "Select all" value**: *Selected*
-    - **"Select all" sends empty string**: *Selected*
-    - **Auto-reset to default value**: Selected
-    - **Default value**: Select all
+    - **값 열(Value column)**: Neighbourhood
+    - **레이블 열(Label column)**: 값 선택과 일치
+    - **"모두 선택(Select all)" 값 추가**: *선택됨*
+    - **"모두 선택(Select all)" 시 빈 문자열 전송**: *선택됨*
+    - **기본값으로 자동 재설정**: 선택됨
+    - **기본값(Default value)**: 모두 선택
 
-1. Select **Done** to create the parameter.
+5. **완료(Done)** 를 선택하여 매개 변수(parameter)를 생성합니다.
 
-    Now that you've added a parameter, you need to modify the base query to filter the data based on the chosen neighbourhoods.
+이제 매개 변수(parameter)를 추가했으므로, 선택한 Neighbourhood(지역)를 기반으로 데이터를 필터링하도록 기본 쿼리(base query)를 수정해야 합니다.
 
-1. In the toolbar, select **Base queries**. Then select the **base_bike_data** query and edit it to add an **and** condition to the **where** clause to filter based on the selected parameter values, as shown in the following code:
+6. 도구 모음에서 **기본 쿼리(Base queries)** 를 선택합니다. 그런 다음 **base_bike_data** 쿼리를 선택하고 다음 코드에 표시된 대로 선택된 매개 변수(parameter) 값을 기반으로 필터링하도록 **where** 절에 **and** 조건을 추가하여 편집합니다.
 
     ```kql
     bikes
@@ -234,22 +233,22 @@ Your dashboard currently shows the latest bike, dock, and location data for all 
         | summarize latest_observation = arg_max(ingestion_time(), *) by Neighbourhood
     ```
 
-1. Select **Done** to save the base query.
+7. **완료(Done)** 를 선택하여 기본 쿼리(base query)를 저장합니다.
 
-1. In the dashboard, use the **Neighbourhood** parameter to filter the data based on the neighbourhoods you select.
+8. 대시보드에서 **Neighbourhood** 매개 변수(parameter)를 사용하여 선택한 Neighbourhood(지역)를 기반으로 데이터를 필터링합니다.
 
-   ![A screenshot of a dashboard with parameters selected.](./Images/dashboard-parameters.png)
+   ![매개 변수가 선택된 대시보드 스크린샷.](./Images/dashboard-parameters.png)
 
-1. Select **Reset** to remove the selected parameter filters.
+9. **재설정(Reset)** 을 선택하여 선택된 매개 변수(parameter) 필터를 제거합니다.
 
-## Add a page
+## 페이지 추가
 
-Your dashboard currently consists of a single page. You can add more pages to provide more data.
+대시보드는 현재 단일 페이지로 구성되어 있습니다. 더 많은 데이터를 제공하기 위해 페이지를 추가할 수 있습니다.
 
-1. On the left side of the dashboard, expand the **Pages** pane; and select **+ Add page**.
-1. Name the new page **Page 2**. Then select it.
-1. On the new page, select **+ Add tile**
-1. In the query editor for the new tile, enter the following query:
+1. 대시보드 왼쪽에서 **페이지(Pages)** 창을 확장하고 **+ 페이지 추가(+ Add page)** 를 선택합니다.
+2. 새 페이지 이름을 **Page 2**로 지정합니다. 그런 다음 해당 페이지를 선택합니다.
+3. 새 페이지에서 **+ 타일 추가(+ Add tile)** 를 선택합니다.
+4. 새 타일의 쿼리 편집기에 다음 쿼리를 입력합니다.
 
     ```kql
     base_bike_data
@@ -257,35 +256,35 @@ Your dashboard currently consists of a single page. You can add more pages to pr
     | order by latest_observation desc
     ```
 
-1. Apply the changes. Then resize the tile to fill the height of the dashboard.
+5. 변경 사항을 적용합니다. 그런 다음 타일의 크기를 조정하여 대시보드 높이를 채우도록 합니다.
 
-   ![Screenshot of a dashboard with two pages](./Images/dashboard-page-2.png)
+   ![두 페이지가 있는 대시보드 스크린샷](./Images/dashboard-page-2.png)
 
-## Configure auto refresh
+## 자동 새로 고침 구성
 
-Users can manually refresh the dashboard, but it may be useful to have it automatically refresh the data at a set interval.
+사용자는 대시보드를 수동으로 새로 고칠 수 있지만, 설정된 간격으로 데이터를 자동으로 새로 고치도록 하는 것이 유용할 수 있습니다.
 
-1. On the dashboard toolbar, on the **Manage** tab, select **Auto refresh**.
-1. In the **Auto refresh** pane, configure the following settings:
-    - **Enabled**: *Selected*
-    - **Minimum time interval**: Allow all refresh intervals
-    - **Default refresh rate**: 30 minutes
-1. Apply the auto refresh settings.
+1. 대시보드 도구 모음의 **관리(Manage)** 탭에서 **자동 새로 고침(Auto refresh)** 을 선택합니다.
+2. **자동 새로 고침(Auto refresh)** 창에서 다음 설정을 구성합니다.
+    - **사용(Enabled)**: *선택됨*
+    - **최소 시간 간격(Minimum time interval)**: 모든 새로 고침 간격 허용
+    - **기본 새로 고침 빈도(Default refresh rate)**: 30분
+3. 자동 새로 고침 설정을 적용합니다.
 
-## Save and share the dashboard
+## 대시보드 저장 및 공유
 
-Now you have a useful dashboard, you can save it and share it with other users.
+이제 유용한 대시보드가 있으므로 이를 저장하고 다른 사용자와 공유할 수 있습니다.
 
-1. On the dashboard toolbar, select **Save**.
-1. When the dashboard is saved, select **Share**.
-1. On the **Share** dialog box, select **Copy link** and copy the link to the dashboard to the clipboard.
-1. Open a new browser tab and paste the copied link to navigate to the shared dashboard. Sign in again with your Fabric credentials if prompted.
-1. Explore the dashboard, using it to see the latest information about bikes and empty bike docks across the city.
+1. 대시보드 도구 모음에서 **저장(Save)** 을 선택합니다.
+2. 대시보드가 저장되면 **공유(Share)** 를 선택합니다.
+3. **공유(Share)** 대화 상자에서 **링크 복사(Copy link)** 를 선택하고 대시보드 링크를 클립보드에 복사합니다.
+4. 새 브라우저 탭을 열고 복사한 링크를 붙여넣어 공유 대시보드로 이동합니다. 메시지가 표시되면 Fabric 자격 증명으로 다시 로그인합니다.
+5. 대시보드를 탐색하고, 이를 사용하여 도시 전역의 자전거 및 빈 자전거 도크에 대한 최신 정보를 확인합니다.
 
-## Clean up resources
+## 리소스 정리
 
-When you've finished exploring your dashboard, you can delete the workspace you created for this exercise.
+대시보드 탐색을 마쳤으면 이 실습을 위해 생성한 작업 영역을 삭제할 수 있습니다.
 
-1. In the bar on the left, select the **icon** for your workspace.
-2. In the the toolbar, select **Workspace settings**.
-3. In the **General** section, select **Remove this workspace**.
+1. 왼쪽 바에서 작업 영역의 **아이콘**을 선택합니다.
+2. 도구 모음에서 **작업 영역 설정(Workspace settings)** 을 선택합니다.
+3. **일반(General)** 섹션에서 **이 작업 영역 제거(Remove this workspace)** 를 선택합니다.
