@@ -4,7 +4,7 @@ lab:
     module: 'Ingest Data with Dataflows Gen2 in Microsoft Fabric'
 ---
 
-# Create and use Dataflows (Gen2) in Microsoft Fabric`
+# Microsoft Fabric에서 데이터 흐름(Gen2) 만들기 및 사용하기
 
 Microsoft Fabric에서 Dataflows (Gen2)는 다양한 데이터 원본에 연결하고 Power Query Online에서 변환을 수행합니다. 그런 다음 Data Pipelines에서 Lakehouse 또는 다른 분석 저장소로 데이터를 수집하거나 Power BI 보고서용 Dataset을 정의하는 데 사용될 수 있습니다.
 
