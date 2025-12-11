@@ -4,8 +4,6 @@ lab:
     module: 'Query a data warehouse in Microsoft Fabric'
 ---
 
-
-```
 # Microsoft Fabric에서 Data Warehouse 쿼리
 
 Microsoft Fabric에서 Data Warehouse는 대규모 분석을 위한 관계형 데이터베이스를 제공합니다. Microsoft Fabric workspace에 내장된 풍부한 기능들은 고객이 Power BI와 DirectLake 모드로 통합된, 쉽게 소비 가능하며 항상 연결된 Semantic Model을 통해 인사이트를 얻는 시간을 단축할 수 있도록 합니다.

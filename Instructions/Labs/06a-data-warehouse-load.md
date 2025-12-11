@@ -4,7 +4,7 @@ lab:
     module: 'Load data into a warehouse in Microsoft Fabric'
 ---
 
-`# T-SQL을 사용하여 Data Warehouse에 데이터 로드
+# T-SQL을 사용하여 Data Warehouse에 데이터 로드
 
 Microsoft Fabric에서 Data Warehouse는 대규모 분석을 위한 관계형 데이터베이스를 제공합니다. Lakehouse에 정의된 테이블의 기본 읽기 전용 SQL endpoint와 달리, Data Warehouse는 테이블에 데이터를 삽입, 업데이트, 삭제하는 기능을 포함하여 전체 SQL semantic(SQL 의미론)을 제공합니다.
 
