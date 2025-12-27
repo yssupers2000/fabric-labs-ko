@@ -50,15 +50,15 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     몇 초 후에 단일 *셀*을 포함하는 새 Notebook이 열립니다. Notebook은 *코드* 또는 *Markdown* (형식화된 텍스트)을 포함할 수 있는 하나 이상의 셀로 구성됩니다.
 
-2. Notebook이 열리면 Notebook 왼쪽 상단에 있는 **Notebook xxxx** 텍스트를 선택하고 새 이름을 입력하여 `Transform data for Silver`로 이름을 변경합니다.
+1. Notebook이 열리면 Notebook 왼쪽 상단에 있는 **Notebook xxxx** 텍스트를 선택하고 새 이름을 입력하여 `Transform data for Silver`로 이름을 변경합니다.
 
     ![Transform data for silver로 이름이 지정된 새 Notebook 스크린샷](./Images/sales-notebook-rename.png)
 
-3. Notebook에서 간단한 주석 처리된 코드가 포함된 기존 셀을 선택합니다. 이 두 줄을 강조 표시하고 삭제하세요. 이 코드는 필요하지 않습니다.
+1. Notebook에서 간단한 주석 처리된 코드가 포함된 기존 셀을 선택합니다. 이 두 줄을 강조 표시하고 삭제하세요. 이 코드는 필요하지 않습니다.
 
    > **참고**: Notebook은 Python, Scala, SQL을 포함한 다양한 언어로 코드를 실행할 수 있도록 합니다. 이 실습에서는 PySpark와 SQL을 사용합니다. 코드 문서화를 위해 형식화된 텍스트와 이미지를 제공하는 Markdown 셀을 추가할 수도 있습니다.
 
-4. 다음 코드를 셀에 **붙여넣기**하세요:
+1. 다음 코드를 셀에 **붙여넣기**하세요:
 
     ```python
    from pyspark.sql.types import *
@@ -83,11 +83,11 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
    display(df.head(10))
     ```
 
-5. 셀 왼쪽에 있는 ****&#9655;** (셀 실행)** 버튼을 사용하여 코드를 실행합니다.
+1. 셀 왼쪽에 있는 ****&#9655;** (셀 실행)** 버튼을 사용하여 코드를 실행합니다.
 
     > **참고**: 이 Notebook에서 Spark 코드를 처음 실행하는 것이므로 Spark 세션이 시작되어야 합니다. 이는 첫 실행에 약 1분 정도 걸릴 수 있음을 의미합니다. 이후 실행은 더 빨라집니다.
 
-6. 셀 명령이 완료되면 셀 아래의 **출력을 검토**하세요. 출력은 다음과 유사해야 합니다:
+1. 셀 명령이 완료되면 셀 아래의 **출력을 검토**하세요. 출력은 다음과 유사해야 합니다:
 
     | Index | SalesOrderNumber | SalesOrderLineNumber | OrderDate | CustomerName | Email | Item | Quantity | UnitPrice | Tax |
     | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
@@ -99,7 +99,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     > **참고**: 출력 창의 왼쪽 상단에 있는 **...** 메뉴를 선택하여 셀 출력 내용을 지우거나 숨기거나 자동으로 크기를 조정할 수 있습니다.
 
-7. 이제 PySpark dataframe을 사용하여 열을 추가하고 기존 열의 일부 값을 업데이트하여 **데이터 유효성 검사 및 정리용 열을 추가**합니다. **+ 코드 (Code)** 버튼을 사용하여 **새 코드 블록을 추가**하고 다음 코드를 셀에 추가하세요:
+1. 이제 PySpark dataframe을 사용하여 열을 추가하고 기존 열의 일부 값을 업데이트하여 **데이터 유효성 검사 및 정리용 열을 추가**합니다. **+ 코드 (Code)** 버튼을 사용하여 **새 코드 블록을 추가**하고 다음 코드를 셀에 추가하세요:
 
     ```python
    from pyspark.sql.functions import when, lit, col, current_timestamp, input_file_name
@@ -117,9 +117,9 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     마지막으로, CustomerName 열이 null이거나 비어 있으면 "Unknown"으로 업데이트합니다.
 
-8. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
+1. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
 
-9. 다음으로, Delta Lake 형식을 사용하여 sales 데이터베이스의 **sales_silver** 테이블에 대한 스키마를 정의합니다. 새 코드 블록을 생성하고 다음 코드를 셀에 추가하세요:
+1. 다음으로, Delta Lake 형식을 사용하여 sales 데이터베이스의 **sales_silver** 테이블에 대한 스키마를 정의합니다. 새 코드 블록을 생성하고 다음 코드를 셀에 추가하세요:
 
     ```python
    # Define the schema for the sales_silver table
@@ -145,19 +145,19 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
        .execute()
     ```
 
-10. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
+1. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
 
-11. 탐색기 (Explorer) 창의 테이블 섹션에서 **...**를 선택하고 **새로 고침 (Refresh)**을 선택합니다. 이제 새 **sales_silver** 테이블이 나열된 것을 볼 수 있습니다. **&#9650;** (삼각형 아이콘)은 Delta 테이블임을 나타냅니다.
+1. 탐색기 (Explorer) 창의 테이블 섹션에서 **...**를 선택하고 **새로 고침 (Refresh)**을 선택합니다. 이제 새 **sales_silver** 테이블이 나열된 것을 볼 수 있습니다. **&#9650;** (삼각형 아이콘)은 Delta 테이블임을 나타냅니다.
 
     > **참고**: 새 테이블이 보이지 않으면 몇 초 기다린 다음 다시 **새로 고침 (Refresh)**을 선택하거나 전체 브라우저 탭을 새로 고침하세요.
 
-12. 이제 Delta 테이블에서 **upsert 작업 (upsert operation)**을 수행하여 특정 조건에 따라 기존 레코드를 업데이트하고 일치하는 항목이 없는 경우 새 레코드를 삽입합니다. 새 코드 블록을 추가하고 다음 코드를 붙여넣으세요:
+1. 이제 Delta 테이블에서 **upsert 작업 (upsert operation)**을 수행하여 특정 조건에 따라 기존 레코드를 업데이트하고 일치하는 항목이 없는 경우 새 레코드를 삽입합니다. 새 코드 블록을 추가하고 다음 코드를 붙여넣으세요:
 
     ```python
    # Update existing records and insert new ones based on a condition defined by the columns SalesOrderNumber, OrderDate, CustomerName, and Item.
-
-   from delta.tables import *
     
+   from delta.tables import *
+
    deltaTable = DeltaTable.forPath(spark, 'Tables/sales_silver')
     
    dfUpdates = df
@@ -192,13 +192,13 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
      .execute()
     ```
 
-13. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
+1. ****&#9655;** (셀 실행)** 버튼을 사용하여 셀을 실행하여 코드를 실행합니다.
 
     이 작업은 특정 열의 값을 기반으로 테이블의 기존 레코드를 업데이트하고 일치하는 항목이 없는 경우 새 레코드를 삽입할 수 있도록 하므로 중요합니다. 이는 기존 및 새 레코드에 대한 업데이트를 포함할 수 있는 원본 시스템에서 데이터를 로드할 때 흔히 요구되는 사항입니다.
 
     이제 추가 변환 및 모델링을 위해 실버 Delta 테이블에 데이터가 준비되었습니다.
 
-14. 마지막 셀을 실행한 후 리본 위에 있는 **실행 (Run)** 탭을 선택한 다음 **세션 중지 (Stop session)**를 선택하여 Notebook에서 사용 중인 컴퓨팅 리소스를 중지합니다.
+1. 마지막 셀을 실행한 후 리본 위에 있는 **실행 (Run)** 탭을 선택한 다음 **세션 중지 (Stop session)**를 선택하여 Notebook에서 사용 중인 컴퓨팅 리소스를 중지합니다.
 
 ## SQL endpoint를 사용하여 실버 계층의 데이터 탐색
 
@@ -247,9 +247,9 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
 1. 작업 영역 홈 페이지로 돌아가서 `Transform data for Gold`라는 새 Notebook을 생성합니다.
 
-2. 탐색기 (Explorer) 창에서 **데이터 항목 추가 (Add data items)**를 선택한 다음 이전에 생성한 **Sales** Lakehouse를 선택하여 **Sales** Lakehouse를 추가합니다. 탐색기 (Explorer) 창의 **테이블 (Tables)** 섹션에 **sales_silver** 테이블이 나열된 것을 볼 수 있습니다.
+1. 탐색기 (Explorer) 창에서 **데이터 항목 추가 (Add data items)**를 선택한 다음 이전에 생성한 **Sales** Lakehouse를 선택하여 **Sales** Lakehouse를 추가합니다. 탐색기 (Explorer) 창의 **테이블 (Tables)** 섹션에 **sales_silver** 테이블이 나열된 것을 볼 수 있습니다.
 
-3. 기존 코드 블록에서 주석 처리된 텍스트를 제거하고, dataframe에 데이터를 로드하고 스타 스키마 구축을 시작하기 위해 **다음 코드를 추가**한 다음 실행합니다:
+1. 기존 코드 블록에서 주석 처리된 텍스트를 제거하고, dataframe에 데이터를 로드하고 스타 스키마 구축을 시작하기 위해 **다음 코드를 추가**한 다음 실행합니다:
 
     ```python
    # Load data to the dataframe as a starting point to create the gold layer
@@ -258,7 +258,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     > **참고**: 첫 번째 셀을 실행할 때 `[TooManyRequestsForCapacity]` 오류가 발생하면, 첫 번째 Notebook에서 이전에 실행 중이던 세션을 중지했는지 확인하십시오.
  
-4. **새 코드 블록을 추가**하고 다음 코드를 붙여넣어 날짜 차원 테이블을 생성하고 실행합니다:
+1. **새 코드 블록을 추가**하고 다음 코드를 붙여넣어 날짜 차원 테이블을 생성하고 실행합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -278,7 +278,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     > **참고**: 언제든지 `display(df)` 명령을 실행하여 작업 진행 상황을 확인할 수 있습니다. 이 경우 'display(dfdimDate_gold)'를 실행하여 dimDate_gold dataframe의 내용을 볼 수 있습니다.
 
-5. 새 코드 블록에서 날짜 차원인 **dimdate_gold**에 대한 dataframe을 생성하기 위해 **다음 코드를 추가하고 실행**합니다:
+1. 새 코드 블록에서 날짜 차원인 **dimdate_gold**에 대한 dataframe을 생성하기 위해 **다음 코드를 추가하고 실행**합니다:
 
     ```python
    from pyspark.sql.functions import col, dayofmonth, month, year, date_format
@@ -298,7 +298,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
    display(dfdimDate_gold.head(10))
     ```
 
-6. 데이터를 변환할 때 Notebook에서 무슨 일이 일어나는지 이해하고 확인할 수 있도록 코드를 새 코드 블록으로 분리하고 있습니다. 다른 새 코드 블록에서 새 데이터가 들어올 때 날짜 차원을 업데이트하기 위해 **다음 코드를 추가하고 실행**합니다:
+1. 데이터를 변환할 때 Notebook에서 무슨 일이 일어나는지 이해하고 확인할 수 있도록 코드를 새 코드 블록으로 분리하고 있습니다. 다른 새 코드 블록에서 새 데이터가 들어올 때 날짜 차원을 업데이트하기 위해 **다음 코드를 추가하고 실행**합니다:
 
     ```python
    from delta.tables import *
@@ -331,7 +331,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
     ```
 
     이제 날짜 차원이 설정되었습니다. 이제 고객 차원을 생성합니다.
-7. 고객 차원 테이블을 구축하기 위해 **새 코드 블록을 추가**하고 다음 코드를 붙여넣고 실행합니다:
+1. 고객 차원 테이블을 구축하기 위해 **새 코드 블록을 추가**하고 다음 코드를 붙여넣고 실행합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -348,7 +348,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
        .execute()
     ```
 
-8. 새 코드 블록에서 중복 고객을 제거하고, 특정 열을 선택하고, "CustomerName" 열을 분할하여 "First" 및 "Last" 이름 열을 생성하기 위해 **다음 코드를 추가하고 실행**합니다:
+1. 새 코드 블록에서 중복 고객을 제거하고, 특정 열을 선택하고, "CustomerName" 열을 분할하여 "First" 및 "Last" 이름 열을 생성하기 위해 **다음 코드를 추가하고 실행**합니다:
 
     ```python
    from pyspark.sql.functions import col, split
@@ -366,7 +366,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     여기서는 중복 제거, 특정 열 선택, "CustomerName" 열을 분할하여 "First" 및 "Last" 이름 열을 생성하는 등 다양한 변환을 수행하여 새 DataFrame dfdimCustomer_silver를 생성했습니다. 결과는 "CustomerName" 열에서 추출된 별도의 "First" 및 "Last" 이름 열을 포함하여 정리되고 구조화된 고객 데이터가 있는 DataFrame입니다.
 
-9. 다음으로 **고객을 위한 ID 열을 생성**합니다. 새 코드 블록에 다음을 붙여넣고 실행합니다:
+1. 다음으로 **고객을 위한 ID 열을 생성**합니다. 새 코드 블록에 다음을 붙여넣고 실행합니다:
 
     ```python
    from pyspark.sql.functions import monotonically_increasing_id, col, when, coalesce, max, lit
@@ -386,7 +386,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     여기서는 dimCustomer_gold 테이블에 이미 존재하는 중복을 제외하기 위해 left anti join을 수행하고, monotonically_increasing_id() 함수를 사용하여 고유한 CustomerID 값을 생성함으로써 고객 데이터(dfdimCustomer_silver)를 정리하고 변환합니다.
 
-10. 이제 새 데이터가 들어올 때 고객 테이블이 최신 상태를 유지하도록 합니다. **새 코드 블록에** 다음을 붙여넣고 실행합니다:
+1. 이제 새 데이터가 들어올 때 고객 테이블이 최신 상태를 유지하도록 합니다. **새 코드 블록에** 다음을 붙여넣고 실행합니다:
 
     ```python
    from delta.tables import *
@@ -417,7 +417,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
      .execute()
     ```
 
-11. 이제 **이러한 단계를 반복하여 제품 차원을 생성**합니다. 새 코드 블록에 다음을 붙여넣고 실행합니다:
+1. 이제 **이러한 단계를 반복하여 제품 차원을 생성**합니다. 새 코드 블록에 다음을 붙여넣고 실행합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -431,7 +431,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
        .execute()
     ```
 
-12. **새 코드 블록을 추가**하여 **product_silver** dataframe을 생성합니다.
+1. **새 코드 블록을 추가**하여 **product_silver** dataframe을 생성합니다.
   
     ```python
    from pyspark.sql.functions import col, split, lit, when
@@ -447,7 +447,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
    display(dfdimProduct_silver.head(10))
     ```
 
-13. 이제 **dimProduct_gold 테이블**을 위한 ID를 생성합니다. 다음 구문을 새 코드 블록에 추가하고 실행합니다:
+1. 이제 **dimProduct_gold 테이블**을 위한 ID를 생성합니다. 다음 구문을 새 코드 블록에 추가하고 실행합니다:
 
     ```python
    from pyspark.sql.functions import monotonically_increasing_id, col, lit, max, coalesce
@@ -468,7 +468,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     이는 테이블의 현재 데이터를 기반으로 다음 사용 가능한 제품 ID를 계산하고, 이 새 ID를 제품에 할당한 다음, 업데이트된 제품 정보를 표시합니다.
 
-14. 다른 차원과 마찬가지로, 새 데이터가 들어올 때 제품 테이블이 최신 상태를 유지하도록 해야 합니다. **새 코드 블록에** 다음을 붙여넣고 실행합니다:
+1. 다른 차원과 마찬가지로, 새 데이터가 들어올 때 제품 테이블이 최신 상태를 유지하도록 해야 합니다. **새 코드 블록에** 다음을 붙여넣고 실행합니다:
 
     ```python
    from delta.tables import *
@@ -499,7 +499,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
 
     이제 차원이 구축되었으므로, 마지막 단계는 팩트 테이블을 생성하는 것입니다.
 
-15. **새 코드 블록에** 다음 코드를 붙여넣고 실행하여 **팩트 테이블**을 생성합니다:
+1. **새 코드 블록에** 다음 코드를 붙여넣고 실행하여 **팩트 테이블**을 생성합니다:
 
     ```python
    from pyspark.sql.types import *
@@ -516,7 +516,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
        .execute()
     ```
 
-16. **새 코드 블록에** 다음 코드를 붙여넣고 실행하여 고객 ID, 항목 ID, 주문 날짜, 수량, 단가 및 세금을 포함한 고객 및 제품 정보와 판매 데이터를 결합하는 **새 dataframe**을 생성합니다:
+1. **새 코드 블록에** 다음 코드를 붙여넣고 실행하여 고객 ID, 항목 ID, 주문 날짜, 수량, 단가 및 세금을 포함한 고객 및 제품 정보와 판매 데이터를 결합하는 **새 dataframe**을 생성합니다:
 
     ```python
    from pyspark.sql.functions import col
@@ -545,7 +545,7 @@ Fabric에서 데이터 작업을 시작하기 전에 Fabric 평가판이 활성�
    display(dffactSales_gold.head(10))
     ```
 
-17. 이제 **새 코드 블록에** 다음 코드를 실행하여 판매 데이터가 최신 상태를 유지하도록 합니다:
+1. 이제 **새 코드 블록에** 다음 코드를 실행하여 판매 데이터가 최신 상태를 유지하도록 합니다:
 
     ```python
    from delta.tables import *
