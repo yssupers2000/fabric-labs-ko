@@ -59,7 +59,7 @@ SQL 쿼리 편집기는 IntelliSense, 코드 완성, 구문 강조 표시, 클�
 1.  다음 Transact-SQL 코드를 입력합니다.
 
     ```sql
-   SELECT 
+    SELECT 
     D.DayName, 
     AVG(T.TripDurationSeconds) AS AvgDuration, 
     AVG(T.TripDistanceMiles) AS AvgDistance 
